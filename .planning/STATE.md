@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 02-calm-canvas-core Plan 02 — 11 custom CALM node components + nodeTypes map
-last_updated: "2026-03-11T11:55:38.465Z"
+stopped_at: Completed 02-calm-canvas-core Plan 04 — NodePalette + CalmCanvas + containment wired into interactive diagramming surface
+last_updated: "2026-03-11T12:01:54.814Z"
 last_activity: 2026-03-11 — Roadmap created; 79 v1 requirements mapped across 12 phases
 progress:
   total_phases: 12
   completed_phases: 1
   total_plans: 8
-  completed_plans: 6
+  completed_plans: 7
   percent: 0
 ---
 
@@ -55,6 +55,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 02-calm-canvas-core P01 | 3min | 2 tasks | 12 files |
 | Phase 02-calm-canvas-core P03 | 5 | 2 tasks | 7 files |
 | Phase 02-calm-canvas-core P02 | 3min | 2 tasks | 12 files |
+| Phase 02-calm-canvas-core P04 | 4min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -80,6 +81,8 @@ Recent decisions affecting current work:
 - [Phase 02-calm-canvas-core]: Monochrome-only node styling — shape alone differentiates CALM types, no per-type coloring
 - [Phase 02-calm-canvas-core]: ContainerNode collapse state uses local $state + DOM CustomEvent node:toggle-collapse — decoupled from Svelte Flow internals
 - [Phase 02-calm-canvas-core]: resolveNodeType uses Set for O(1) built-in type lookup, returns generic for unknown strings
+- [Phase 02-calm-canvas-core]: NodePalette fires onplacenode as callback prop (Svelte 5 idiom); CalmCanvas exports placeNodeAtCenter() via bind:this
+- [Phase 02-calm-canvas-core]: makeContainment called for both edge-draw and node drag-into-container — both paths create visual nesting
 
 ### Pending Todos
 
@@ -93,6 +96,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-11T11:55:38.462Z
-Stopped at: Completed 02-calm-canvas-core Plan 02 — 11 custom CALM node components + nodeTypes map
+Last session: 2026-03-11T12:01:54.811Z
+Stopped at: Completed 02-calm-canvas-core Plan 04 — NodePalette + CalmCanvas + containment wired into interactive diagramming surface
 Resume file: None
