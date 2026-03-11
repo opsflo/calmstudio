@@ -2,7 +2,6 @@
 <!-- SPDX-License-Identifier: Apache-2.0 -->
 <script lang="ts">
 	import { Handle, Position, NodeResizer, type NodeProps } from '@xyflow/svelte';
-
 	let { id, data, selected }: NodeProps = $props();
 
 	let collapsed = $state(data.collapsed ?? false);
@@ -19,7 +18,7 @@
 </script>
 
 {#if !collapsed}
-	<NodeResizer minWidth={200} minHeight={150} isVisible={selected} />
+	<NodeResizer minWidth={180} minHeight={120} isVisible={selected} />
 {/if}
 
 <Handle type="target" position={Position.Top} />
@@ -29,164 +28,113 @@
 
 {#if data.interfaces}
 	{#each data.interfaces as iface, i}
-		<Handle
-			type="source"
-			position={Position.Right}
-			id={iface['unique-id']}
-			style="top: {20 + i * 20}%"
-		/>
+		<Handle type="source" position={Position.Right} id={iface['unique-id']} style="top: {20 + i * 20}%" />
 	{/each}
 {/if}
 
 {#if collapsed}
-	<div class="container-node collapsed" class:selected>
-		<div class="collapsed-inner">
-			<div class="icon-dot"></div>
+	<div class="container collapsed" class:selected>
+		<div class="collapsed-row">
+			<div class="dot"></div>
 			<span class="label">{data.label ?? data.calmId}</span>
-			<button class="toggle-btn" onclick={toggleCollapse} title="Expand container" aria-label="Expand container">
-				<svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-					<path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-				</svg>
+			<button class="toggle" onclick={toggleCollapse} title="Expand" aria-label="Expand container">
+				<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
 			</button>
 		</div>
-		<span class="type-badge">Container</span>
 	</div>
 {:else}
-	<div class="container-node expanded" class:selected>
-		<div class="header-bar">
+	<div class="container expanded" class:selected>
+		<div class="header">
 			<div class="header-left">
-				<div class="icon-dot"></div>
+				<div class="dot"></div>
 				<span class="label">{data.label ?? data.calmId}</span>
 			</div>
-			<div class="header-right">
-				<span class="type-badge">Container</span>
-				<button class="toggle-btn" onclick={toggleCollapse} title="Collapse container" aria-label="Collapse container">
-					<svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-						<path d="M18 15l-6-6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-					</svg>
-				</button>
-			</div>
+			<button class="toggle" onclick={toggleCollapse} title="Collapse" aria-label="Collapse container">
+				<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 15l-6-6-6 6"/></svg>
+			</button>
 		</div>
-		<div class="container-body"></div>
+		<div class="body"></div>
 	</div>
 {/if}
 
 <style>
-	.container-node {
+	.container {
 		font-family: var(--node-font);
 		cursor: default;
 		user-select: none;
 	}
-
-	/* Collapsed */
-	.container-node.collapsed {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 2px;
-		padding: 10px 16px;
-		background: var(--node-container-bg);
+	.container.collapsed {
+		padding: 6px 12px;
+		background: var(--node-container-header-bg);
 		border: 1.5px solid var(--node-container-border);
-		border-radius: 10px;
-		min-width: 140px;
-		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+		border-radius: 6px;
+		min-width: 100px;
 	}
-
-	.container-node.collapsed.selected {
+	.container.collapsed.selected {
 		border-color: var(--node-selected-ring);
-		box-shadow: 0 0 0 2px var(--node-selected-ring);
 	}
-
-	.collapsed-inner {
+	.collapsed-row {
 		display: flex;
 		align-items: center;
-		gap: 8px;
+		gap: 6px;
 	}
-
-	/* Expanded */
-	.container-node.expanded {
+	.container.expanded {
 		width: 100%;
 		height: 100%;
 		display: flex;
 		flex-direction: column;
-		border: 2px dashed var(--node-container-border);
-		border-radius: 12px;
-		min-width: 200px;
-		min-height: 150px;
-		background: var(--node-container-bg);
+		border: 1.5px dashed var(--node-container-border);
+		border-radius: 8px;
+		min-width: 180px;
+		min-height: 120px;
 		overflow: hidden;
 	}
-
-	.container-node.expanded.selected {
+	.container.expanded.selected {
 		border-color: var(--node-selected-ring);
 		border-style: solid;
 	}
-
-	.header-bar {
+	.header {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		padding: 6px 12px;
+		padding: 5px 10px;
 		background: var(--node-container-header-bg);
 		border-bottom: 1px solid var(--node-container-header-border);
 	}
-
 	.header-left {
 		display: flex;
 		align-items: center;
-		gap: 8px;
+		gap: 6px;
 	}
-
-	.header-right {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-	}
-
-	.container-body {
-		flex: 1;
-	}
-
-	.icon-dot {
-		width: 8px;
-		height: 8px;
+	.body { flex: 1; }
+	.dot {
+		width: 6px;
+		height: 6px;
 		border-radius: 50%;
 		background: var(--node-container-stroke);
-		opacity: 0.6;
+		opacity: 0.5;
 		flex-shrink: 0;
 	}
-
 	.label {
-		font-size: 12px;
+		font-size: 10px;
 		font-weight: 600;
 		color: var(--node-label-color);
-		max-width: 160px;
+		max-width: 140px;
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
 	}
-
-	.type-badge {
-		font-size: 10px;
-		font-weight: 500;
-		color: var(--node-container-badge);
-		letter-spacing: 0.02em;
-	}
-
-	.toggle-btn {
+	.toggle {
 		background: none;
 		border: none;
-		padding: 3px;
+		padding: 2px;
 		cursor: pointer;
 		color: var(--node-container-badge);
 		display: flex;
-		align-items: center;
-		justify-content: center;
-		border-radius: 4px;
-		transition: all 0.15s ease;
+		border-radius: 3px;
+		transition: all 0.15s;
 	}
-
-	.toggle-btn:hover {
+	.toggle:hover {
 		background: var(--node-container-header-bg);
 		color: var(--node-container-stroke);
 	}

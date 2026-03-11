@@ -26,6 +26,8 @@
 <script lang="ts">
 	import {
 		SvelteFlow,
+		Background,
+		BackgroundVariant,
 		useSvelteFlow,
 		type Node,
 		type Edge,
@@ -290,7 +292,7 @@
 		onconnect={handleConnect}
 		onnodedragstop={handleNodeDragStop}
 	>
-		<!-- Shared SVG marker defs — rendered once, referenced by all edge components -->
+		<Background variant={BackgroundVariant.Dots} gap={20} size={1} />
 		<EdgeMarkers />
 	</SvelteFlow>
 
