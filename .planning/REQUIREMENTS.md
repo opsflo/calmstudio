@@ -9,15 +9,15 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Canvas Core
 
-- [ ] **CANV-01**: User can drag CALM-typed nodes from a palette onto a canvas
+- [x] **CANV-01**: User can drag CALM-typed nodes from a palette onto a canvas
 - [ ] **CANV-02**: User can draw typed edges between nodes (connects, interacts, deployed-in, composed-of)
 - [ ] **CANV-03**: User can select, multi-select, move, resize, and delete nodes and edges
 - [ ] **CANV-04**: User can zoom, pan, and navigate the canvas with trackpad/mouse
-- [ ] **CANV-05**: User can undo/redo any canvas or code action (unlimited history)
+- [x] **CANV-05**: User can undo/redo any canvas or code action (unlimited history)
 - [ ] **CANV-06**: User can use keyboard shortcuts for common actions (Cmd+Z, Cmd+S, Delete, spacebar-pan)
-- [ ] **CANV-07**: User can copy/paste nodes with new unique-ids auto-generated
-- [ ] **CANV-08**: User can search/filter nodes by name, type, or ID
-- [ ] **CANV-09**: User can toggle dark mode and light mode (system preference detection)
+- [x] **CANV-07**: User can copy/paste nodes with new unique-ids auto-generated
+- [x] **CANV-08**: User can search/filter nodes by name, type, or ID
+- [x] **CANV-09**: User can toggle dark mode and light mode (system preference detection)
 
 ### CALM Nodes & Relationships
 
@@ -25,7 +25,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **CALM-02**: Custom node types supported (any string) rendered via GenericNode component
 - [ ] **CALM-03**: All 5 CALM relationship types rendered as distinct edge styles (connects, interacts, deployed-in, composed-of, options)
 - [ ] **CALM-04**: CALM interfaces rendered as typed handles on node edges
-- [ ] **CALM-05**: Containment relationships (deployed-in, composed-of) rendered as Svelte Flow sub-flows with parent-child constraints
+- [x] **CALM-05**: Containment relationships (deployed-in, composed-of) rendered as Svelte Flow sub-flows with parent-child constraints
 - [ ] **CALM-06**: Protocol labels displayed on connects edges (HTTPS, JDBC, mTLS, etc.)
 
 ### Properties & Metadata
@@ -209,20 +209,20 @@ Deferred to future release. Tracked but not in current roadmap.
 | CICD-04 | Phase 1 | Complete |
 | CICD-05 | Phase 1 | Pending |
 | CICD-06 | Phase 1 | Complete |
-| CANV-01 | Phase 2 | Pending |
+| CANV-01 | Phase 2 | Complete |
 | CANV-02 | Phase 2 | Pending |
 | CANV-03 | Phase 2 | Pending |
 | CANV-04 | Phase 2 | Pending |
-| CANV-05 | Phase 2 | Pending |
+| CANV-05 | Phase 2 | Complete |
 | CANV-06 | Phase 2 | Pending |
-| CANV-07 | Phase 2 | Pending |
-| CANV-08 | Phase 2 | Pending |
-| CANV-09 | Phase 2 | Pending |
+| CANV-07 | Phase 2 | Complete |
+| CANV-08 | Phase 2 | Complete |
+| CANV-09 | Phase 2 | Complete |
 | CALM-01 | Phase 2 | Pending |
 | CALM-02 | Phase 2 | Pending |
 | CALM-03 | Phase 2 | Pending |
 | CALM-04 | Phase 2 | Pending |
-| CALM-05 | Phase 2 | Pending |
+| CALM-05 | Phase 2 | Complete |
 | CALM-06 | Phase 2 | Pending |
 | PROP-01 | Phase 3 | Pending |
 | PROP-02 | Phase 3 | Pending |

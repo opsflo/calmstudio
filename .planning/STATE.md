@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Phase 2 context gathered
-last_updated: "2026-03-11T11:05:46.667Z"
+stopped_at: Completed 02-00-PLAN.md (test infrastructure)
+last_updated: "2026-03-11T11:49:09.181Z"
 last_activity: 2026-03-11 — Roadmap created; 79 v1 requirements mapped across 12 phases
 progress:
   total_phases: 12
   completed_phases: 1
-  total_plans: 2
-  completed_plans: 2
+  total_plans: 8
+  completed_plans: 3
   percent: 0
 ---
 
@@ -51,6 +51,7 @@ Progress: [░░░░░░░░░░] 0%
 
 *Updated after each plan completion*
 | Phase 01-foundation-governance P02 | 5m | 2 tasks | 11 files |
+| Phase 02-calm-canvas-core P00 | 15 | 2 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -65,6 +66,9 @@ Recent decisions affecting current work:
 - [Pre-Phase 1]: Extension pack metadata goes in `.calmstudio.json` sidecar — never embedded in `.calm` JSON
 - [Pre-Phase 1]: MCP server uses stdio transport (Claude Code compatible); file-based state sharing with frontend in v1
 - [Phase 01-foundation-governance]: No @semantic-release/github in per-package configs — avoids one GitHub Release per package per push (anti-pattern)
+- [Phase 02-calm-canvas-core]: SvelteKit plugin required in vite.config.ts — plain vitest/config would fail to resolve @sveltejs/kit
+- [Phase 02-calm-canvas-core]: passWithNoTests:true added to Vitest config so vitest exits 0 when no test files exist yet
+- [Phase 02-calm-canvas-core]: tsconfig.json extends .svelte-kit/tsconfig.json without overriding paths — SvelteKit handles $lib aliases automatically
 
 ### Pending Todos
 
@@ -78,6 +82,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-11T11:05:46.664Z
-Stopped at: Phase 2 context gathered
-Resume file: .planning/phases/02-calm-canvas-core/02-CONTEXT.md
+Last session: 2026-03-11T11:49:09.178Z
+Stopped at: Completed 02-00-PLAN.md (test infrastructure)
+Resume file: None
