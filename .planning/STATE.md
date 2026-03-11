@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 02-calm-canvas-core Plan 03 — custom CALM edge components and edgeTypes map
-last_updated: "2026-03-11T11:54:05.887Z"
+stopped_at: Completed 02-calm-canvas-core Plan 02 — 11 custom CALM node components + nodeTypes map
+last_updated: "2026-03-11T11:55:38.465Z"
 last_activity: 2026-03-11 — Roadmap created; 79 v1 requirements mapped across 12 phases
 progress:
   total_phases: 12
   completed_phases: 1
   total_plans: 8
-  completed_plans: 5
+  completed_plans: 6
   percent: 0
 ---
 
@@ -54,6 +54,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 02-calm-canvas-core P00 | 15 | 2 tasks | 9 files |
 | Phase 02-calm-canvas-core P01 | 3min | 2 tasks | 12 files |
 | Phase 02-calm-canvas-core P03 | 5 | 2 tasks | 7 files |
+| Phase 02-calm-canvas-core P02 | 3min | 2 tasks | 12 files |
 
 ## Accumulated Context
 
@@ -76,6 +77,9 @@ Recent decisions affecting current work:
 - [Phase 02-calm-canvas-core]: calm-core exports point to TypeScript source directly — no build step, TypeScript-first workspace package pattern
 - [Phase 02-calm-canvas-core]: EdgeMarkers.svelte rendered once in canvas DOM — avoids duplicate SVG defs; orient=auto-start-reverse required for marker rotation
 - [Phase 02-calm-canvas-core]: currentColor for SVG marker fill/stroke — enables edge color customization and dark mode without marker-specific props
+- [Phase 02-calm-canvas-core]: Monochrome-only node styling — shape alone differentiates CALM types, no per-type coloring
+- [Phase 02-calm-canvas-core]: ContainerNode collapse state uses local $state + DOM CustomEvent node:toggle-collapse — decoupled from Svelte Flow internals
+- [Phase 02-calm-canvas-core]: resolveNodeType uses Set for O(1) built-in type lookup, returns generic for unknown strings
 
 ### Pending Todos
 
@@ -89,6 +93,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-11T11:54:05.883Z
-Stopped at: Completed 02-calm-canvas-core Plan 03 — custom CALM edge components and edgeTypes map
+Last session: 2026-03-11T11:55:38.462Z
+Stopped at: Completed 02-calm-canvas-core Plan 02 — 11 custom CALM node components + nodeTypes map
 Resume file: None
