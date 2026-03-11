@@ -14,7 +14,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **CANV-03**: User can select, multi-select, move, resize, and delete nodes and edges
 - [ ] **CANV-04**: User can zoom, pan, and navigate the canvas with trackpad/mouse
 - [x] **CANV-05**: User can undo/redo any canvas or code action (unlimited history)
-- [ ] **CANV-06**: User can use keyboard shortcuts for common actions (Cmd+Z, Cmd+S, Delete, spacebar-pan)
+- [x] **CANV-06**: User can use keyboard shortcuts for common actions (Cmd+Z, Cmd+S, Delete, spacebar-pan)
 - [x] **CANV-07**: User can copy/paste nodes with new unique-ids auto-generated
 - [x] **CANV-08**: User can search/filter nodes by name, type, or ID
 - [x] **CANV-09**: User can toggle dark mode and light mode (system preference detection)
@@ -214,7 +214,7 @@ Deferred to future release. Tracked but not in current roadmap.
 | CANV-03 | Phase 2 | Pending |
 | CANV-04 | Phase 2 | Pending |
 | CANV-05 | Phase 2 | Complete |
-| CANV-06 | Phase 2 | Pending |
+| CANV-06 | Phase 2 | Complete |
 | CANV-07 | Phase 2 | Complete |
 | CANV-08 | Phase 2 | Complete |
 | CANV-09 | Phase 2 | Complete |

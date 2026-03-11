@@ -4,7 +4,7 @@ milestone: v1.0
 milestone_name: milestone
 status: planning
 stopped_at: Completed 02-calm-canvas-core Plan 05 — undo/redo, copy/paste, dark mode, node search, and keyboard shortcuts wired into CalmCanvas
-last_updated: "2026-03-11T16:57:20.348Z"
+last_updated: "2026-03-11T17:01:34.172Z"
 last_activity: 2026-03-11 — Roadmap created; 79 v1 requirements mapped across 12 phases
 progress:
   total_phases: 12
