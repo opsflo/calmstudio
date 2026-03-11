@@ -15,11 +15,14 @@
 		selectedNode = null,
 		selectedEdge = null,
 		onBeforeFirstEdit,
+		onmutate,
 	}: {
 		selectedNode?: Node | null;
 		selectedEdge?: Edge | null;
 		/** Forwarded to NodeProperties/EdgeProperties for undo snapshot before first edit. */
 		onBeforeFirstEdit?: () => void;
+		/** Called after each property mutation to re-project canvas and code panel. */
+		onmutate?: () => void;
 	} = $props();
 
 	/** Prefer node when both are somehow selected. */
@@ -40,9 +43,9 @@
 	{#if hasSelection}
 		<div class="panel-content">
 			{#if activeNode}
-				<NodeProperties node={activeNode} {onBeforeFirstEdit} />
+				<NodeProperties node={activeNode} {onBeforeFirstEdit} {onmutate} />
 			{:else if activeEdge}
-				<EdgeProperties edge={activeEdge} {onBeforeFirstEdit} />
+				<EdgeProperties edge={activeEdge} {onBeforeFirstEdit} {onmutate} />
 			{/if}
 		</div>
 	{:else}

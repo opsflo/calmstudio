@@ -20,10 +20,13 @@
 	let {
 		node,
 		onBeforeFirstEdit,
+		onmutate,
 	}: {
 		node: Node;
 		/** Called once before the first mutation per selection — used to push undo snapshot. */
 		onBeforeFirstEdit?: () => void;
+		/** Called after each property mutation to re-project canvas and code panel. */
+		onmutate?: () => void;
 	} = $props();
 
 	const CALM_NODE_TYPES: CalmNodeType[] = [
@@ -82,6 +85,7 @@
 		clearTimeout(nameTimer);
 		nameTimer = setTimeout(() => {
 			updateNodeProperty(node.data.calmId, 'name', value);
+			onmutate?.();
 		}, 300);
 	}
 
@@ -92,6 +96,7 @@
 		clearTimeout(descTimer);
 		descTimer = setTimeout(() => {
 			updateNodeProperty(node.data.calmId, 'description', value);
+			onmutate?.();
 		}, 300);
 	}
 
@@ -100,6 +105,7 @@
 		signalFirstEdit();
 		if (value !== 'custom') {
 			updateNodeProperty(node.data.calmId, 'node-type', value);
+			onmutate?.();
 		}
 		// If custom, wait for the custom input to commit
 	}
@@ -112,6 +118,7 @@
 		customTypeTimer = setTimeout(() => {
 			if (value.trim()) {
 				updateNodeProperty(node.data.calmId, 'node-type', value.trim());
+				onmutate?.();
 			}
 		}, 300);
 	}

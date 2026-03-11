@@ -44,6 +44,7 @@
 	import NodeSearch from '$lib/search/NodeSearch.svelte';
 	import { pushSnapshot, undo, redo } from '$lib/stores/history.svelte';
 	import { copy, paste } from '$lib/stores/clipboard.svelte';
+	import { applyFromCanvas } from '$lib/stores/calmModel.svelte';
 
 	import '@xyflow/svelte/dist/style.css';
 
@@ -53,11 +54,14 @@
 		nodes = $bindable<Node[]>([]),
 		edges = $bindable<Edge[]>([]),
 		onplacenode,
+		onselectionchange,
 	}: {
 		nodes?: Node[];
 		edges?: Edge[];
 		/** Called by parent when a palette item is clicked — places node at viewport center. */
 		onplacenode?: (type: string) => void;
+		/** Called when canvas selection changes. nodeId and edgeId are the IDs of the first selected items (or null). */
+		onselectionchange?: (nodeId: string | null, edgeId: string | null) => void;
 	} = $props();
 
 	// ─── Svelte Flow context ─────────────────────────────────────────────────
@@ -115,6 +119,7 @@
 		};
 
 		nodes = [...nodes, newNode];
+		applyFromCanvas(nodes, edges);
 	}
 
 	// ─── Click-to-place ──────────────────────────────────────────────────────
@@ -145,6 +150,7 @@
 		};
 
 		nodes = [...nodes, newNode];
+		applyFromCanvas(nodes, edges);
 	}
 
 	// ─── Edge creation ───────────────────────────────────────────────────────
@@ -167,6 +173,7 @@
 		if (isContainmentType(edgeType)) {
 			nodes = makeContainment(connection.source, connection.target, nodes);
 		}
+		applyFromCanvas(nodes, edges);
 	}
 
 	/**
@@ -187,6 +194,7 @@
 		if (isContainmentType(newType)) {
 			nodes = makeContainment(edge.source, edge.target, nodes);
 		}
+		applyFromCanvas(nodes, edges);
 	}
 
 	// ─── Edge context menu (right-click to change type) ─────────────────────
@@ -259,10 +267,13 @@
 				if (isInsideBounds(draggedNode.position, bounds)) {
 					pushSnapshot(nodes, edges);
 					nodes = makeContainment(candidate.id, draggedNode.id, nodes);
+					applyFromCanvas(nodes, edges);
 					return;
 				}
 			}
 		}
+		// Regular drag stop (position change only)
+		applyFromCanvas(nodes, edges);
 	}
 
 	// ─── Keyboard shortcuts ───────────────────────────────────────────────────
@@ -272,6 +283,7 @@
 		if (snapshot) {
 			nodes = snapshot.nodes;
 			edges = snapshot.edges;
+			applyFromCanvas(nodes, edges);
 		}
 	}
 
@@ -280,6 +292,7 @@
 		if (snapshot) {
 			nodes = snapshot.nodes;
 			edges = snapshot.edges;
+			applyFromCanvas(nodes, edges);
 		}
 	}
 
@@ -292,6 +305,7 @@
 		if (newNodes.length > 0) {
 			pushSnapshot(nodes, edges);
 			nodes = [...nodes, ...newNodes];
+			applyFromCanvas(nodes, edges);
 		}
 	}
 
@@ -305,6 +319,14 @@
 			// Clear search highlights when closing
 			nodes = nodes.map((n) => ({ ...n, selected: false }));
 		}
+	}
+
+	// ─── Selection change ─────────────────────────────────────────────────────
+
+	function handleSelectionChange({ nodes: selectedNodes, edges: selectedEdges }: { nodes: Node[]; edges: Edge[] }) {
+		const nodeId = selectedNodes.length > 0 ? (selectedNodes[0].data?.calmId as string ?? selectedNodes[0].id) : null;
+		const edgeId = selectedEdges.length > 0 ? selectedEdges[0].id : null;
+		onselectionchange?.(nodeId, edgeId);
 	}
 </script>
 
@@ -347,6 +369,7 @@
 		onconnect={handleConnect}
 		onnodedragstop={handleNodeDragStop}
 		onedgecontextmenu={handleEdgeContextMenu}
+		onselectionchange={handleSelectionChange}
 	>
 		<Background variant={BackgroundVariant.Dots} gap={20} size={1} />
 		<EdgeMarkers />

@@ -14,10 +14,13 @@
 	let {
 		edge,
 		onBeforeFirstEdit,
+		onmutate,
 	}: {
 		edge: Edge;
 		/** Called once before the first mutation per selection — used to push undo snapshot. */
 		onBeforeFirstEdit?: () => void;
+		/** Called after each property mutation to re-project canvas and code panel. */
+		onmutate?: () => void;
 	} = $props();
 
 	const RELATIONSHIP_TYPES: CalmRelationshipType[] = [
@@ -66,6 +69,7 @@
 		const value = (e.target as HTMLSelectElement).value;
 		signalFirstEdit();
 		updateEdgeProperty(edge.id, 'relationship-type', value);
+		onmutate?.();
 	}
 
 	function handleProtocolInput(e: Event) {
@@ -75,6 +79,7 @@
 		clearTimeout(protocolTimer);
 		protocolTimer = setTimeout(() => {
 			updateEdgeProperty(edge.id, 'protocol', value);
+			onmutate?.();
 		}, 300);
 	}
 
@@ -85,6 +90,7 @@
 		clearTimeout(descTimer);
 		descTimer = setTimeout(() => {
 			updateEdgeProperty(edge.id, 'description', value);
+			onmutate?.();
 		}, 300);
 	}
 

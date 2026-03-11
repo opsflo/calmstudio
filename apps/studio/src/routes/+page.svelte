@@ -8,7 +8,12 @@
 	import NodePalette from '$lib/palette/NodePalette.svelte';
 	import CalmCanvas from '$lib/canvas/CalmCanvas.svelte';
 	import CodePanel from '$lib/editor/CodePanel.svelte';
+	import PropertiesPanel from '$lib/properties/PropertiesPanel.svelte';
 	import { toggleTheme, isDark } from '$lib/stores/theme.svelte';
+	import { getModelJson, applyFromJson, getModel } from '$lib/stores/calmModel.svelte';
+	import { calmToFlow } from '$lib/stores/projection';
+	import { pushSnapshot } from '$lib/stores/history.svelte';
+	import type { CalmArchitecture } from '@calmstudio/calm-core';
 
 	let nodes = $state.raw<Node[]>([]);
 	let edges = $state.raw<Edge[]>([]);
@@ -17,6 +22,93 @@
 
 	function handlePalettePlace(type: string) {
 		canvas?.placeNodeAtCenter(type);
+	}
+
+	// ─── Forward sync: model -> JSON string for code panel ───────────────────
+
+	const calmJson = $derived(getModelJson());
+
+	// ─── Selection state ─────────────────────────────────────────────────────
+
+	let selectedNodeId = $state<string | null>(null);
+	let selectedEdgeId = $state<string | null>(null);
+
+	// Derive selected node/edge objects for properties panel
+	const selectedNode = $derived(
+		selectedNodeId ? nodes.find((n) => n.data?.calmId === selectedNodeId) ?? null : null
+	);
+	const selectedEdge = $derived(
+		selectedEdgeId ? edges.find((e) => e.id === selectedEdgeId) ?? null : null
+	);
+
+	function handleSelectionChange(nodeId: string | null, edgeId: string | null) {
+		selectedNodeId = nodeId;
+		selectedEdgeId = edgeId;
+	}
+
+	// ─── Reverse sync: code editor -> model -> canvas ────────────────────────
+
+	let codeParseError = $state<string | null>(null);
+	let codeChangeTimer: ReturnType<typeof setTimeout>;
+
+	function handleCodeChange(newValue: string) {
+		// Debounce: wait 400ms after last change before parsing
+		clearTimeout(codeChangeTimer);
+		codeChangeTimer = setTimeout(() => {
+			try {
+				const parsed = JSON.parse(newValue) as CalmArchitecture;
+				codeParseError = null;
+
+				// Build position map from current nodes to preserve positions
+				const positionMap = new Map<string, { x: number; y: number }>();
+				for (const n of nodes) {
+					if (n.data?.calmId) {
+						positionMap.set(n.data.calmId as string, { ...n.position });
+					}
+				}
+
+				// Push undo snapshot BEFORE applying
+				pushSnapshot(nodes, edges);
+
+				// Apply to canonical model (mutex prevents re-entry)
+				const applied = applyFromJson(parsed);
+				if (applied) {
+					// Project back to Svelte Flow format, preserving positions
+					const projected = calmToFlow(parsed, positionMap);
+					nodes = projected.nodes;
+					edges = projected.edges;
+				}
+			} catch (e) {
+				codeParseError = (e as Error).message;
+				// Canvas keeps last valid state — no update
+			}
+		}, 400);
+	}
+
+	// ─── Properties panel mutation callback ──────────────────────────────────
+
+	/**
+	 * Called by PropertiesPanel after a property mutation updates the model store.
+	 * Re-projects the canonical model back to Svelte Flow nodes/edges to keep
+	 * canvas and code panel in sync.
+	 */
+	function handlePropertyMutation() {
+		const model = getModel();
+		const positionMap = new Map<string, { x: number; y: number }>();
+		for (const n of nodes) {
+			if (n.data?.calmId) positionMap.set(n.data.calmId as string, { ...n.position });
+		}
+		const projected = calmToFlow(model, positionMap);
+		nodes = projected.nodes;
+		edges = projected.edges;
+	}
+
+	/**
+	 * Called by PropertiesPanel before the first mutation in a selection session.
+	 * Pushes an undo snapshot so property edits can be undone as a group.
+	 */
+	function handleBeforeFirstEdit() {
+		pushSnapshot(nodes, edges);
 	}
 </script>
 
@@ -57,7 +149,12 @@
 						</div>
 
 						<SvelteFlowProvider>
-							<CalmCanvas bind:this={canvas} bind:nodes bind:edges />
+							<CalmCanvas
+								bind:this={canvas}
+								bind:nodes
+								bind:edges
+								onselectionchange={handleSelectionChange}
+							/>
 						</SvelteFlowProvider>
 					</div>
 				</Pane>
@@ -66,18 +163,27 @@
 
 				<!-- Bottom: Code editor panel -->
 				<Pane defaultSize={30} minSize={10}>
-					<CodePanel value="" onchange={() => {}} />
+					<CodePanel
+						value={calmJson}
+						onchange={handleCodeChange}
+						parseError={codeParseError}
+						selectedNodeId={selectedNodeId}
+						selectedEdgeId={selectedEdgeId}
+					/>
 				</Pane>
 			</PaneGroup>
 		</Pane>
 
 		<PaneResizer class="resizer resizer-vertical" />
 
-		<!-- Right: Properties placeholder (Plan 02 fills this) -->
+		<!-- Right: Properties panel -->
 		<Pane defaultSize={15} minSize={5}>
-			<div class="properties-placeholder">
-				<span>Select a node or edge</span>
-			</div>
+			<PropertiesPanel
+				{selectedNode}
+				{selectedEdge}
+				onBeforeFirstEdit={handleBeforeFirstEdit}
+				onmutate={handlePropertyMutation}
+			/>
 		</Pane>
 	</PaneGroup>
 </DnDProvider>
@@ -137,26 +243,6 @@
 	:global(.dark) .toolbar-btn:hover {
 		background: #1e293b;
 		color: #e2e8f0;
-	}
-
-	/* Properties placeholder panel */
-	.properties-placeholder {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		height: 100%;
-		background: var(--color-surface);
-		border-left: 1px solid var(--color-border);
-		color: var(--color-text-secondary);
-		font-size: 13px;
-		text-align: center;
-		padding: 16px;
-	}
-
-	:global(.dark) .properties-placeholder {
-		background: #0d1117;
-		border-left-color: #334155;
-		color: #64748b;
 	}
 
 	/* PaneResizer styling — thin draggable bars */
