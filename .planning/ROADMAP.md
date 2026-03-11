@@ -52,7 +52,13 @@ Plans:
   3. User can select multiple nodes, move, resize, and delete them, and undo/redo every action with Cmd+Z/Cmd+Shift+Z
   4. Containment relationships (deployed-in, composed-of) render as Svelte Flow sub-flows with parent-child visual nesting
   5. User can toggle dark mode and light mode, and zoom, pan, and search nodes by name or type
-**Plans**: TBD
+**Plans:** 5 plans
+Plans:
+- [ ] 02-01-PLAN.md — Scaffold SvelteKit app, install Svelte Flow + Tailwind, define CALM core types
+- [ ] 02-02-PLAN.md — Create 11 custom node components (9 CALM types + GenericNode + ContainerNode) with distinct shapes
+- [ ] 02-03-PLAN.md — Create 5 custom edge components with distinct line styles and SVG markers
+- [ ] 02-04-PLAN.md — Wire canvas, palette (DnD + click-to-place), edge creation, and containment sub-flows
+- [ ] 02-05-PLAN.md — Add undo/redo, copy/paste, dark mode, search, keyboard shortcuts, and visual verification
 
 ### Phase 3: Properties & Bidirectional Sync
 **Goal**: Editing properties in the panel or CALM JSON in the code editor both update the diagram, with no infinite loops
@@ -174,7 +180,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & Governance | 2/2 | Complete    | 2026-03-11 |
-| 2. CALM Canvas Core | 0/TBD | Not started | - |
+| 2. CALM Canvas Core | 0/5 | Not started | - |
 | 3. Properties & Bidirectional Sync | 0/TBD | Not started | - |
 | 4. Import, Export & Layout | 0/TBD | Not started | - |
 | 5. calmscript DSL | 0/TBD | Not started | - |
