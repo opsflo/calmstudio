@@ -37,7 +37,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. All five FINOS governance files exist (CONTRIBUTING.md, CODE_OF_CONDUCT.md, SECURITY.md, NOTICE, MAINTAINERS.md) and are linked from the README
   4. A git push triggers GitHub Actions: build, lint, test, license scan, CVE scan, and commitlint all run and report status
   5. Semantic release runs on merge to main and produces a versioned changelog entry
-**Plans:** 2 plans
+**Plans:** 1/2 plans executed
 Plans:
 - [ ] 01-01-PLAN.md — Monorepo scaffold, FINOS governance files, REUSE/SPDX licensing, commitlint + husky
 - [ ] 01-02-PLAN.md — GitHub Actions CI/CD pipeline, semantic release, DCO App setup
@@ -173,7 +173,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Governance | 0/2 | Planning complete | - |
+| 1. Foundation & Governance | 1/2 | In Progress|  |
 | 2. CALM Canvas Core | 0/TBD | Not started | - |
 | 3. Properties & Bidirectional Sync | 0/TBD | Not started | - |
 | 4. Import, Export & Layout | 0/TBD | Not started | - |
