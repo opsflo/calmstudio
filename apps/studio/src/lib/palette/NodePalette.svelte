@@ -157,11 +157,11 @@
 					draggable="true"
 					ondragstart={(e) => handleDragStart(e, type)}
 					ondragend={handleDragEnd}
-					onclick={() => handleClick(type)}
+					ondblclick={() => handleClick(type)}
 					class="palette-item"
 					style="--item-border: var({getColorVar(type)}-border); --item-stroke: var({getColorVar(type)}-stroke); --item-bg: var({getColorVar(type)}-bg);"
-					aria-label="Drag or click to place {getLabel(type)} node"
-					title="Drag to canvas or click to place"
+					aria-label="Drag or double-click to place {getLabel(type)} node"
+					title="Drag to canvas or double-click to place"
 				>
 					<span class="item-icon" style="background: var({getColorVar(type)}-border); color: var({getColorVar(type)}-stroke);">
 						{@html getIcon(type)}

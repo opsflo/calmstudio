@@ -164,48 +164,103 @@
 
 		edges = [...edges, newEdge];
 
-		// If it's a containment edge type, also set parentId on the target
 		if (isContainmentType(edgeType)) {
 			nodes = makeContainment(connection.source, connection.target, nodes);
 		}
 	}
 
+	/**
+	 * Change the type of an existing edge (e.g. connects -> deployed-in).
+	 * Handles containment side-effects when switching to/from containment types.
+	 */
+	function changeEdgeType(edgeId: string, newType: string) {
+		pushSnapshot(nodes, edges);
+
+		const edge = edges.find((e) => e.id === edgeId);
+		if (!edge) return;
+
+		edges = edges.map((e) =>
+			e.id === edgeId ? { ...e, type: newType } : e
+		);
+
+		// If changing TO a containment type, establish containment
+		if (isContainmentType(newType)) {
+			nodes = makeContainment(edge.source, edge.target, nodes);
+		}
+	}
+
+	// ─── Edge context menu (right-click to change type) ─────────────────────
+
+	let edgeMenu = $state<{ x: number; y: number; edgeId: string } | null>(null);
+
+	const EDGE_TYPE_OPTIONS = [
+		{ value: 'connects', label: 'Connects' },
+		{ value: 'interacts', label: 'Interacts' },
+		{ value: 'deployed-in', label: 'Deployed In' },
+		{ value: 'composed-of', label: 'Composed Of' },
+		{ value: 'options', label: 'Options' },
+	];
+
+	function handleEdgeContextMenu(event: { event: MouseEvent; edge: Edge }) {
+		event.event.preventDefault();
+		edgeMenu = {
+			x: event.event.clientX,
+			y: event.event.clientY,
+			edgeId: event.edge.id,
+		};
+	}
+
+	function selectEdgeType(type: string) {
+		if (edgeMenu) {
+			changeEdgeType(edgeMenu.edgeId, type);
+			edgeMenu = null;
+		}
+	}
+
+	function closeEdgeMenu() {
+		edgeMenu = null;
+	}
+
 	// ─── Node drag-into-container ────────────────────────────────────────────
 
 	/**
-	 * Checks whether two rectangle bounds overlap (used for drag-into-container detection).
+	 * Checks whether point a is inside the bounding box of b.
 	 */
-	function boundsOverlap(
-		a: { x: number; y: number; width?: number; height?: number },
+	function isInsideBounds(
+		a: { x: number; y: number },
 		b: { x: number; y: number; width?: number; height?: number }
 	): boolean {
-		const aw = a.width ?? 150;
-		const ah = a.height ?? 50;
-		const bw = b.width ?? 150;
-		const bh = b.height ?? 50;
+		const bw = b.width ?? 200;
+		const bh = b.height ?? 150;
 		return (
-			a.x < b.x + bw &&
-			a.x + aw > b.x &&
-			a.y < b.y + bh &&
-			a.y + ah > b.y
+			a.x >= b.x &&
+			a.x <= b.x + bw &&
+			a.y >= b.y &&
+			a.y <= b.y + bh
 		);
 	}
 
 	function handleNodeDragStop(event: NodeDragEvent) {
 		const draggedNode = event.node;
-		// Don't reparent nodes that are already parented or are containers themselves
+		// Don't reparent nodes that are already parented or are containers
 		if (draggedNode.type === 'container' || draggedNode.parentId) return;
 
-		// Find any container node whose bounds overlap the dragged node
-		const containers = nodes.filter(
-			(n) => n.type === 'container' && n.id !== draggedNode.id
-		);
-
-		for (const container of containers) {
-			if (boundsOverlap(draggedNode.position, container.position)) {
-				pushSnapshot(nodes, edges);
-				nodes = makeContainment(container.id, draggedNode.id, nodes);
-				return;
+		// Find any large node whose bounds contain the dragged node's position.
+		// Any node type can become a container when something is dropped into it.
+		for (const candidate of nodes) {
+			if (candidate.id === draggedNode.id) continue;
+			if (candidate.type === 'container' || (candidate.measured?.width && candidate.measured.width > 100)) {
+				const bounds = {
+					x: candidate.position.x,
+					y: candidate.position.y,
+					width: candidate.measured?.width ?? candidate.width ?? 200,
+					height: candidate.measured?.height ?? candidate.height ?? 150,
+				};
+				if (isInsideBounds(draggedNode.position, bounds)) {
+					pushSnapshot(nodes, edges);
+					nodes = makeContainment(candidate.id, draggedNode.id, nodes);
+					return;
+				}
 			}
 		}
 	}
@@ -282,7 +337,7 @@
 		bind:edges
 		{nodeTypes}
 		{edgeTypes}
-		deleteKey="Delete"
+		deleteKey={['Delete', 'Backspace']}
 		selectionKey="Shift"
 		multiSelectionKey="Meta"
 		fitView
@@ -291,6 +346,7 @@
 		panOnScroll={false}
 		onconnect={handleConnect}
 		onnodedragstop={handleNodeDragStop}
+		onedgecontextmenu={handleEdgeContextMenu}
 	>
 		<Background variant={BackgroundVariant.Dots} gap={20} size={1} />
 		<EdgeMarkers />
@@ -304,4 +360,90 @@
 			onclose={closeSearch}
 		/>
 	{/if}
+
+	<!-- Edge type context menu — right-click an edge to change its type -->
+	{#if edgeMenu}
+		<!-- svelte-ignore a11y_click_events_have_key_events -->
+		<!-- svelte-ignore a11y_no_static_element_interactions -->
+		<div class="edge-menu-backdrop" onclick={closeEdgeMenu}>
+			<div
+				class="edge-menu"
+				style="left: {edgeMenu.x}px; top: {edgeMenu.y}px;"
+				onclick={(e) => e.stopPropagation()}
+			>
+				<div class="edge-menu-header">Edge Type</div>
+				{#each EDGE_TYPE_OPTIONS as opt}
+					<button
+						type="button"
+						class="edge-menu-item"
+						onclick={() => selectEdgeType(opt.value)}
+					>
+						{opt.label}
+					</button>
+				{/each}
+			</div>
+		</div>
+	{/if}
 </div>
+
+<style>
+	.edge-menu-backdrop {
+		position: fixed;
+		inset: 0;
+		z-index: 100;
+	}
+
+	.edge-menu {
+		position: fixed;
+		z-index: 101;
+		min-width: 140px;
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-radius: 8px;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
+		padding: 4px;
+		font-family: var(--font-sans);
+	}
+
+	:global(.dark) .edge-menu {
+		background: #111827;
+		border-color: #334155;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+	}
+
+	.edge-menu-header {
+		padding: 4px 8px;
+		font-size: 10px;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
+		color: var(--color-text-tertiary);
+	}
+
+	.edge-menu-item {
+		display: block;
+		width: 100%;
+		padding: 6px 8px;
+		border: none;
+		background: none;
+		border-radius: 5px;
+		font-size: 12px;
+		font-family: inherit;
+		color: var(--color-text-primary);
+		text-align: left;
+		cursor: pointer;
+		transition: background 0.1s;
+	}
+
+	.edge-menu-item:hover {
+		background: var(--color-surface-tertiary);
+	}
+
+	:global(.dark) .edge-menu-item {
+		color: #e2e8f0;
+	}
+
+	:global(.dark) .edge-menu-item:hover {
+		background: #1e293b;
+	}
+</style>
