@@ -133,12 +133,12 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### CI/CD Pipeline
 
-- [ ] **CICD-01**: GitHub Actions: build, lint, test on every PR
-- [ ] **CICD-02**: DCO verification check on all PRs
-- [ ] **CICD-03**: License scanning for Apache 2.0 compatibility
-- [ ] **CICD-04**: CVE scanning with OWASP Dependency-Check
+- [x] **CICD-01**: GitHub Actions: build, lint, test on every PR
+- [x] **CICD-02**: DCO verification check on all PRs
+- [x] **CICD-03**: License scanning for Apache 2.0 compatibility
+- [x] **CICD-04**: CVE scanning with OWASP Dependency-Check
 - [ ] **CICD-05**: Conventional commits enforcement (commitlint + husky)
-- [ ] **CICD-06**: Semantic release for automated versioning and changelog
+- [x] **CICD-06**: Semantic release for automated versioning and changelog
 
 ### Documentation
 
@@ -203,12 +203,12 @@ Deferred to future release. Tracked but not in current roadmap.
 | GOVN-06 | Phase 1 | Pending |
 | GOVN-07 | Phase 1 | Pending |
 | GOVN-08 | Phase 1 | Pending |
-| CICD-01 | Phase 1 | Pending |
-| CICD-02 | Phase 1 | Pending |
-| CICD-03 | Phase 1 | Pending |
-| CICD-04 | Phase 1 | Pending |
+| CICD-01 | Phase 1 | Complete |
+| CICD-02 | Phase 1 | Complete |
+| CICD-03 | Phase 1 | Complete |
+| CICD-04 | Phase 1 | Complete |
 | CICD-05 | Phase 1 | Pending |
-| CICD-06 | Phase 1 | Pending |
+| CICD-06 | Phase 1 | Complete |
 | CANV-01 | Phase 2 | Pending |
 | CANV-02 | Phase 2 | Pending |
 | CANV-03 | Phase 2 | Pending |

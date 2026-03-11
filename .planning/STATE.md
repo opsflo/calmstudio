@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Phase 1 plan 01-01 complete
-last_updated: "2026-03-11T09:14:47.284Z"
+stopped_at: Completed Phase 1 Plan 02 tasks; checkpoint awaiting DCO App install + CI pipeline human verify
+last_updated: "2026-03-11T09:18:18.570Z"
 last_activity: 2026-03-11 — Roadmap created; 79 v1 requirements mapped across 12 phases
 progress:
   total_phases: 12
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 2
-  completed_plans: 1
+  completed_plans: 2
   percent: 0
 ---
 
@@ -50,6 +50,7 @@ Progress: [░░░░░░░░░░] 0%
 - Trend: -
 
 *Updated after each plan completion*
+| Phase 01-foundation-governance P02 | 5m | 2 tasks | 11 files |
 
 ## Accumulated Context
 
@@ -63,6 +64,7 @@ Recent decisions affecting current work:
 - [Pre-Phase 1]: calmscript uses two-layer parsing: Lezer for CodeMirror highlighting, Chevrotain for runtime compilation
 - [Pre-Phase 1]: Extension pack metadata goes in `.calmstudio.json` sidecar — never embedded in `.calm` JSON
 - [Pre-Phase 1]: MCP server uses stdio transport (Claude Code compatible); file-based state sharing with frontend in v1
+- [Phase 01-foundation-governance]: No @semantic-release/github in per-package configs — avoids one GitHub Release per package per push (anti-pattern)
 
 ### Pending Todos
 
@@ -76,6 +78,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-11T09:14:47.282Z
-Stopped at: Phase 1 plan 01-01 complete
-Resume file: .planning/phases/01-foundation-governance/01-01-SUMMARY.md
+Last session: 2026-03-11T09:18:18.567Z
+Stopped at: Completed Phase 1 Plan 02 tasks; checkpoint awaiting DCO App install + CI pipeline human verify
+Resume file: None

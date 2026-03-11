@@ -12,7 +12,7 @@ CalmStudio ships in 12 phases, each delivering a coherent, independently verifia
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Foundation & Governance** - Project skeleton, Apache 2.0 licensing, FINOS governance files, and CI/CD pipeline
+- [x] **Phase 1: Foundation & Governance** - Project skeleton, Apache 2.0 licensing, FINOS governance files, and CI/CD pipeline (completed 2026-03-11)
 - [ ] **Phase 2: CALM Canvas Core** - Typed drag-and-drop canvas with all 9 CALM node types, 5 relationship types, and table-stakes UX
 - [ ] **Phase 3: Properties & Bidirectional Sync** - Properties panel, CALM JSON code editor, and bidirectional visual-to-code sync engine
 - [ ] **Phase 4: Import, Export & Layout** - CALM JSON import with ELK auto-layout, file export (CALM JSON, calmscript, SVG, PNG), and native file I/O
@@ -37,7 +37,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. All five FINOS governance files exist (CONTRIBUTING.md, CODE_OF_CONDUCT.md, SECURITY.md, NOTICE, MAINTAINERS.md) and are linked from the README
   4. A git push triggers GitHub Actions: build, lint, test, license scan, CVE scan, and commitlint all run and report status
   5. Semantic release runs on merge to main and produces a versioned changelog entry
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 Plans:
 - [ ] 01-01-PLAN.md — Monorepo scaffold, FINOS governance files, REUSE/SPDX licensing, commitlint + husky
 - [ ] 01-02-PLAN.md — GitHub Actions CI/CD pipeline, semantic release, DCO App setup
@@ -173,7 +173,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Governance | 1/2 | In Progress|  |
+| 1. Foundation & Governance | 2/2 | Complete   | 2026-03-11 |
 | 2. CALM Canvas Core | 0/TBD | Not started | - |
 | 3. Properties & Bidirectional Sync | 0/TBD | Not started | - |
 | 4. Import, Export & Layout | 0/TBD | Not started | - |
