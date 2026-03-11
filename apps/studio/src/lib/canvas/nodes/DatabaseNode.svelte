@@ -6,15 +6,13 @@
 	let { id, data, selected }: NodeProps = $props();
 </script>
 
-<NodeResizer minWidth={90} minHeight={100} isVisible={selected} />
+<NodeResizer minWidth={140} minHeight={64} isVisible={selected} />
 
-<!-- Default handles -->
 <Handle type="target" position={Position.Top} />
 <Handle type="source" position={Position.Bottom} />
 <Handle type="target" position={Position.Left} />
 <Handle type="source" position={Position.Right} />
 
-<!-- Interface handles -->
 {#if data.interfaces}
 	{#each data.interfaces as iface, i}
 		<Handle
@@ -26,56 +24,84 @@
 	{/each}
 {/if}
 
-<!-- Cylinder shape: ellipse top + rect body + ellipse bottom -->
-<div class="database-node" class:selected>
-	<svg width="60" height="80" viewBox="0 0 60 80" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-		<!-- Cylinder body sides -->
-		<path d="M5 16 L5 64" stroke="currentColor" stroke-width="2" />
-		<path d="M55 16 L55 64" stroke="currentColor" stroke-width="2" />
-		<!-- Bottom ellipse -->
-		<ellipse cx="30" cy="64" rx="25" ry="8" stroke="currentColor" stroke-width="2" fill="none" />
-		<!-- Top ellipse -->
-		<ellipse cx="30" cy="16" rx="25" ry="8" stroke="currentColor" stroke-width="2" fill="none" />
-		<!-- Middle line (shelf) -->
-		<ellipse cx="30" cy="30" rx="25" ry="8" stroke="currentColor" stroke-width="1" stroke-dasharray="4 3" fill="none" />
-	</svg>
-	<div class="label">{data.label ?? data.calmId}</div>
-	<div class="type-badge">database</div>
+<div class="node-card" class:selected>
+	<div class="icon-container">
+		<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+			<ellipse cx="12" cy="5.5" rx="8" ry="2.5" stroke="currentColor" stroke-width="1.5" />
+			<path d="M4 5.5v13c0 1.38 3.58 2.5 8 2.5s8-1.12 8-2.5v-13" stroke="currentColor" stroke-width="1.5" />
+			<path d="M4 12c0 1.38 3.58 2.5 8 2.5s8-1.12 8-2.5" stroke="currentColor" stroke-width="1.2" opacity="0.5" />
+		</svg>
+	</div>
+	<div class="node-content">
+		<span class="label">{data.label ?? data.calmId}</span>
+		<span class="type-badge">Database</span>
+	</div>
 </div>
 
 <style>
-	.database-node {
+	.node-card {
 		display: flex;
-		flex-direction: column;
 		align-items: center;
-		padding: 4px 8px;
-		min-width: 90px;
-		min-height: 100px;
-		color: #1a1a1a;
+		gap: 10px;
+		padding: 10px 14px;
+		min-width: 140px;
+		background: var(--node-database-bg);
+		border: 1.5px solid var(--node-database-border);
+		border-radius: 10px;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+		transition: all 0.15s ease;
+		font-family: var(--node-font);
 		cursor: default;
 		user-select: none;
 	}
 
-	.database-node.selected svg ellipse,
-	.database-node.selected svg path,
-	.database-node.selected svg line {
-		stroke: #3b82f6;
+	.node-card:hover {
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
+	}
+
+	.node-card.selected {
+		border-color: var(--node-selected-ring);
+		box-shadow: 0 0 0 2px var(--node-selected-ring), 0 2px 8px rgba(99, 102, 241, 0.12);
+	}
+
+	.icon-container {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 36px;
+		height: 36px;
+		border-radius: 8px;
+		background: var(--node-database-border);
+		color: var(--node-database-stroke);
+		flex-shrink: 0;
+	}
+
+	:global(.dark) .icon-container {
+		background: rgba(217, 119, 6, 0.12);
+	}
+
+	.node-content {
+		display: flex;
+		flex-direction: column;
+		min-width: 0;
 	}
 
 	.label {
-		font-size: 11px;
+		font-size: 12px;
 		font-weight: 600;
-		text-align: center;
-		margin-top: 4px;
-		max-width: 100px;
-		word-break: break-word;
+		color: var(--node-label-color);
+		line-height: 1.3;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		max-width: 120px;
 	}
 
 	.type-badge {
-		font-size: 9px;
-		color: #6b7280;
-		text-transform: uppercase;
-		letter-spacing: 0.05em;
-		margin-top: 2px;
+		font-size: 10px;
+		font-weight: 500;
+		color: var(--node-database-badge);
+		letter-spacing: 0.02em;
+		margin-top: 1px;
 	}
 </style>

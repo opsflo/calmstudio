@@ -23,6 +23,7 @@
     "@sveltejs/adapter-auto": "^3.3.1",
     "@sveltejs/kit": "^2.53.4",
     "@sveltejs/vite-plugin-svelte": "^5.0.0",
+    "@tailwindcss/vite": "^4.2.1",
     "@testing-library/svelte": "^5.2.7",
     "@types/node": "^22.0.0",
     "jsdom": "^25.0.1",

@@ -6,15 +6,13 @@
 	let { id, data, selected }: NodeProps = $props();
 </script>
 
-<NodeResizer minWidth={120} minHeight={80} isVisible={selected} />
+<NodeResizer minWidth={140} minHeight={64} isVisible={selected} />
 
-<!-- Default handles -->
 <Handle type="target" position={Position.Top} />
 <Handle type="source" position={Position.Bottom} />
 <Handle type="target" position={Position.Left} />
 <Handle type="source" position={Position.Right} />
 
-<!-- Interface handles -->
 {#if data.interfaces}
 	{#each data.interfaces as iface, i}
 		<Handle
@@ -26,85 +24,83 @@
 	{/each}
 {/if}
 
-<!-- Large rectangle with double border — system boundary box -->
-<div class="system-node" class:selected>
-	<div class="outer-border">
-		<div class="inner-border">
-			<div class="content">
-				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-					<!-- System icon: nested squares -->
-					<rect x="2" y="2" width="20" height="20" rx="2" stroke="currentColor" stroke-width="1.5" fill="none" />
-					<rect x="6" y="6" width="12" height="12" rx="1" stroke="currentColor" stroke-width="1.5" fill="none" />
-				</svg>
-				<div class="label">{data.label ?? data.calmId}</div>
-				<div class="type-badge">system</div>
-			</div>
-		</div>
+<div class="node-card" class:selected>
+	<div class="icon-container">
+		<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+			<rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.5" />
+			<rect x="7" y="7" width="10" height="10" rx="1" stroke="currentColor" stroke-width="1.2" />
+		</svg>
+	</div>
+	<div class="node-content">
+		<span class="label">{data.label ?? data.calmId}</span>
+		<span class="type-badge">System</span>
 	</div>
 </div>
 
 <style>
-	.system-node {
-		min-width: 120px;
-		min-height: 80px;
-		height: 100%;
-		width: 100%;
-		color: #1a1a1a;
+	.node-card {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		padding: 10px 14px;
+		min-width: 140px;
+		background: var(--node-system-bg);
+		border: 1.5px solid var(--node-system-border);
+		border-radius: 10px;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+		transition: all 0.15s ease;
+		font-family: var(--node-font);
 		cursor: default;
 		user-select: none;
 	}
 
-	.outer-border {
-		width: 100%;
-		height: 100%;
-		border: 2px solid #1a1a1a;
-		border-radius: 4px;
-		padding: 3px;
+	.node-card:hover {
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
 	}
 
-	.inner-border {
-		width: 100%;
-		height: 100%;
-		border: 1px solid #1a1a1a;
-		border-radius: 2px;
+	.node-card.selected {
+		border-color: var(--node-selected-ring);
+		box-shadow: 0 0 0 2px var(--node-selected-ring), 0 2px 8px rgba(99, 102, 241, 0.12);
+	}
+
+	.icon-container {
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		width: 36px;
+		height: 36px;
+		border-radius: 8px;
+		background: var(--node-system-border);
+		color: var(--node-system-stroke);
+		flex-shrink: 0;
 	}
 
-	.system-node.selected .outer-border {
-		border-color: #3b82f6;
+	:global(.dark) .icon-container {
+		background: rgba(148, 163, 184, 0.12);
 	}
 
-	.system-node.selected .inner-border {
-		border-color: #3b82f6;
-	}
-
-	.system-node.selected svg rect {
-		stroke: #3b82f6;
-	}
-
-	.content {
+	.node-content {
 		display: flex;
 		flex-direction: column;
-		align-items: center;
-		padding: 8px;
+		min-width: 0;
 	}
 
 	.label {
-		font-size: 11px;
+		font-size: 12px;
 		font-weight: 600;
-		text-align: center;
-		margin-top: 4px;
+		color: var(--node-label-color);
+		line-height: 1.3;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
 		max-width: 120px;
-		word-break: break-word;
 	}
 
 	.type-badge {
-		font-size: 9px;
-		color: #6b7280;
-		text-transform: uppercase;
-		letter-spacing: 0.05em;
-		margin-top: 2px;
+		font-size: 10px;
+		font-weight: 500;
+		color: var(--node-system-badge);
+		letter-spacing: 0.02em;
+		margin-top: 1px;
 	}
 </style>

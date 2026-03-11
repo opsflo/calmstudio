@@ -4,8 +4,7 @@
 <!--
   ConnectsEdge.svelte — CALM "connects" relationship edge.
   Visual style: solid line + filled arrowhead.
-  Protocol labels (e.g. "HTTPS", "JDBC", "gRPC") render as inline text
-  centered on the path when data.protocol or label is provided.
+  Protocol labels render as inline pill on the path.
 -->
 <script lang="ts">
 	import { BaseEdge, EdgeLabel, getSmoothStepPath, type EdgeProps } from '@xyflow/svelte';
@@ -40,10 +39,30 @@
 
 {#if protocolLabel}
 	<EdgeLabel x={labelX} y={labelY} class="nodrag nopan">
-		<span
-			class="rounded bg-white/90 px-1.5 py-0.5 text-xs font-medium text-gray-700 shadow-sm dark:bg-gray-800/90 dark:text-gray-200"
-		>
+		<span class="edge-label">
 			{protocolLabel}
 		</span>
 	</EdgeLabel>
 {/if}
+
+<style>
+	.edge-label {
+		display: inline-block;
+		padding: 2px 8px;
+		font-family: var(--node-font);
+		font-size: 10px;
+		font-weight: 600;
+		letter-spacing: 0.02em;
+		color: var(--color-text-secondary);
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-radius: 6px;
+		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+	}
+
+	:global(.dark) .edge-label {
+		background: #111827;
+		border-color: #334155;
+		color: #94a3b8;
+	}
+</style>

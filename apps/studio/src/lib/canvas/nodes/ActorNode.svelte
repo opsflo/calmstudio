@@ -6,15 +6,13 @@
 	let { id, data, selected }: NodeProps = $props();
 </script>
 
-<NodeResizer minWidth={80} minHeight={100} isVisible={selected} />
+<NodeResizer minWidth={140} minHeight={64} isVisible={selected} />
 
-<!-- Default handles -->
 <Handle type="target" position={Position.Top} />
 <Handle type="source" position={Position.Bottom} />
 <Handle type="target" position={Position.Left} />
 <Handle type="source" position={Position.Right} />
 
-<!-- Interface handles -->
 {#if data.interfaces}
 	{#each data.interfaces as iface, i}
 		<Handle
@@ -26,54 +24,83 @@
 	{/each}
 {/if}
 
-<div class="actor-node" class:selected>
-	<!-- Person silhouette: head circle + body trapezoid -->
-	<svg width="48" height="60" viewBox="0 0 48 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-		<!-- Head -->
-		<circle cx="24" cy="13" r="10" stroke="currentColor" stroke-width="2" fill="none" />
-		<!-- Body (trapezoid) -->
-		<path d="M10 54 L14 32 Q24 26 34 32 L38 54 Z" stroke="currentColor" stroke-width="2" fill="none" />
-		<!-- Arms -->
-		<line x1="6" y1="36" x2="42" y2="36" stroke="currentColor" stroke-width="2" />
-	</svg>
-
-	<div class="label">{data.label ?? data.calmId}</div>
-	<div class="type-badge">actor</div>
+<div class="node-card" class:selected>
+	<div class="icon-container">
+		<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+			<circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="1.5" />
+			<path d="M5.5 21c0-3.5 2.9-6.5 6.5-6.5s6.5 3 6.5 6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+		</svg>
+	</div>
+	<div class="node-content">
+		<span class="label">{data.label ?? data.calmId}</span>
+		<span class="type-badge">Actor</span>
+	</div>
 </div>
 
 <style>
-	.actor-node {
+	.node-card {
 		display: flex;
-		flex-direction: column;
 		align-items: center;
-		padding: 8px;
-		min-width: 80px;
-		min-height: 100px;
-		color: #1a1a1a;
+		gap: 10px;
+		padding: 10px 14px;
+		min-width: 140px;
+		background: var(--node-actor-bg);
+		border: 1.5px solid var(--node-actor-border);
+		border-radius: 10px;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+		transition: all 0.15s ease;
+		font-family: var(--node-font);
 		cursor: default;
 		user-select: none;
 	}
 
-	.actor-node.selected svg circle,
-	.actor-node.selected svg path,
-	.actor-node.selected svg line {
-		stroke: #3b82f6;
+	.node-card:hover {
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
+	}
+
+	.node-card.selected {
+		border-color: var(--node-selected-ring);
+		box-shadow: 0 0 0 2px var(--node-selected-ring), 0 2px 8px rgba(99, 102, 241, 0.12);
+	}
+
+	.icon-container {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 36px;
+		height: 36px;
+		border-radius: 8px;
+		background: var(--node-actor-border);
+		color: var(--node-actor-stroke);
+		flex-shrink: 0;
+	}
+
+	:global(.dark) .icon-container {
+		background: rgba(96, 165, 250, 0.12);
+	}
+
+	.node-content {
+		display: flex;
+		flex-direction: column;
+		min-width: 0;
 	}
 
 	.label {
-		font-size: 11px;
+		font-size: 12px;
 		font-weight: 600;
-		text-align: center;
-		margin-top: 4px;
-		max-width: 100px;
-		word-break: break-word;
+		color: var(--node-label-color);
+		line-height: 1.3;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		max-width: 120px;
 	}
 
 	.type-badge {
-		font-size: 9px;
-		color: #6b7280;
-		text-transform: uppercase;
-		letter-spacing: 0.05em;
-		margin-top: 2px;
+		font-size: 10px;
+		font-weight: 500;
+		color: var(--node-actor-badge);
+		letter-spacing: 0.02em;
+		margin-top: 1px;
 	}
 </style>
