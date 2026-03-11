@@ -45,9 +45,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Code Editor
 
-- [ ] **CODE-01**: User can view and edit CALM JSON in a CodeMirror panel alongside the canvas
-- [ ] **CODE-02**: User can toggle between CALM JSON and calmscript views
-- [ ] **CODE-03**: Code panel has syntax highlighting, line numbers, and error indicators
+- [x] **CODE-01**: User can view and edit CALM JSON in a CodeMirror panel alongside the canvas
+- [x] **CODE-02**: User can toggle between CALM JSON and calmscript views
+- [x] **CODE-03**: Code panel has syntax highlighting, line numbers, and error indicators
 
 ### calmscript DSL
 
@@ -233,9 +233,9 @@ Deferred to future release. Tracked but not in current roadmap.
 | SYNC-02 | Phase 3 | Complete |
 | SYNC-03 | Phase 3 | Complete |
 | SYNC-04 | Phase 3 | Complete |
-| CODE-01 | Phase 3 | Pending |
-| CODE-02 | Phase 3 | Pending |
-| CODE-03 | Phase 3 | Pending |
+| CODE-01 | Phase 3 | Complete |
+| CODE-02 | Phase 3 | Complete |
+| CODE-03 | Phase 3 | Complete |
 | IOEX-01 | Phase 4 | Pending |
 | IOEX-02 | Phase 4 | Pending |
 | IOEX-03 | Phase 4 | Pending |
