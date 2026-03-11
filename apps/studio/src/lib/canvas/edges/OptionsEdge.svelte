@@ -1,0 +1,33 @@
+<!-- SPDX-FileCopyrightText: 2024 CalmStudio contributors - see NOTICE file -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
+<!--
+  OptionsEdge.svelte — CALM "options" relationship edge.
+  Visual style: dotted line (2 4) + open arrowhead marker.
+  Represents an optional or alternative relationship between nodes.
+-->
+<script lang="ts">
+	import { BaseEdge, getSmoothStepPath, type EdgeProps } from '@xyflow/svelte';
+
+	let {
+		id,
+		sourceX,
+		sourceY,
+		targetX,
+		targetY,
+		sourcePosition,
+		targetPosition,
+		style
+	}: EdgeProps = $props();
+
+	const [edgePath] = $derived(
+		getSmoothStepPath({ sourceX, sourceY, sourcePosition, targetX, targetY, targetPosition })
+	);
+</script>
+
+<BaseEdge
+	{id}
+	path={edgePath}
+	markerEnd="url(#marker-arrow-open)"
+	style="stroke-dasharray: 2 4; {style ?? ''}"
+/>
