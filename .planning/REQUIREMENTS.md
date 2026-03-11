@@ -195,13 +195,107 @@ Deferred to future release. Tracked but not in current roadmap.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (Populated during roadmap creation) | | |
+| GOVN-01 | Phase 1 | Pending |
+| GOVN-02 | Phase 1 | Pending |
+| GOVN-03 | Phase 1 | Pending |
+| GOVN-04 | Phase 1 | Pending |
+| GOVN-05 | Phase 1 | Pending |
+| GOVN-06 | Phase 1 | Pending |
+| GOVN-07 | Phase 1 | Pending |
+| GOVN-08 | Phase 1 | Pending |
+| CICD-01 | Phase 1 | Pending |
+| CICD-02 | Phase 1 | Pending |
+| CICD-03 | Phase 1 | Pending |
+| CICD-04 | Phase 1 | Pending |
+| CICD-05 | Phase 1 | Pending |
+| CICD-06 | Phase 1 | Pending |
+| CANV-01 | Phase 2 | Pending |
+| CANV-02 | Phase 2 | Pending |
+| CANV-03 | Phase 2 | Pending |
+| CANV-04 | Phase 2 | Pending |
+| CANV-05 | Phase 2 | Pending |
+| CANV-06 | Phase 2 | Pending |
+| CANV-07 | Phase 2 | Pending |
+| CANV-08 | Phase 2 | Pending |
+| CANV-09 | Phase 2 | Pending |
+| CALM-01 | Phase 2 | Pending |
+| CALM-02 | Phase 2 | Pending |
+| CALM-03 | Phase 2 | Pending |
+| CALM-04 | Phase 2 | Pending |
+| CALM-05 | Phase 2 | Pending |
+| CALM-06 | Phase 2 | Pending |
+| PROP-01 | Phase 3 | Pending |
+| PROP-02 | Phase 3 | Pending |
+| PROP-03 | Phase 3 | Pending |
+| PROP-04 | Phase 3 | Pending |
+| PROP-05 | Phase 3 | Pending |
+| SYNC-01 | Phase 3 | Pending |
+| SYNC-02 | Phase 3 | Pending |
+| SYNC-03 | Phase 3 | Pending |
+| SYNC-04 | Phase 3 | Pending |
+| CODE-01 | Phase 3 | Pending |
+| CODE-02 | Phase 3 | Pending |
+| CODE-03 | Phase 3 | Pending |
+| IOEX-01 | Phase 4 | Pending |
+| IOEX-02 | Phase 4 | Pending |
+| IOEX-03 | Phase 4 | Pending |
+| IOEX-04 | Phase 4 | Pending |
+| IOEX-05 | Phase 4 | Pending |
+| IOEX-06 | Phase 4 | Pending |
+| LAYT-01 | Phase 4 | Pending |
+| LAYT-02 | Phase 4 | Pending |
+| LAYT-03 | Phase 4 | Pending |
+| CSPT-01 | Phase 5 | Pending |
+| CSPT-02 | Phase 5 | Pending |
+| CSPT-03 | Phase 5 | Pending |
+| CSPT-04 | Phase 5 | Pending |
+| CSPT-05 | Phase 5 | Pending |
+| CSPT-06 | Phase 5 | Pending |
+| VALD-01 | Phase 6 | Pending |
+| VALD-02 | Phase 6 | Pending |
+| VALD-03 | Phase 6 | Pending |
+| EXTK-01 | Phase 7 | Pending |
+| EXTK-02 | Phase 7 | Pending |
+| EXTK-03 | Phase 7 | Pending |
+| EXTK-04 | Phase 7 | Pending |
+| EXTK-05 | Phase 7 | Pending |
+| EXTK-06 | Phase 7 | Pending |
+| EXTK-07 | Phase 7 | Pending |
+| EXTK-08 | Phase 7 | Pending |
+| MCPS-01 | Phase 8 | Pending |
+| MCPS-02 | Phase 8 | Pending |
+| MCPS-03 | Phase 8 | Pending |
+| MCPS-04 | Phase 8 | Pending |
+| MCPS-05 | Phase 8 | Pending |
+| MCPS-06 | Phase 8 | Pending |
+| MCPS-07 | Phase 8 | Pending |
+| DESK-01 | Phase 9 | Pending |
+| DESK-02 | Phase 9 | Pending |
+| DESK-03 | Phase 9 | Pending |
+| PATN-01 | Phase 10 | Pending |
+| PATN-02 | Phase 10 | Pending |
+| PATN-03 | Phase 10 | Pending |
+| DOCS-01 | Phase 10 | Pending |
+| DOCS-02 | Phase 10 | Pending |
+| DOCS-03 | Phase 10 | Pending |
+| DOCS-04 | Phase 10 | Pending |
+| DOCS-05 | Phase 10 | Pending |
+| DOCS-06 | Phase 10 | Pending |
+| TEST-01 | Phase 11 | Pending |
+| TEST-02 | Phase 11 | Pending |
+| TEST-03 | Phase 11 | Pending |
+| TEST-04 | Phase 11 | Pending |
+| TEST-05 | Phase 11 | Pending |
+| ECOS-01 | Phase 12 | Pending |
+| ECOS-02 | Phase 12 | Pending |
+| ECOS-03 | Phase 12 | Pending |
+| ECOS-04 | Phase 12 | Pending |
 
 **Coverage:**
 - v1 requirements: 79 total
-- Mapped to phases: 0
-- Unmapped: 79
+- Mapped to phases: 79
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-11*
-*Last updated: 2026-03-11 after initial definition*
+*Last updated: 2026-03-11 after roadmap creation — 79/79 requirements mapped across 12 phases*
