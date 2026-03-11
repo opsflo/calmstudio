@@ -10,6 +10,15 @@ export default defineConfig({
 	ssr: {
 		noExternal: ['@xyflow/svelte']
 	},
+	optimizeDeps: {
+		exclude: [
+			'svelte-codemirror-editor',
+			'codemirror',
+			'@codemirror/lang-json',
+			'@codemirror/lint',
+			'@codemirror/theme-one-dark',
+		]
+	},
 	test: {
 		include: ['src/**/*.test.ts'],
 		environment: 'jsdom',
