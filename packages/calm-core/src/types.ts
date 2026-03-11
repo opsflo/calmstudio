@@ -48,6 +48,8 @@ export interface CalmNode {
   name: string;
   description?: string;
   interfaces?: CalmInterface[];
+  /** Arbitrary key-value metadata for extension without schema changes */
+  customMetadata?: Record<string, string>;
 }
 
 /**
