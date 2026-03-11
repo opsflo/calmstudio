@@ -173,7 +173,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Governance | 2/2 | Complete   | 2026-03-11 |
+| 1. Foundation & Governance | 2/2 | Complete    | 2026-03-11 |
 | 2. CALM Canvas Core | 0/TBD | Not started | - |
 | 3. Properties & Bidirectional Sync | 0/TBD | Not started | - |
 | 4. Import, Export & Layout | 0/TBD | Not started | - |
