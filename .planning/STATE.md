@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 03-properties-bidirectional-sync-01-PLAN.md
-last_updated: "2026-03-11T17:50:41.314Z"
+stopped_at: Completed 03-properties-bidirectional-sync-03-PLAN.md
+last_updated: "2026-03-11T17:56:28.809Z"
 last_activity: 2026-03-11 — Roadmap created; 79 v1 requirements mapped across 12 phases
 progress:
   total_phases: 12
   completed_phases: 2
   total_plans: 13
-  completed_plans: 11
+  completed_plans: 12
   percent: 0
 ---
 
@@ -60,6 +60,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 03-properties-bidirectional-sync P00 | 5min | 2 tasks | 5 files |
 | Phase 03-properties-bidirectional-sync P02 | 8min | 2 tasks | 5 files |
 | Phase 03-properties-bidirectional-sync P01 | 7min | 2 tasks | 5 files |
+| Phase 03-properties-bidirectional-sync P03 | 10min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -98,6 +99,8 @@ Recent decisions affecting current work:
 - [Phase 03-properties-bidirectional-sync]: jsonParseLinter imported from @codemirror/lang-json not @codemirror/lint — only lang-json exports it
 - [Phase 03-properties-bidirectional-sync]: @codemirror/view and @codemirror/state must be directly installed — Rollup cannot resolve transitive deps in SvelteKit builds
 - [Phase 03-properties-bidirectional-sync]: optimizeDeps.exclude required for all @codemirror/* packages — per svelte-codemirror-editor docs for SvelteKit/vite
+- [Phase 03-properties-bidirectional-sync]: onmutate callback propagates through PropertiesPanel to NodeProperties/EdgeProperties — called after each debounced store mutation to re-project canvas
+- [Phase 03-properties-bidirectional-sync]: applyFromCanvas called after undo/redo restores snapshot — code panel always reflects canvas state
 
 ### Pending Todos
 
@@ -111,6 +114,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-11T17:50:41.310Z
-Stopped at: Completed 03-properties-bidirectional-sync-01-PLAN.md
+Last session: 2026-03-11T17:56:28.807Z
+Stopped at: Completed 03-properties-bidirectional-sync-03-PLAN.md
 Resume file: None
