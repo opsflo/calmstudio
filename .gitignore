@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+.svelte-kit/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Editor directories and files
+.DS_Store
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Test output
+coverage/
+playwright-report/
+test-results/
+
+# pnpm
+.pnpm-debug.log
