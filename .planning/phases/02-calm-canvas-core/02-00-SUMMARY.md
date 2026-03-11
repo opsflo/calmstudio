@@ -154,6 +154,18 @@ None - no external service configuration required.
 - Playwright configured and ready for E2E tests (no tests written yet)
 - SvelteKit + Svelte 5 + @xyflow/svelte all installed and configured
 
+## Self-Check: PASSED
+
+All artifacts verified:
+- FOUND: apps/studio/vite.config.ts
+- FOUND: apps/studio/playwright.config.ts
+- FOUND: apps/studio/src/tests/containment.test.ts
+- FOUND: apps/studio/src/tests/history.test.ts
+- FOUND: apps/studio/src/tests/clipboard.test.ts
+- FOUND: apps/studio/src/tests/search.test.ts
+- FOUND: commit 11ccbc2 (Task 1)
+- FOUND: commit c2b712d (Task 2)
+
 ---
 *Phase: 02-calm-canvas-core*
 *Completed: 2026-03-11*
