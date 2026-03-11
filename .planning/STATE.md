@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 02-calm-canvas-core Plan 04 — NodePalette + CalmCanvas + containment wired into interactive diagramming surface
-last_updated: "2026-03-11T12:01:54.814Z"
+stopped_at: Completed 02-calm-canvas-core Plan 05 — undo/redo, copy/paste, dark mode, node search, and keyboard shortcuts wired into CalmCanvas
+last_updated: "2026-03-11T16:57:20.348Z"
 last_activity: 2026-03-11 — Roadmap created; 79 v1 requirements mapped across 12 phases
 progress:
   total_phases: 12
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 8
-  completed_plans: 7
+  completed_plans: 8
   percent: 0
 ---
 
@@ -56,6 +56,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 02-calm-canvas-core P03 | 5 | 2 tasks | 7 files |
 | Phase 02-calm-canvas-core P02 | 3min | 2 tasks | 12 files |
 | Phase 02-calm-canvas-core P04 | 4min | 2 tasks | 6 files |
+| Phase 02-calm-canvas-core P05 | 20min | 3 tasks | 12 files |
 
 ## Accumulated Context
 
@@ -83,6 +84,9 @@ Recent decisions affecting current work:
 - [Phase 02-calm-canvas-core]: resolveNodeType uses Set for O(1) built-in type lookup, returns generic for unknown strings
 - [Phase 02-calm-canvas-core]: NodePalette fires onplacenode as callback prop (Svelte 5 idiom); CalmCanvas exports placeNodeAtCenter() via bind:this
 - [Phase 02-calm-canvas-core]: makeContainment called for both edge-draw and node drag-into-container — both paths create visual nesting
+- [Phase 02-calm-canvas-core]: Svelte 5 module-level $state runes for history/clipboard/theme stores — avoids singleton class pattern, enables reactive exports
+- [Phase 02-calm-canvas-core]: Snapshot-before-mutation undo/redo — pushSnapshot called before every mutation per CALM RESEARCH Pitfall 6
+- [Phase 02-calm-canvas-core]: paste() returns new Node[] to append — caller (CalmCanvas) decides insertion; store has no canvas reference
 
 ### Pending Todos
 
@@ -96,6 +100,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-11T12:01:54.811Z
-Stopped at: Completed 02-calm-canvas-core Plan 04 — NodePalette + CalmCanvas + containment wired into interactive diagramming surface
+Last session: 2026-03-11T16:57:20.345Z
+Stopped at: Completed 02-calm-canvas-core Plan 05 — undo/redo, copy/paste, dark mode, node search, and keyboard shortcuts wired into CalmCanvas
 Resume file: None
