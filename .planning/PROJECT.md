@@ -29,6 +29,11 @@ Make architecture diagrams the source of truth: draw visually, get validated arc
 - [ ] Web component `<calm-diagram>` for universal embedding
 - [ ] VS Code extension with live calmscript preview
 - [ ] GitHub Action for rendering calmscript in PRs and validating CALM in CI
+- [ ] Docusaurus documentation site (architecture docs, ADRs, API reference, contributor guides)
+- [ ] Architecture Decision Records (ADRs) tracked in docs and .planning/
+- [ ] London School TDD — outside-in test development with comprehensive coverage (unit, integration, E2E, component)
+- [ ] FINOS/Linux Foundation governance: Apache 2.0 license, DCO sign-off, CONTRIBUTING.md, CODE_OF_CONDUCT.md, SECURITY.md, NOTICE, MAINTAINERS.md
+- [ ] CI pipeline with DCO verification, license header scanning, test suite, and CALM validation
 
 ### Out of Scope
 
@@ -59,6 +64,12 @@ Make architecture diagrams the source of truth: draw visually, get validated arc
 - **Data format**: CALM JSON as canonical source of truth (FINOS standard)
 - **CALM compatibility**: All output must validate against `calm validate` — extension packs use custom node types, not schema modifications
 - **AI integration**: MCP server for Claude Code; calmscript format must be AI-generatable in ~20 lines for typical architectures
+- **License**: Apache 2.0 — FINOS/Linux Foundation compatible, SPDX headers on all source files
+- **DCO**: Developer Certificate of Origin sign-off required on every commit (`Signed-off-by:`)
+- **FINOS readiness**: Designed from day one for FINOS adoption — open governance, CONTRIBUTING.md, CODE_OF_CONDUCT.md, SECURITY.md, NOTICE, MAINTAINERS.md, CII Best Practices badge readiness
+- **Dependencies**: All must be OSS-compatible with Apache 2.0 (no proprietary deps)
+- **Testing**: London School TDD (outside-in), comprehensive test suite — unit, integration, E2E (Playwright), component tests
+- **Documentation**: Docusaurus site with architecture docs, ADRs, API reference, contributor guides
 
 ## Key Decisions
 
@@ -71,6 +82,9 @@ Make architecture diagrams the source of truth: draw visually, get validated arc
 | MCP server as primary AI integration | Makes CalmStudio the native architecture tool for Claude Code and other AI assistants | — Pending |
 | Tauri 2 for desktop | Smaller bundle than Electron, Rust backend, native file system, cross-platform | — Pending |
 | ELK.js for auto-layout | Hierarchical layout with orthogonal routing — standard for architecture diagrams | — Pending |
+| Apache 2.0 + DCO | Required for FINOS/Linux Foundation adoption; DCO over CLA for lower contributor friction | — Pending |
+| London School TDD | Outside-in testing catches integration issues early; fits well with sync engine and MCP server design | — Pending |
+| Docusaurus for docs | Standard in FINOS ecosystem (CALM itself uses Docusaurus); ADRs, architecture docs, API reference | — Pending |
 
 ---
 *Last updated: 2026-03-11 after initialization*
