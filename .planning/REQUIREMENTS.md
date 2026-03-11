@@ -30,18 +30,18 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Properties & Metadata
 
-- [ ] **PROP-01**: User can edit CALM metadata for selected node (unique-id, name, description, node-type)
-- [ ] **PROP-02**: User can add/edit/remove interfaces on a node (URL, host-port, container-image, port, etc.)
+- [x] **PROP-01**: User can edit CALM metadata for selected node (unique-id, name, description, node-type)
+- [x] **PROP-02**: User can add/edit/remove interfaces on a node (URL, host-port, container-image, port, etc.)
 - [ ] **PROP-03**: User can add/edit/remove CALM controls on nodes and edges (security, compliance, performance)
-- [ ] **PROP-04**: User can add custom metadata key-value pairs to any node or edge
-- [ ] **PROP-05**: User can edit relationship properties (type, protocol, description, source/destination interfaces)
+- [x] **PROP-04**: User can add custom metadata key-value pairs to any node or edge
+- [x] **PROP-05**: User can edit relationship properties (type, protocol, description, source/destination interfaces)
 
 ### Bidirectional Sync
 
-- [ ] **SYNC-01**: Diagram changes automatically update CALM JSON in real-time (forward sync)
-- [ ] **SYNC-02**: CALM JSON edits in code panel automatically update the diagram (reverse sync)
-- [ ] **SYNC-03**: Sync engine prevents infinite loops via direction mutex
-- [ ] **SYNC-04**: CALM JSON is the single canonical source of truth; visual state is derived
+- [x] **SYNC-01**: Diagram changes automatically update CALM JSON in real-time (forward sync)
+- [x] **SYNC-02**: CALM JSON edits in code panel automatically update the diagram (reverse sync)
+- [x] **SYNC-03**: Sync engine prevents infinite loops via direction mutex
+- [x] **SYNC-04**: CALM JSON is the single canonical source of truth; visual state is derived
 
 ### Code Editor
 
@@ -224,15 +224,15 @@ Deferred to future release. Tracked but not in current roadmap.
 | CALM-04 | Phase 2 | Complete |
 | CALM-05 | Phase 2 | Complete |
 | CALM-06 | Phase 2 | Complete |
-| PROP-01 | Phase 3 | Pending |
-| PROP-02 | Phase 3 | Pending |
+| PROP-01 | Phase 3 | Complete |
+| PROP-02 | Phase 3 | Complete |
 | PROP-03 | Phase 3 | Pending |
-| PROP-04 | Phase 3 | Pending |
-| PROP-05 | Phase 3 | Pending |
-| SYNC-01 | Phase 3 | Pending |
-| SYNC-02 | Phase 3 | Pending |
-| SYNC-03 | Phase 3 | Pending |
-| SYNC-04 | Phase 3 | Pending |
+| PROP-04 | Phase 3 | Complete |
+| PROP-05 | Phase 3 | Complete |
+| SYNC-01 | Phase 3 | Complete |
+| SYNC-02 | Phase 3 | Complete |
+| SYNC-03 | Phase 3 | Complete |
+| SYNC-04 | Phase 3 | Complete |
 | CODE-01 | Phase 3 | Pending |
 | CODE-02 | Phase 3 | Pending |
 | CODE-03 | Phase 3 | Pending |
