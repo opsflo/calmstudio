@@ -52,7 +52,7 @@ Plans:
   3. User can select multiple nodes, move, resize, and delete them, and undo/redo every action with Cmd+Z/Cmd+Shift+Z
   4. Containment relationships (deployed-in, composed-of) render as Svelte Flow sub-flows with parent-child visual nesting
   5. User can toggle dark mode and light mode, and zoom, pan, and search nodes by name or type
-**Plans:** 1/6 plans executed
+**Plans:** 2/6 plans executed
 Plans:
 - [ ] 02-00-PLAN.md — Wave 0: Test infrastructure (Vitest + Playwright) and stub test files
 - [ ] 02-01-PLAN.md — Scaffold SvelteKit app, install Svelte Flow + Tailwind, define CALM core types
@@ -181,7 +181,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & Governance | 2/2 | Complete    | 2026-03-11 |
-| 2. CALM Canvas Core | 1/6 | In Progress|  |
+| 2. CALM Canvas Core | 2/6 | In Progress|  |
 | 3. Properties & Bidirectional Sync | 0/TBD | Not started | - |
 | 4. Import, Export & Layout | 0/TBD | Not started | - |
 | 5. calmscript DSL | 0/TBD | Not started | - |

@@ -21,7 +21,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### CALM Nodes & Relationships
 
-- [ ] **CALM-01**: All 9 CALM node types rendered as distinct custom Svelte components (actor, system, service, database, network, webclient, ecosystem, ldap, data-asset)
+- [x] **CALM-01**: All 9 CALM node types rendered as distinct custom Svelte components (actor, system, service, database, network, webclient, ecosystem, ldap, data-asset)
 - [ ] **CALM-02**: Custom node types supported (any string) rendered via GenericNode component
 - [ ] **CALM-03**: All 5 CALM relationship types rendered as distinct edge styles (connects, interacts, deployed-in, composed-of, options)
 - [ ] **CALM-04**: CALM interfaces rendered as typed handles on node edges
@@ -218,7 +218,7 @@ Deferred to future release. Tracked but not in current roadmap.
 | CANV-07 | Phase 2 | Complete |
 | CANV-08 | Phase 2 | Complete |
 | CANV-09 | Phase 2 | Complete |
-| CALM-01 | Phase 2 | Pending |
+| CALM-01 | Phase 2 | Complete |
 | CALM-02 | Phase 2 | Pending |
 | CALM-03 | Phase 2 | Pending |
 | CALM-04 | Phase 2 | Pending |
