@@ -3,8 +3,8 @@
 
 <script lang="ts">
 	import { EditorView } from '@codemirror/view';
-	import { json } from '@codemirror/lang-json';
-	import { linter, lintGutter, jsonParseLinter } from '@codemirror/lint';
+	import { json, jsonParseLinter } from '@codemirror/lang-json';
+	import { linter, lintGutter } from '@codemirror/lint';
 	import { oneDark } from '@codemirror/theme-one-dark';
 	import type { Extension } from '@codemirror/state';
 	import CodeMirror from 'svelte-codemirror-editor';

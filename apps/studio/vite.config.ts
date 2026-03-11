@@ -14,6 +14,8 @@ export default defineConfig({
 		exclude: [
 			'svelte-codemirror-editor',
 			'codemirror',
+			'@codemirror/view',
+			'@codemirror/state',
 			'@codemirror/lang-json',
 			'@codemirror/lint',
 			'@codemirror/theme-one-dark',

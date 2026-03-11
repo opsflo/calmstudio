@@ -44,6 +44,12 @@ importers:
       '@codemirror/lint':
         specifier: ^6.9.5
         version: 6.9.5
+      '@codemirror/state':
+        specifier: ^6.5.4
+        version: 6.5.4
+      '@codemirror/view':
+        specifier: ^6.39.17
+        version: 6.39.17
       '@xyflow/svelte':
         specifier: ^1.5.1
         version: 1.5.1(svelte@5.53.10)
