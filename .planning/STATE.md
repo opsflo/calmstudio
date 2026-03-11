@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 03-properties-bidirectional-sync-00-PLAN.md
-last_updated: "2026-03-11T17:40:58.297Z"
+stopped_at: Completed 03-properties-bidirectional-sync-02-PLAN.md
+last_updated: "2026-03-11T17:47:43.482Z"
 last_activity: 2026-03-11 — Roadmap created; 79 v1 requirements mapped across 12 phases
 progress:
   total_phases: 12
   completed_phases: 2
   total_plans: 13
-  completed_plans: 9
+  completed_plans: 10
   percent: 0
 ---
 
@@ -58,6 +58,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 02-calm-canvas-core P04 | 4min | 2 tasks | 6 files |
 | Phase 02-calm-canvas-core P05 | 20min | 3 tasks | 12 files |
 | Phase 03-properties-bidirectional-sync P00 | 5min | 2 tasks | 5 files |
+| Phase 03-properties-bidirectional-sync P02 | 8min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -91,6 +92,8 @@ Recent decisions affecting current work:
 - [Phase 03-properties-bidirectional-sync]: projection.ts imports no .svelte.ts files — stays pure TypeScript for vitest testability
 - [Phase 03-properties-bidirectional-sync]: syncing mutex uses plain boolean (not $state) — no reactivity needed, avoids overhead
 - [Phase 03-properties-bidirectional-sync]: Mutation functions do NOT use the mutex — called from UI event handlers, not sync paths
+- [Phase 03-properties-bidirectional-sync]: onBeforeFirstEdit callback prop — properties components lack canvas nodes/edges; parent provides snapshot closure
+- [Phase 03-properties-bidirectional-sync]: PropertiesPanel collapsed state uses width:40px CSS + class:collapsed — paneforge Pane handles actual resize
 
 ### Pending Todos
 
@@ -104,6 +107,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-11T17:40:58.295Z
-Stopped at: Completed 03-properties-bidirectional-sync-00-PLAN.md
+Last session: 2026-03-11T17:47:35.029Z
+Stopped at: Completed 03-properties-bidirectional-sync-02-PLAN.md
 Resume file: None

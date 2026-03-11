@@ -32,7 +32,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [x] **PROP-01**: User can edit CALM metadata for selected node (unique-id, name, description, node-type)
 - [x] **PROP-02**: User can add/edit/remove interfaces on a node (URL, host-port, container-image, port, etc.)
-- [ ] **PROP-03**: User can add/edit/remove CALM controls on nodes and edges (security, compliance, performance)
+- [x] **PROP-03**: User can add/edit/remove CALM controls on nodes and edges (security, compliance, performance)
 - [x] **PROP-04**: User can add custom metadata key-value pairs to any node or edge
 - [x] **PROP-05**: User can edit relationship properties (type, protocol, description, source/destination interfaces)
 
@@ -226,7 +226,7 @@ Deferred to future release. Tracked but not in current roadmap.
 | CALM-06 | Phase 2 | Complete |
 | PROP-01 | Phase 3 | Complete |
 | PROP-02 | Phase 3 | Complete |
-| PROP-03 | Phase 3 | Pending |
+| PROP-03 | Phase 3 | Complete |
 | PROP-04 | Phase 3 | Complete |
 | PROP-05 | Phase 3 | Complete |
 | SYNC-01 | Phase 3 | Complete |
