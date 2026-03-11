@@ -18,3 +18,39 @@ body {
 	height: 100%;
 	overflow: hidden;
 }
+
+/* ─── Dark mode — Svelte Flow overrides ──────────────────────────────────────
+   Svelte Flow uses CSS custom properties for theming.
+   We override them under .dark (applied to <html> by theme.svelte.ts).
+   Source: https://svelteflow.dev/api-reference/types/react-flow-props#style
+*/
+
+.dark .svelte-flow {
+	/* Canvas background */
+	--xy-background-color-default: theme(colors.neutral.950);
+	--xy-background-pattern-color-default: theme(colors.neutral.800);
+
+	/* Node defaults */
+	--xy-node-background-color-default: theme(colors.neutral.900);
+	--xy-node-border-color-default: theme(colors.neutral.600);
+	--xy-node-color-default: theme(colors.neutral.100);
+	--xy-node-boxshadow-default: none;
+	--xy-node-boxshadow-selected-default: 0 0 0 1.5px theme(colors.blue.400);
+
+	/* Edge defaults */
+	--xy-edge-stroke-default: theme(colors.neutral.400);
+	--xy-edge-stroke-selected-default: theme(colors.blue.400);
+
+	/* Handle defaults */
+	--xy-handle-background-color-default: theme(colors.neutral.400);
+	--xy-handle-border-color-default: theme(colors.neutral.600);
+
+	/* Attribution / controls */
+	--xy-attribution-background-color-default: theme(colors.neutral.800);
+	--xy-controls-button-background-color-default: theme(colors.neutral.800);
+	--xy-controls-button-border-color-default: theme(colors.neutral.700);
+	--xy-controls-button-color-default: theme(colors.neutral.200);
+	--xy-controls-button-background-color-hover-default: theme(colors.neutral.700);
+	--xy-minimap-background-color-default: theme(colors.neutral.900);
+	--xy-minimap-node-background-color-default: theme(colors.neutral.700);
+}

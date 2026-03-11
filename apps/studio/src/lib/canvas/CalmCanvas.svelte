@@ -13,11 +13,15 @@
   - Creates containment when deployed-in/composed-of edges are drawn
   - Detects node drag-into-container and auto-creates containment
   - Renders EdgeMarkers.svelte once (shared SVG defs for all edges)
+  - Wires undo/redo (Cmd+Z/Cmd+Shift+Z), copy/paste (Cmd+C/V)
+  - Wires search panel (Cmd+F), dark mode keyboard shortcut
+  - Calls pushSnapshot BEFORE every mutation (RESEARCH Pitfall 6)
 
   Key decisions:
   - MUST use $state.raw for nodes/edges — Svelte Flow mutates arrays internally;
     deep $state() reactivity causes double-render loops (RESEARCH Pitfall 1)
   - makeContainment is called for both edge-draw and node drag-into (per user decision)
+  - @svelte-put/shortcut action used for declarative keyboard shortcut binding
 -->
 <script lang="ts">
 	import {
@@ -28,12 +32,16 @@
 		type Connection,
 		type NodeDragEvent,
 	} from '@xyflow/svelte';
+	import { shortcut } from '@svelte-put/shortcut';
 	import { nanoid } from 'nanoid';
 
 	import { nodeTypes, resolveNodeType } from './nodeTypes';
 	import { edgeTypes, DEFAULT_EDGE_TYPE } from './edgeTypes';
 	import { makeContainment, isContainmentType } from './containment';
 	import EdgeMarkers from './edges/EdgeMarkers.svelte';
+	import NodeSearch from '$lib/search/NodeSearch.svelte';
+	import { pushSnapshot, undo, redo } from '$lib/stores/history.svelte';
+	import { copy, paste } from '$lib/stores/clipboard.svelte';
 
 	import '@xyflow/svelte/dist/style.css';
 
@@ -54,6 +62,25 @@
 
 	const { screenToFlowPosition } = useSvelteFlow();
 
+	// ─── Search state ─────────────────────────────────────────────────────────
+
+	let searchOpen = $state(false);
+
+	function handleSearchResults(ids: string[]) {
+		if (ids.length === 0) return;
+		// Highlight matching nodes by setting selected: true
+		nodes = nodes.map((n) => ({
+			...n,
+			selected: ids.includes(n.id),
+		}));
+	}
+
+	function closeSearch() {
+		searchOpen = false;
+		// Deselect all nodes when search closes
+		nodes = nodes.map((n) => ({ ...n, selected: false }));
+	}
+
 	// ─── DnD drop handler ────────────────────────────────────────────────────
 
 	function handleDragOver(event: DragEvent) {
@@ -67,6 +94,8 @@
 		event.preventDefault();
 		const calmType = event.dataTransfer?.getData('application/calm-node-type');
 		if (!calmType) return;
+
+		pushSnapshot(nodes, edges);
 
 		const position = screenToFlowPosition({ x: event.clientX, y: event.clientY });
 		const id = nanoid();
@@ -100,6 +129,8 @@
 		const id = nanoid();
 		const resolvedType = resolveNodeType(calmType);
 
+		pushSnapshot(nodes, edges);
+
 		const newNode: Node = {
 			id,
 			type: resolvedType,
@@ -117,6 +148,8 @@
 	// ─── Edge creation ───────────────────────────────────────────────────────
 
 	function handleConnect(connection: Connection) {
+		pushSnapshot(nodes, edges);
+
 		const edgeType = DEFAULT_EDGE_TYPE;
 		const newEdge: Edge = {
 			id: nanoid(),
@@ -168,9 +201,52 @@
 
 		for (const container of containers) {
 			if (boundsOverlap(draggedNode.position, container.position)) {
+				pushSnapshot(nodes, edges);
 				nodes = makeContainment(container.id, draggedNode.id, nodes);
 				return;
 			}
+		}
+	}
+
+	// ─── Keyboard shortcuts ───────────────────────────────────────────────────
+
+	function handleUndo() {
+		const snapshot = undo();
+		if (snapshot) {
+			nodes = snapshot.nodes;
+			edges = snapshot.edges;
+		}
+	}
+
+	function handleRedo() {
+		const snapshot = redo();
+		if (snapshot) {
+			nodes = snapshot.nodes;
+			edges = snapshot.edges;
+		}
+	}
+
+	function handleCopy() {
+		copy(nodes);
+	}
+
+	function handlePaste() {
+		const newNodes = paste(nodes);
+		if (newNodes.length > 0) {
+			pushSnapshot(nodes, edges);
+			nodes = [...nodes, ...newNodes];
+		}
+	}
+
+	function handleSelectAll() {
+		nodes = nodes.map((n) => ({ ...n, selected: true }));
+	}
+
+	function handleToggleSearch() {
+		searchOpen = !searchOpen;
+		if (!searchOpen) {
+			// Clear search highlights when closing
+			nodes = nodes.map((n) => ({ ...n, selected: false }));
 		}
 	}
 </script>
@@ -179,13 +255,25 @@
   Full-size canvas wrapper. ondragover + ondrop handle palette drops.
   The wrapper div must fill its parent (h-full w-full) so SvelteFlow
   has a proper measurement context.
+
+  Keyboard shortcuts are bound via @svelte-put/shortcut action on the wrapper div.
 -->
 <div
-	class="h-full w-full"
+	class="relative h-full w-full"
 	ondragover={handleDragOver}
 	ondrop={handleDrop}
 	role="main"
 	aria-label="CALM diagram canvas"
+	use:shortcut={{
+		trigger: [
+			{ key: 'z', modifier: ['meta'], callback: handleUndo },
+			{ key: 'z', modifier: ['meta', 'shift'], callback: handleRedo },
+			{ key: 'c', modifier: ['meta'], callback: handleCopy },
+			{ key: 'v', modifier: ['meta'], callback: handlePaste },
+			{ key: 'a', modifier: ['meta'], callback: handleSelectAll },
+			{ key: 'f', modifier: ['meta'], callback: handleToggleSearch },
+		],
+	}}
 >
 	<SvelteFlow
 		bind:nodes
@@ -205,4 +293,13 @@
 		<!-- Shared SVG marker defs — rendered once, referenced by all edge components -->
 		<EdgeMarkers />
 	</SvelteFlow>
+
+	<!-- Floating search panel — shown when Cmd+F is pressed -->
+	{#if searchOpen}
+		<NodeSearch
+			{nodes}
+			onresults={handleSearchResults}
+			onclose={closeSearch}
+		/>
+	{/if}
 </div>
