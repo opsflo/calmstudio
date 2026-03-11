@@ -71,7 +71,13 @@ Plans:
   3. Editing the canvas (moving a node, adding an edge) updates the CALM JSON in the code panel in real time
   4. Rapid back-and-forth edits between canvas and code panel never cause an infinite update loop or UI freeze
   5. User can toggle the code panel between CALM JSON and calmscript views
-**Plans**: TBD
+**Plans:** 5 plans
+Plans:
+- [ ] 03-00-PLAN.md — TDD: CALM model store, projection functions, direction mutex, property mutations
+- [ ] 03-01-PLAN.md — Install deps, CodeMirror code panel, paneforge resizable layout
+- [ ] 03-02-PLAN.md — Properties panel components (node, edge, interfaces, custom metadata)
+- [ ] 03-03-PLAN.md — Wire bidirectional sync engine (forward + reverse + selection scroll)
+- [ ] 03-04-PLAN.md — Visual verification of complete Phase 3 deliverable
 
 ### Phase 4: Import, Export & Layout
 **Goal**: Architects can bring existing CALM JSON into the tool, arrange it automatically, and export diagrams in any format they need
@@ -176,13 +182,13 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10 → 11 → 12
+Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10 -> 11 -> 12
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & Governance | 2/2 | Complete    | 2026-03-11 |
 | 2. CALM Canvas Core | 3/6 | In Progress|  |
-| 3. Properties & Bidirectional Sync | 0/TBD | Not started | - |
+| 3. Properties & Bidirectional Sync | 0/5 | Not started | - |
 | 4. Import, Export & Layout | 0/TBD | Not started | - |
 | 5. calmscript DSL | 0/TBD | Not started | - |
 | 6. CALM Validation | 0/TBD | Not started | - |
