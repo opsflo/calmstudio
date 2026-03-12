@@ -3,46 +3,74 @@
 
 <script lang="ts">
 	import { useDnD } from './DnDProvider.svelte';
+	import { getAllPacks, initAllPacks } from '@calmstudio/extensions';
+	import type { PackDefinition, NodeTypeEntry } from '@calmstudio/extensions';
+
+	// Register all packs on import so they're available immediately
+	initAllPacks();
 
 	const dnd = useDnD();
 
 	let { onplacenode }: { onplacenode?: (type: string) => void } = $props();
 
-	const CALM_TYPES = [
-		'actor',
-		'system',
-		'service',
-		'database',
-		'network',
-		'webclient',
-		'ecosystem',
-		'ldap',
-		'data-asset',
-	] as const;
-
 	let searchQuery = $state('');
 	let showCustomInput = $state(false);
 	let customTypeValue = $state('');
 
-	const filteredTypes = $derived(
-		searchQuery.trim() === ''
-			? ([...CALM_TYPES] as string[])
-			: CALM_TYPES.filter((t) => t.includes(searchQuery.toLowerCase()))
-	);
+	// Track expand/collapse state per pack id. Core starts expanded; others collapsed.
+	let expandedSections = $state<Record<string, boolean>>({ core: true });
 
-	function handleDragStart(event: DragEvent, type: string) {
+	const allPacks = $derived(getAllPacks());
+
+	/** Flat list of all nodes across all packs for search */
+	interface SearchResult {
+		node: NodeTypeEntry;
+		pack: PackDefinition;
+	}
+
+	const searchResults = $derived((): SearchResult[] => {
+		if (searchQuery.trim() === '') return [];
+		const query = searchQuery.toLowerCase();
+		const results: SearchResult[] = [];
+		for (const pack of allPacks) {
+			for (const node of pack.nodes) {
+				if (
+					node.label.toLowerCase().includes(query) ||
+					node.typeId.toLowerCase().includes(query)
+				) {
+					results.push({ node, pack });
+				}
+			}
+		}
+		return results;
+	});
+
+	const isSearching = $derived(searchQuery.trim() !== '');
+
+	function toggleSection(packId: string) {
+		expandedSections = {
+			...expandedSections,
+			[packId]: !expandedSections[packId],
+		};
+	}
+
+	function isSectionExpanded(packId: string): boolean {
+		return expandedSections[packId] ?? false;
+	}
+
+	function handleDragStart(event: DragEvent, typeId: string) {
 		if (!event.dataTransfer) return;
-		event.dataTransfer.setData('application/calm-node-type', type);
+		event.dataTransfer.setData('application/calm-node-type', typeId);
 		event.dataTransfer.effectAllowed = 'copy';
-		dnd.setDragType(type);
+		dnd.setDragType(typeId);
 	}
 
 	function handleDragEnd() {
 		dnd.setDragType(null);
 	}
 
-	function handleClick(type: string) {
-		onplacenode?.(type);
+	function handleClick(typeId: string) {
+		onplacenode?.(typeId);
 	}
 
 	function handleCustomKeydown(event: KeyboardEvent) {
@@ -57,65 +85,6 @@
 			showCustomInput = false;
 			customTypeValue = '';
 		}
-	}
-
-	/** Returns the CSS custom property prefix for a node type's color */
-	function getColorVar(type: string): string {
-		return `--node-${type}`;
-	}
-
-	function getIcon(type: string): string {
-		switch (type) {
-			case 'actor':
-				return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-					<circle cx="12" cy="7" r="4"/><path d="M5.5 21c0-3.5 2.9-6.5 6.5-6.5s6.5 3 6.5 6.5" stroke-linecap="round"/>
-				</svg>`;
-			case 'system':
-				return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-					<rect x="3" y="3" width="18" height="18" rx="2"/><rect x="7" y="7" width="10" height="10" rx="1" stroke-width="1.2"/>
-				</svg>`;
-			case 'service':
-				return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-					<circle cx="12" cy="12" r="3"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72 1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke-linecap="round"/>
-				</svg>`;
-			case 'database':
-				return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-					<ellipse cx="12" cy="5.5" rx="8" ry="2.5"/><path d="M4 5.5v13c0 1.38 3.58 2.5 8 2.5s8-1.12 8-2.5v-13"/>
-				</svg>`;
-			case 'network':
-				return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-					<path d="M6.5 19c-2.5 0-4.5-2-4.5-4.5 0-2.2 1.6-4.1 3.7-4.4C5.9 7.3 8.2 5 11 5c2.4 0 4.5 1.6 5.3 3.8.4-.2.8-.3 1.2-.3 1.9 0 3.5 1.6 3.5 3.5s-1.6 3.5-3.5 3.5H6.5Z" stroke-linejoin="round"/>
-				</svg>`;
-			case 'webclient':
-				return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-					<rect x="2" y="3" width="20" height="18" rx="2"/><path d="M2 8h20"/><circle cx="5.5" cy="5.5" r="1" fill="currentColor" stroke="none"/><circle cx="8.5" cy="5.5" r="1" fill="currentColor" stroke="none"/>
-				</svg>`;
-			case 'ecosystem':
-				return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-					<path d="M12 2l8.5 5v10L12 22l-8.5-5V7L12 2Z" stroke-linejoin="round"/>
-				</svg>`;
-			case 'ldap':
-				return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-					<path d="M12 2l8 3.5V11c0 5-3.5 9.7-8 11-4.5-1.3-8-6-8-11V5.5L12 2Z" stroke-linejoin="round"/>
-					<circle cx="12" cy="10" r="2" stroke-width="1.2"/><path d="M12 12v4M12 14h2" stroke-width="1.2" stroke-linecap="round"/>
-				</svg>`;
-			case 'data-asset':
-				return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-					<path d="M6 2h9l5 5v15H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z" stroke-linejoin="round"/><path d="M15 2v5h5"/>
-					<path d="M8 10h8M8 13h8M8 16h5" stroke-width="1.2" stroke-linecap="round"/>
-				</svg>`;
-			default:
-				return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 2">
-					<rect x="3" y="3" width="18" height="18" rx="3"/>
-				</svg>`;
-		}
-	}
-
-	function getLabel(type: string): string {
-		return type
-			.split('-')
-			.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-			.join(' ');
 	}
 </script>
 
@@ -140,7 +109,7 @@
 			</svg>
 			<input
 				type="search"
-				placeholder="Search..."
+				placeholder="Search all packs..."
 				bind:value={searchQuery}
 				class="search-input"
 				aria-label="Search node types"
@@ -148,37 +117,101 @@
 		</div>
 	</div>
 
-	<!-- Palette items -->
-	<ul class="palette-list" role="list" aria-label="Node type list">
-		{#each filteredTypes as type (type)}
-			<li>
-				<button
-					type="button"
-					draggable="true"
-					ondragstart={(e) => handleDragStart(e, type)}
-					ondragend={handleDragEnd}
-					ondblclick={() => handleClick(type)}
-					class="palette-item"
-					style="--item-border: var({getColorVar(type)}-border); --item-stroke: var({getColorVar(type)}-stroke); --item-bg: var({getColorVar(type)}-bg);"
-					aria-label="Drag or double-click to place {getLabel(type)} node"
-					title="Drag to canvas or double-click to place"
-				>
-					<span class="item-icon" style="background: var({getColorVar(type)}-border); color: var({getColorVar(type)}-stroke);">
-						{@html getIcon(type)}
-					</span>
-					<span class="item-label">{getLabel(type)}</span>
-				</button>
-			</li>
-		{/each}
+	<!-- Main content: search results OR collapsible sections -->
+	<div class="palette-body">
+		{#if isSearching}
+			<!-- Search results: flat list with pack badge attribution -->
+			<ul class="palette-list" role="list" aria-label="Search results">
+				{#each searchResults() as { node, pack } (node.typeId)}
+					<li>
+						<button
+							type="button"
+							draggable="true"
+							ondragstart={(e) => handleDragStart(e, node.typeId)}
+							ondragend={handleDragEnd}
+							ondblclick={() => handleClick(node.typeId)}
+							class="palette-item"
+							aria-label="Drag or double-click to place {node.label} node"
+							title={node.description ?? node.label}
+						>
+							<span class="item-icon" style="background: {node.color.border}20; color: {node.color.stroke};">
+								{@html node.icon}
+							</span>
+							<span class="item-label">{node.label}</span>
+							{#if pack.color.badge}
+								<span class="pack-badge" style="color: {pack.color.stroke}; border-color: {pack.color.border}40;">
+									{pack.color.badge}
+								</span>
+							{/if}
+						</button>
+					</li>
+				{/each}
 
-		{#if filteredTypes.length === 0}
-			<li class="empty-state">
-				No match for "{searchQuery}"
-			</li>
+				{#if searchResults().length === 0}
+					<li class="empty-state">
+						No match for "{searchQuery}"
+					</li>
+				{/if}
+			</ul>
+		{:else}
+			<!-- Collapsible pack sections -->
+			{#each allPacks as pack (pack.id)}
+				<div class="pack-section">
+					<!-- Section header -->
+					<button
+						type="button"
+						class="section-header"
+						class:expanded={isSectionExpanded(pack.id)}
+						onclick={() => toggleSection(pack.id)}
+						aria-expanded={isSectionExpanded(pack.id)}
+						aria-label="Toggle {pack.label} section"
+						style="--pack-color: {pack.color.border};"
+					>
+						<svg
+							class="chevron"
+							class:rotated={isSectionExpanded(pack.id)}
+							viewBox="0 0 16 16"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							aria-hidden="true"
+						>
+							<path d="M4 6l4 4 4-4" stroke-linecap="round" stroke-linejoin="round"/>
+						</svg>
+						<span class="section-label">{pack.label}</span>
+						<span class="section-count">{pack.nodes.length}</span>
+					</button>
+
+					<!-- Section body -->
+					{#if isSectionExpanded(pack.id)}
+						<ul class="palette-list section-body" role="list" aria-label="{pack.label} nodes">
+							{#each pack.nodes as node (node.typeId)}
+								<li>
+									<button
+										type="button"
+										draggable="true"
+										ondragstart={(e) => handleDragStart(e, node.typeId)}
+										ondragend={handleDragEnd}
+										ondblclick={() => handleClick(node.typeId)}
+										class="palette-item"
+										aria-label="Drag or double-click to place {node.label} node"
+										title={node.description ?? node.label}
+									>
+										<span class="item-icon" style="background: {node.color.border}20; color: {node.color.stroke};">
+											{@html node.icon}
+										</span>
+										<span class="item-label">{node.label}</span>
+									</button>
+								</li>
+							{/each}
+						</ul>
+					{/if}
+				</div>
+			{/each}
 		{/if}
-	</ul>
+	</div>
 
-	<!-- Custom node entry -->
+	<!-- Custom node entry (always at bottom) -->
 	<div class="palette-footer">
 		{#if showCustomInput}
 			<input
@@ -236,6 +269,7 @@
 		gap: 8px;
 		padding: 14px 16px;
 		border-bottom: 1px solid var(--color-border);
+		flex-shrink: 0;
 	}
 
 	:global(.dark) .palette-header {
@@ -267,6 +301,7 @@
 	/* Search */
 	.search-wrapper {
 		padding: 10px 12px;
+		flex-shrink: 0;
 	}
 
 	.search-container {
@@ -295,6 +330,7 @@
 		border-radius: 8px;
 		outline: none;
 		transition: all 0.15s ease;
+		box-sizing: border-box;
 	}
 
 	.search-input::placeholder {
@@ -321,13 +357,22 @@
 		box-shadow: 0 0 0 2px rgba(129, 140, 248, 0.15);
 	}
 
-	/* Palette list */
-	.palette-list {
+	/* Scrollable body */
+	.palette-body {
 		flex: 1;
 		overflow-y: auto;
+	}
+
+	/* Palette list */
+	.palette-list {
 		padding: 4px 8px;
 		margin: 0;
 		list-style: none;
+	}
+
+	.section-body {
+		padding-top: 2px;
+		padding-bottom: 4px;
 	}
 
 	.palette-item {
@@ -369,7 +414,7 @@
 	}
 
 	:global(.dark) .item-icon {
-		background: color-mix(in srgb, var(--item-stroke) 12%, transparent) !important;
+		background: rgba(255, 255, 255, 0.06) !important;
 	}
 
 	.item-label {
@@ -377,6 +422,10 @@
 		font-weight: 500;
 		color: var(--color-text-secondary);
 		transition: color 0.15s ease;
+		flex: 1;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
 	}
 
 	.palette-item:hover .item-label {
@@ -391,6 +440,17 @@
 		color: #e2e8f0;
 	}
 
+	/* Pack badge in search results */
+	.pack-badge {
+		font-size: 9px;
+		font-weight: 600;
+		padding: 1px 4px;
+		border-radius: 3px;
+		border: 1px solid;
+		flex-shrink: 0;
+		white-space: nowrap;
+	}
+
 	.empty-state {
 		padding: 20px 12px;
 		text-align: center;
@@ -398,10 +458,91 @@
 		color: var(--color-text-tertiary);
 	}
 
+	/* Pack section headers */
+	.pack-section {
+		border-bottom: 1px solid var(--color-border);
+	}
+
+	.pack-section:last-child {
+		border-bottom: none;
+	}
+
+	:global(.dark) .pack-section {
+		border-color: #1e293b;
+	}
+
+	.section-header {
+		display: flex;
+		width: 100%;
+		align-items: center;
+		gap: 6px;
+		padding: 8px 12px;
+		border: none;
+		background: transparent;
+		cursor: pointer;
+		font-family: inherit;
+		transition: background 0.15s ease;
+		border-left: 2.5px solid var(--pack-color, var(--color-border));
+		box-sizing: border-box;
+	}
+
+	.section-header:hover {
+		background: var(--color-surface-secondary);
+	}
+
+	:global(.dark) .section-header:hover {
+		background: #1a2235;
+	}
+
+	.chevron {
+		width: 12px;
+		height: 12px;
+		color: var(--color-text-tertiary);
+		flex-shrink: 0;
+		transition: transform 0.2s ease;
+	}
+
+	.chevron.rotated {
+		transform: rotate(180deg);
+	}
+
+	:global(.dark) .chevron {
+		color: #64748b;
+	}
+
+	.section-label {
+		font-size: 11px;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		color: var(--color-text-secondary);
+		flex: 1;
+		text-align: left;
+	}
+
+	:global(.dark) .section-label {
+		color: #94a3b8;
+	}
+
+	.section-count {
+		font-size: 10px;
+		font-weight: 500;
+		color: var(--color-text-tertiary);
+		background: var(--color-surface-secondary);
+		border-radius: 10px;
+		padding: 1px 6px;
+	}
+
+	:global(.dark) .section-count {
+		color: #64748b;
+		background: #1e293b;
+	}
+
 	/* Footer */
 	.palette-footer {
 		padding: 8px;
 		border-top: 1px solid var(--color-border);
+		flex-shrink: 0;
 	}
 
 	:global(.dark) .palette-footer {
@@ -466,6 +607,7 @@
 		border-radius: 8px;
 		outline: none;
 		box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.12);
+		box-sizing: border-box;
 	}
 
 	:global(.dark) .custom-input {
