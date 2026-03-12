@@ -53,8 +53,8 @@ created: 2026-03-12
 ## Wave 0 Requirements
 
 - [ ] `packages/mcp-server/src/tests/createArchitecture.test.ts` — stubs for MCPS-01
-- [ ] `packages/mcp-server/src/tests/addNode.test.ts` — stubs for MCPS-02 (add_node)
-- [ ] `packages/mcp-server/src/tests/addRelationship.test.ts` — stubs for MCPS-02 (add_relationship)
+- [ ] `packages/mcp-server/src/tests/nodes.test.ts` — stubs for MCPS-02 (node CRUD)
+- [ ] `packages/mcp-server/src/tests/relationships.test.ts` — stubs for MCPS-02 (relationship CRUD)
 - [ ] `packages/mcp-server/src/tests/validate.test.ts` — stubs for MCPS-03
 - [ ] `packages/mcp-server/src/tests/render.test.ts` — stubs for MCPS-04
 - [ ] `packages/mcp-server/src/tests/io.test.ts` — stubs for MCPS-05
