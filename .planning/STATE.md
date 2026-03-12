@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 05-mcp-server-01-PLAN.md
-last_updated: "2026-03-12T09:18:45Z"
-last_activity: 2026-03-12 — Phase 5 Plan 01 complete; 14 tool handlers implemented with passing tests
+stopped_at: Completed 05-mcp-server-02-PLAN.md
+last_updated: "2026-03-12T09:50:27.200Z"
+last_activity: 2026-03-12 — Phase 5 Plan 02 complete; 21 MCP tools wired, CLI with dual transport, all tests pass
 progress:
   total_phases: 12
   completed_phases: 3
   total_plans: 22
-  completed_plans: 19
+  completed_plans: 20
   percent: 27
 ---
 
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-03-11)
 ## Current Position
 
 Phase: 5 of 12 (MCP Server)
-Plan: 1 of 3 in current phase (1 complete)
-Status: Phase 5 in progress — Plan 01 complete
-Last activity: 2026-03-12 — Phase 5 Plan 01 complete; 14 MCP tool handlers with passing tests
+Plan: 2 of 3 in current phase (2 complete)
+Status: Phase 5 in progress — Plan 02 complete
+Last activity: 2026-03-12 — Phase 5 Plan 02 complete; 21 MCP tools wired, CLI with dual transport, all tests pass
 
 Progress: [███░░░░░░░] 27%
 
@@ -68,6 +68,7 @@ Progress: [███░░░░░░░] 27%
 | Phase 04-import-export-layout P03 | 4min | 2 tasks | 2 files |
 | Phase 05-mcp-server P00 | 8min | 2 tasks | 14 files |
 | Phase 05-mcp-server P01 | 12min | 2 tasks | 8 files |
+| Phase 05-mcp-server P02 | 15min | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -127,6 +128,10 @@ Recent decisions affecting current work:
 - [Phase 05-mcp-server P01]: z.infer<typeof Schema> for tool handler params — avoids exactOptionalPropertyTypes conflicts with Zod output
 - [Phase 05-mcp-server P01]: server.tool(name, description, schema.shape, cb) pattern for MCP SDK registration
 - [Phase 05-mcp-server P01]: Pure logic functions exported alongside registerXxxTools() — enables direct testing without MCP server
+- [Phase 05-mcp-server P02]: ELK default import uses esModuleInterop .default?? pattern — CJS bundled module in ESM package context
+- [Phase 05-mcp-server P02]: Custom SVG assembly replaces elkjs-svg Renderer — enables per-node-type fill color coding for CALM types
+- [Phase 05-mcp-server P02]: StreamableHTTPServerTransport type cast (as unknown as StdioServerTransport) — exactOptionalPropertyTypes conflict with SDK internal Transport interface
+- [Phase 05-mcp-server P02]: HTTP transport runs stateless (no sessionIdGenerator) — simplest per-request lifecycle for v1 MCP server
 
 ### Pending Todos
 
@@ -140,6 +145,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-12T09:18:45Z
-Stopped at: Completed 05-mcp-server-01-PLAN.md
+Last session: 2026-03-12T09:50:27.198Z
+Stopped at: Completed 05-mcp-server-02-PLAN.md
 Resume file: None

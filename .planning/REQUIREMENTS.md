@@ -98,7 +98,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **MCPS-04**: MCP server exposes `render_diagram` tool (-> SVG)
 - [x] **MCPS-05**: MCP server exposes `export_calm` and `import_calm` tools
 - [x] **MCPS-06**: MCP server installable via `npm install -g @calmstudio/mcp`
-- [ ] **MCPS-07**: MCP server works with Claude Code and any MCP-compatible AI assistant
+- [x] **MCPS-07**: MCP server works with Claude Code and any MCP-compatible AI assistant
 
 ### Desktop App
 
@@ -268,7 +268,7 @@ Deferred to future release. Tracked but not in current roadmap.
 | MCPS-04 | Phase 8 | Complete |
 | MCPS-05 | Phase 8 | Complete |
 | MCPS-06 | Phase 8 | Complete |
-| MCPS-07 | Phase 8 | Pending |
+| MCPS-07 | Phase 8 | Complete |
 | DESK-01 | Phase 9 | Pending |
 | DESK-02 | Phase 9 | Pending |
 | DESK-03 | Phase 9 | Pending |
