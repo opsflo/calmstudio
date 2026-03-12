@@ -66,18 +66,18 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Import & Export
 
-- [ ] **IOEX-01**: User can import existing CALM JSON files and auto-layout the diagram (ELK.js)
+- [x] **IOEX-01**: User can import existing CALM JSON files and auto-layout the diagram (ELK.js)
 - [ ] **IOEX-02**: User can export diagram as CALM JSON
 - [ ] **IOEX-03**: User can export diagram as calmscript
 - [ ] **IOEX-04**: User can export diagram as SVG (vector, crisp)
 - [ ] **IOEX-05**: User can export diagram as PNG
-- [ ] **IOEX-06**: User can save/load diagrams via native file system (Tauri 2)
+- [x] **IOEX-06**: User can save/load diagrams via native file system (Tauri 2)
 
 ### Layout
 
-- [ ] **LAYT-01**: User can auto-layout the diagram using ELK.js hierarchical layout
-- [ ] **LAYT-02**: Auto-layout preserves manual position overrides for pinned nodes
-- [ ] **LAYT-03**: Layout presets available (hierarchical, left-to-right, top-to-bottom)
+- [x] **LAYT-01**: User can auto-layout the diagram using ELK.js hierarchical layout
+- [x] **LAYT-02**: Auto-layout preserves manual position overrides for pinned nodes
+- [x] **LAYT-03**: Layout presets available (hierarchical, left-to-right, top-to-bottom)
 
 ### Extension Packs
 
@@ -236,15 +236,15 @@ Deferred to future release. Tracked but not in current roadmap.
 | CODE-01 | Phase 3 | Complete |
 | CODE-02 | Phase 3 | Complete |
 | CODE-03 | Phase 3 | Complete |
-| IOEX-01 | Phase 4 | Pending |
+| IOEX-01 | Phase 4 | Complete |
 | IOEX-02 | Phase 4 | Pending |
 | IOEX-03 | Phase 4 | Pending |
 | IOEX-04 | Phase 4 | Pending |
 | IOEX-05 | Phase 4 | Pending |
-| IOEX-06 | Phase 4 | Pending |
-| LAYT-01 | Phase 4 | Pending |
-| LAYT-02 | Phase 4 | Pending |
-| LAYT-03 | Phase 4 | Pending |
+| IOEX-06 | Phase 4 | Complete |
+| LAYT-01 | Phase 4 | Complete |
+| LAYT-02 | Phase 4 | Complete |
+| LAYT-03 | Phase 4 | Complete |
 | CSPT-01 | Phase 5 | Pending |
 | CSPT-02 | Phase 5 | Pending |
 | CSPT-03 | Phase 5 | Pending |
