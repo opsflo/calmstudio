@@ -121,6 +121,14 @@ None - no external service configuration required.
 - Dirty state tracking ready; beforeunload guard active
 - Toolbar provides all user-facing entry points for file operations and exports
 
+## Self-Check: PASSED
+
+- FOUND: apps/studio/src/lib/toolbar/Toolbar.svelte
+- FOUND: apps/studio/src/routes/+page.svelte
+- FOUND: .planning/phases/04-import-export-layout/04-03-SUMMARY.md
+- FOUND commit: e551965 (Task 1)
+- FOUND commit: 781a6fb (Task 2)
+
 ---
 *Phase: 04-import-export-layout*
 *Completed: 2026-03-12*
