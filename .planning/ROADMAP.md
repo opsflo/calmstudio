@@ -122,7 +122,11 @@ Plans:
   1. Nodes and edges with CALM schema violations show inline error indicators on the canvas without any user action
   2. A validation panel lists all errors, warnings, and info messages with severity levels and the offending node/edge identified
   3. Validation runs automatically after each edit with a debounce and never blocks typing or canvas interaction
-**Plans:** 0/TBD
+**Plans:** 3 plans
+Plans:
+- [ ] 06-00-PLAN.md — Install Ajv, bundle CALM 2025-03 schemas, create shared validation engine in calm-core with tests
+- [ ] 06-01-PLAN.md — Validation store (debounced reactive), ValidationBadge component, wire badges into all 11 node components and color overrides into all 5 edge components
+- [ ] 06-02-PLAN.md — ValidationPanel bottom drawer, +page.svelte enrichment wiring, two-way navigation, MCP server upgrade to shared engine, visual verification
 
 ### Phase 7: Extension Packs
 **Goal**: Architects can diagram AWS, GCP, Azure, Kubernetes, and AI/Agentic architectures with domain-specific node types that produce valid CALM output
@@ -203,7 +207,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 3. Properties & Bidirectional Sync | 5/5 | Complete   | 2026-03-12 |
 | 4. Import, Export & Layout | 3/5 | In Progress|  |
 | 5. MCP Server | 4/4 | Complete   | 2026-03-12 |
-| 6. CALM Validation | 0/TBD | Not started | - |
+| 6. CALM Validation | 0/3 | Not started | - |
 | 7. Extension Packs | 0/TBD | Not started | - |
 | 8. calmscript DSL | 0/TBD | Not started (deferred) | - |
 | 9. Desktop App | 0/TBD | Not started | - |
