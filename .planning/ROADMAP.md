@@ -107,7 +107,7 @@ Plans:
   3. Claude Code can add nodes, add relationships, export/import CALM files, and render to SVG through dedicated MCP tools
   4. All MCP tools pass MCP Inspector compliance validation and return properly structured `content` responses
   5. The MCP server works without the desktop app running — it operates on `.calm` files directly
-**Plans:** 1/4 plans executed
+**Plans:** 2/4 plans executed
 Plans:
 - [ ] 05-00-PLAN.md — Package setup, deps, build pipeline, Zod schemas, file I/O layer, validation, test stubs
 - [ ] 05-01-PLAN.md — Architecture CRUD, node CRUD, relationship CRUD, and file I/O tool handlers
@@ -202,7 +202,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 2. CALM Canvas Core | 3/6 | In Progress|  |
 | 3. Properties & Bidirectional Sync | 5/5 | Complete   | 2026-03-12 |
 | 4. Import, Export & Layout | 3/5 | In Progress|  |
-| 5. MCP Server | 1/4 | In Progress|  |
+| 5. MCP Server | 2/4 | In Progress|  |
 | 6. CALM Validation | 0/TBD | Not started | - |
 | 7. Extension Packs | 0/TBD | Not started | - |
 | 8. calmscript DSL | 0/TBD | Not started (deferred) | - |

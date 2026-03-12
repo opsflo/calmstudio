@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: verifying
-stopped_at: Completed 05-mcp-server-00-PLAN.md
-last_updated: "2026-03-12T09:04:29.181Z"
-last_activity: 2026-03-12 — Phase 3 verification passed; gap fixes confirmed; ready for Phase 4
+status: executing
+stopped_at: Completed 05-mcp-server-01-PLAN.md
+last_updated: "2026-03-12T09:18:45Z"
+last_activity: 2026-03-12 — Phase 5 Plan 01 complete; 14 tool handlers implemented with passing tests
 progress:
   total_phases: 12
   completed_phases: 3
   total_plans: 22
-  completed_plans: 18
-  percent: 25
+  completed_plans: 19
+  percent: 27
 ---
 
 # Project State
@@ -25,12 +25,12 @@ See: .planning/PROJECT.md (updated 2026-03-11)
 
 ## Current Position
 
-Phase: 3 of 12 (Properties + Bidirectional Sync)
-Plan: 5 of 5 in current phase (all complete)
-Status: Phase 3 complete — verification passed 21/21
-Last activity: 2026-03-12 — Phase 3 verification passed; gap fixes confirmed; ready for Phase 4
+Phase: 5 of 12 (MCP Server)
+Plan: 1 of 3 in current phase (1 complete)
+Status: Phase 5 in progress — Plan 01 complete
+Last activity: 2026-03-12 — Phase 5 Plan 01 complete; 14 MCP tool handlers with passing tests
 
-Progress: [██░░░░░░░░] 25%
+Progress: [███░░░░░░░] 27%
 
 ## Performance Metrics
 
@@ -67,6 +67,7 @@ Progress: [██░░░░░░░░] 25%
 | Phase 04-import-export-layout P01 | 37min | 2 tasks | 4 files |
 | Phase 04-import-export-layout P03 | 4min | 2 tasks | 2 files |
 | Phase 05-mcp-server P00 | 8min | 2 tasks | 14 files |
+| Phase 05-mcp-server P01 | 12min | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -123,6 +124,9 @@ Recent decisions affecting current work:
 - [Phase 05-mcp-server]: Package named @calmstudio/mcp for npm distribution (not workspace stub name)
 - [Phase 05-mcp-server]: Node16 moduleResolution required for mcp-server CLI — bundler resolution fails for standalone binaries
 - [Phase 05-mcp-server]: readCalmFile auto-inits with empty arch on ENOENT — not an error (per RESEARCH Pitfall 8)
+- [Phase 05-mcp-server P01]: z.infer<typeof Schema> for tool handler params — avoids exactOptionalPropertyTypes conflicts with Zod output
+- [Phase 05-mcp-server P01]: server.tool(name, description, schema.shape, cb) pattern for MCP SDK registration
+- [Phase 05-mcp-server P01]: Pure logic functions exported alongside registerXxxTools() — enables direct testing without MCP server
 
 ### Pending Todos
 
@@ -136,6 +140,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-12T09:04:29.178Z
-Stopped at: Completed 05-mcp-server-00-PLAN.md
+Last session: 2026-03-12T09:18:45Z
+Stopped at: Completed 05-mcp-server-01-PLAN.md
 Resume file: None
