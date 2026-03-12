@@ -53,6 +53,10 @@
 	 * Called by the Validate toolbar button.
 	 */
 	function handleValidate() {
+		if (isPanelOpen()) {
+			closePanel();
+			return;
+		}
 		runValidation();
 		enrichNodesEdgesWithValidation();
 	}
