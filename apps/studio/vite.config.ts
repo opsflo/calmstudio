@@ -11,6 +11,7 @@ export default defineConfig({
 		noExternal: ['@xyflow/svelte']
 	},
 	optimizeDeps: {
+		include: ['ajv', 'ajv-formats'],
 		exclude: [
 			'svelte-codemirror-editor',
 			'codemirror',

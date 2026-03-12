@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Phase 6 context gathered
-last_updated: "2026-03-12T12:06:54.336Z"
+stopped_at: Completed 06-calm-validation 06-00-PLAN.md
+last_updated: "2026-03-12T12:45:07.402Z"
 last_activity: 2026-03-12 — Phase 5 Plan 03 complete; MCP server verified end-to-end via Claude Code, .json extension fix
 progress:
   total_phases: 12
   completed_phases: 4
-  total_plans: 22
-  completed_plans: 21
+  total_plans: 25
+  completed_plans: 22
   percent: 29
 ---
 
@@ -70,6 +70,7 @@ Progress: [███░░░░░░░] 29%
 | Phase 05-mcp-server P01 | 12min | 2 tasks | 8 files |
 | Phase 05-mcp-server P02 | 15min | 2 tasks | 7 files |
 | Phase 05-mcp-server P03 | 30min | 2 tasks | 2 files |
+| Phase 06-calm-validation P00 | 5min | 1 tasks | 13 files |
 
 ## Accumulated Context
 
@@ -134,6 +135,9 @@ Recent decisions affecting current work:
 - [Phase 05-mcp-server P02]: StreamableHTTPServerTransport type cast (as unknown as StdioServerTransport) — exactOptionalPropertyTypes conflict with SDK internal Transport interface
 - [Phase 05-mcp-server P02]: HTTP transport runs stateless (no sessionIdGenerator) — simplest per-request lifecycle for v1 MCP server
 - [Phase 05-mcp-server P03]: MCP server outputs .json extension (not .calm) for CalmStudio file picker compatibility — CALM JSON files use standard .json extension
+- [Phase 06-calm-validation]: CalmStudio uses flat internal schema (source/destination strings) not FINOS nested relationship-type — separate calmStudioSchema for Ajv instance validation
+- [Phase 06-calm-validation]: No $schema field in calmStudioSchema — avoids Ajv meta-schema resolution failure for draft/2020-12; strict:false handles CALM 2020-12 vocabulary declarations
+- [Phase 06-calm-validation]: Orphan node warning fires unconditionally — empty relationships array means every node is orphaned
 
 ### Pending Todos
 
@@ -147,6 +151,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-12T12:06:54.330Z
-Stopped at: Phase 6 context gathered
-Resume file: .planning/phases/06-calm-validation/06-CONTEXT.md
+Last session: 2026-03-12T12:45:07.399Z
+Stopped at: Completed 06-calm-validation 06-00-PLAN.md
+Resume file: None
