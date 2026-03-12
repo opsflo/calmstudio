@@ -47,7 +47,7 @@ export const RelationshipInputSchema = z.object({
 export const CreateArchitectureSchema = z.object({
   nodes: z.array(NodeInputSchema),
   relationships: z.array(RelationshipInputSchema).optional().default([]),
-  /** Target .calm file path. Defaults to ./architecture.calm if omitted. */
+  /** Target .calm file path. Defaults to ./architecture.json if omitted. */
   file: z.string().optional()
 });
 
@@ -72,7 +72,7 @@ export const RenderDiagramSchema = z.object({
 });
 
 export const ExportCalmSchema = z.object({
-  /** Source .calm file path. Defaults to ./architecture.calm if omitted. */
+  /** Source .calm file path. Defaults to ./architecture.json if omitted. */
   source: z.string().optional(),
   destination: z.string()
 });

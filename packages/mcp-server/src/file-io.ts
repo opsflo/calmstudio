@@ -7,11 +7,12 @@ import path from 'node:path';
 import type { CalmArchitecture } from '@calmstudio/calm-core';
 
 /**
- * Resolve a .calm file path. Defaults to ./architecture.calm in the current
- * working directory if no path is provided.
+ * Resolve a CALM architecture file path. Defaults to ./architecture.json in the
+ * current working directory if no path is provided.
+ * Uses .json extension for compatibility with CalmStudio (accepts .json and .calm.json).
  */
 export function resolveFile(file?: string): string {
-  return path.resolve(file ?? './architecture.calm');
+  return path.resolve(file ?? './architecture.json');
 }
 
 /**
