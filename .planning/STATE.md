@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Completed 05-mcp-server-02-PLAN.md
-last_updated: "2026-03-12T09:50:27.200Z"
-last_activity: 2026-03-12 — Phase 5 Plan 02 complete; 21 MCP tools wired, CLI with dual transport, all tests pass
+status: completed
+stopped_at: Completed 05-mcp-server-03-PLAN.md (Phase 5 complete)
+last_updated: "2026-03-12T10:34:46.506Z"
+last_activity: 2026-03-12 — Phase 5 Plan 03 complete; MCP server verified end-to-end via Claude Code, .json extension fix
 progress:
   total_phases: 12
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 22
-  completed_plans: 20
-  percent: 27
+  completed_plans: 21
+  percent: 29
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-03-11)
 ## Current Position
 
 Phase: 5 of 12 (MCP Server)
-Plan: 2 of 3 in current phase (2 complete)
-Status: Phase 5 in progress — Plan 02 complete
-Last activity: 2026-03-12 — Phase 5 Plan 02 complete; 21 MCP tools wired, CLI with dual transport, all tests pass
+Plan: 3 of 3 in current phase (3 complete — Phase 5 DONE)
+Status: Phase 5 complete — all 3 plans done
+Last activity: 2026-03-12 — Phase 5 Plan 03 complete; MCP server verified end-to-end via Claude Code, .json extension fix
 
-Progress: [███░░░░░░░] 27%
+Progress: [███░░░░░░░] 29%
 
 ## Performance Metrics
 
@@ -69,6 +69,7 @@ Progress: [███░░░░░░░] 27%
 | Phase 05-mcp-server P00 | 8min | 2 tasks | 14 files |
 | Phase 05-mcp-server P01 | 12min | 2 tasks | 8 files |
 | Phase 05-mcp-server P02 | 15min | 2 tasks | 7 files |
+| Phase 05-mcp-server P03 | 30min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -132,6 +133,7 @@ Recent decisions affecting current work:
 - [Phase 05-mcp-server P02]: Custom SVG assembly replaces elkjs-svg Renderer — enables per-node-type fill color coding for CALM types
 - [Phase 05-mcp-server P02]: StreamableHTTPServerTransport type cast (as unknown as StdioServerTransport) — exactOptionalPropertyTypes conflict with SDK internal Transport interface
 - [Phase 05-mcp-server P02]: HTTP transport runs stateless (no sessionIdGenerator) — simplest per-request lifecycle for v1 MCP server
+- [Phase 05-mcp-server P03]: MCP server outputs .json extension (not .calm) for CalmStudio file picker compatibility — CALM JSON files use standard .json extension
 
 ### Pending Todos
 
@@ -145,6 +147,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-12T09:50:27.198Z
-Stopped at: Completed 05-mcp-server-02-PLAN.md
+Last session: 2026-03-12T10:30:00.000Z
+Stopped at: Completed 05-mcp-server-03-PLAN.md (Phase 5 complete)
 Resume file: None

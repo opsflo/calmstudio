@@ -16,7 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 2: CALM Canvas Core** - Typed drag-and-drop canvas with all 9 CALM node types, 5 relationship types, and table-stakes UX
 - [x] **Phase 3: Properties & Bidirectional Sync** - Properties panel, CALM JSON code editor, and bidirectional visual-to-code sync engine (completed 2026-03-12)
 - [ ] **Phase 4: Import, Export & Layout** - CALM JSON import with ELK auto-layout, file export (CALM JSON, calmscript, SVG, PNG), and native file I/O
-- [ ] **Phase 5: MCP Server** - Standalone MCP server enabling Claude Code and AI assistants to create/modify/validate architectures via structured tool calls
+- [x] **Phase 5: MCP Server** - Standalone MCP server enabling Claude Code and AI assistants to create/modify/validate architectures via structured tool calls (completed 2026-03-12)
 - [ ] **Phase 6: CALM Validation** - Real-time schema validation with inline indicators and severity panel
 - [ ] **Phase 7: Extension Packs** - Dynamic pack system with AWS, GCP, Azure, Kubernetes, and AI/Agentic node types
 - [ ] **Phase 8: calmscript DSL** - Mermaid-competitive text format that compiles losslessly to CALM JSON and back (deferred from original Phase 5 — evaluate need after MCP usage)
@@ -107,7 +107,7 @@ Plans:
   3. Claude Code can add nodes, add relationships, export/import CALM files, and render to SVG through dedicated MCP tools
   4. All MCP tools pass MCP Inspector compliance validation and return properly structured `content` responses
   5. The MCP server works without the desktop app running — it operates on `.calm` files directly
-**Plans:** 3/4 plans executed
+**Plans:** 4/4 plans complete
 Plans:
 - [ ] 05-00-PLAN.md — Package setup, deps, build pipeline, Zod schemas, file I/O layer, validation, test stubs
 - [ ] 05-01-PLAN.md — Architecture CRUD, node CRUD, relationship CRUD, and file I/O tool handlers
@@ -202,7 +202,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 2. CALM Canvas Core | 3/6 | In Progress|  |
 | 3. Properties & Bidirectional Sync | 5/5 | Complete   | 2026-03-12 |
 | 4. Import, Export & Layout | 3/5 | In Progress|  |
-| 5. MCP Server | 3/4 | In Progress|  |
+| 5. MCP Server | 4/4 | Complete   | 2026-03-12 |
 | 6. CALM Validation | 0/TBD | Not started | - |
 | 7. Extension Packs | 0/TBD | Not started | - |
 | 8. calmscript DSL | 0/TBD | Not started (deferred) | - |
