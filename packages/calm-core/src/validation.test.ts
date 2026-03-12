@@ -16,16 +16,13 @@ function makeNode(id: string, name: string, description?: string) {
   };
 }
 
-// Helper: make a minimal valid "connects" relationship
-function makeConnectsRel(id: string, sourceNode: string, destNode: string) {
+// Helper: make a minimal valid relationship (CalmStudio flat format)
+function makeRel(id: string, sourceNode: string, destNode: string) {
   return {
     'unique-id': id,
-    'relationship-type': {
-      connects: {
-        source: { node: sourceNode },
-        destination: { node: destNode }
-      }
-    }
+    'relationship-type': 'connects' as const,
+    source: sourceNode,
+    destination: destNode
   };
 }
 
@@ -33,7 +30,7 @@ describe('validateCalmArchitecture', () => {
   it('valid architecture with 2 nodes + 1 relationship returns empty issues', () => {
     const arch: CalmArchitecture = {
       nodes: [makeNode('node-a', 'Node A'), makeNode('node-b', 'Node B')],
-      relationships: [makeConnectsRel('rel-1', 'node-a', 'node-b')]
+      relationships: [makeRel('rel-1', 'node-a', 'node-b')]
     };
     const issues = validateCalmArchitecture(arch);
     const errors = issues.filter((i) => i.severity === 'error');
@@ -70,7 +67,7 @@ describe('validateCalmArchitecture', () => {
   it('relationship with dangling source ref returns error with relationshipId', () => {
     const arch: CalmArchitecture = {
       nodes: [makeNode('node-b', 'Node B')],
-      relationships: [makeConnectsRel('rel-1', 'unknown-node', 'node-b')]
+      relationships: [makeRel('rel-1', 'unknown-node', 'node-b')]
     };
     const issues = validateCalmArchitecture(arch);
     const errors = issues.filter((i) => i.severity === 'error' && i.relationshipId === 'rel-1');
@@ -100,7 +97,7 @@ describe('validateCalmArchitecture', () => {
   it('self-loop relationship returns warning with relationshipId', () => {
     const arch: CalmArchitecture = {
       nodes: [makeNode('node-a', 'Node A'), makeNode('node-b', 'Node B')],
-      relationships: [makeConnectsRel('rel-loop', 'node-a', 'node-a')]
+      relationships: [makeRel('rel-loop', 'node-a', 'node-a')]
     };
     const issues = validateCalmArchitecture(arch);
     const warnings = issues.filter(
