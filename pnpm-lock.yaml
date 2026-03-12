@@ -38,6 +38,9 @@ importers:
 
   apps/studio:
     dependencies:
+      '@calmstudio/calm-core':
+        specifier: workspace:*
+        version: link:../../packages/calm-core
       '@codemirror/lang-json':
         specifier: ^6.0.2
         version: 6.0.2
