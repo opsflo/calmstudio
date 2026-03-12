@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: verifying
-stopped_at: Completed 04-import-export-layout/04-01-PLAN.md
-last_updated: "2026-03-12T04:39:53.566Z"
+stopped_at: Completed 04-import-export-layout/04-03-PLAN.md
+last_updated: "2026-03-12T04:46:39.861Z"
 last_activity: 2026-03-12 — Phase 3 verification passed; gap fixes confirmed; ready for Phase 4
 progress:
   total_phases: 12
   completed_phases: 3
   total_plans: 18
-  completed_plans: 16
+  completed_plans: 17
   percent: 25
 ---
 
@@ -65,6 +65,7 @@ Progress: [██░░░░░░░░] 25%
 | Phase 04-import-export-layout P00 | 4min | 2 tasks | 4 files |
 | Phase 04-import-export-layout P02 | 4min | 2 tasks | 3 files |
 | Phase 04-import-export-layout P01 | 37min | 2 tasks | 4 files |
+| Phase 04-import-export-layout P03 | 4min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -115,6 +116,9 @@ Recent decisions affecting current work:
 - [Phase 04-import-export-layout]: Flat ELK graph (no nested children) per RESEARCH Pitfall 7 — sub-flow nesting by @xyflow/svelte parentId independently
 - [Phase 04-import-export-layout]: Pin toggle as canvas-level floating overlay on nodemouseenter — avoids modifying 11 node components
 - [Phase 04-import-export-layout]: importCalmFile: no partial load — if JSON invalid or nodes array missing, importError set and canvas unchanged
+- [Phase 04-import-export-layout]: Error banner in document flow below Toolbar (not absolute positioned) — cleaner layout, no z-index conflicts
+- [Phase 04-import-export-layout]: Explicit markDirty() calls in handleCodeChange/handlePropertyMutation rather than  on nodes/edges — avoids false positives on layout runs
+- [Phase 04-import-export-layout]: handleSaveAs marks clean on Blob download fallback — content exported so dirty state resolved
 
 ### Pending Todos
 
@@ -128,6 +132,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-12T04:39:53.564Z
-Stopped at: Completed 04-import-export-layout/04-01-PLAN.md
+Last session: 2026-03-12T04:46:39.859Z
+Stopped at: Completed 04-import-export-layout/04-03-PLAN.md
 Resume file: None
