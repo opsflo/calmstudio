@@ -73,9 +73,17 @@
 				// Apply to canonical model (mutex prevents re-entry)
 				const applied = applyFromJson(parsed);
 				if (applied) {
-					// Project back to Svelte Flow format, preserving positions
+					// Project back to Svelte Flow format, preserving positions and selection
 					const projected = calmToFlow(parsed, positionMap);
-					nodes = projected.nodes;
+					const selectionMap = new Map<string, boolean>();
+					for (const n of nodes) {
+						if (n.selected && n.data?.calmId) selectionMap.set(n.data.calmId as string, true);
+					}
+					nodes = projected.nodes.map((n) =>
+						selectionMap.has(n.data?.calmId as string)
+							? { ...n, selected: true }
+							: n
+					);
 					edges = projected.edges;
 				}
 			} catch (e) {
@@ -95,11 +103,20 @@
 	function handlePropertyMutation() {
 		const model = getModel();
 		const positionMap = new Map<string, { x: number; y: number }>();
+		const selectionMap = new Map<string, boolean>();
 		for (const n of nodes) {
-			if (n.data?.calmId) positionMap.set(n.data.calmId as string, { ...n.position });
+			if (n.data?.calmId) {
+				positionMap.set(n.data.calmId as string, { ...n.position });
+				if (n.selected) selectionMap.set(n.data.calmId as string, true);
+			}
 		}
 		const projected = calmToFlow(model, positionMap);
-		nodes = projected.nodes;
+		// Preserve selection state so SvelteFlow doesn't fire deselection
+		nodes = projected.nodes.map((n) =>
+			selectionMap.has(n.data?.calmId as string)
+				? { ...n, selected: true }
+				: n
+		);
 		edges = projected.edges;
 	}
 
@@ -113,19 +130,19 @@
 </script>
 
 <DnDProvider>
-	<PaneGroup direction="horizontal" style="height: 100vh; overflow: hidden;">
-		<!-- Left: Node Palette -->
-		<Pane defaultSize={15} minSize={8}>
-			<NodePalette onplacenode={handlePalettePlace} />
-		</Pane>
+	<PaneGroup direction="vertical" style="height: 100vh; overflow: hidden;">
+		<!-- Top: Three-column layout (palette | canvas | properties) -->
+		<Pane defaultSize={70} minSize={30}>
+			<PaneGroup direction="horizontal" style="height: 100%;">
+				<!-- Left: Node Palette -->
+				<Pane defaultSize={15} minSize={8}>
+					<NodePalette onplacenode={handlePalettePlace} />
+				</Pane>
 
-		<PaneResizer class="resizer resizer-vertical" />
+				<PaneResizer class="resizer resizer-vertical" />
 
-		<!-- Center: Canvas + Code editor (nested vertical split) -->
-		<Pane defaultSize={70}>
-			<PaneGroup direction="vertical" style="height: 100%;">
-				<!-- Top: Canvas area -->
-				<Pane defaultSize={70} minSize={30}>
+				<!-- Center: Canvas area -->
+				<Pane defaultSize={70}>
 					<div class="canvas-pane">
 						<!-- Floating toolbar -->
 						<div class="toolbar">
@@ -159,30 +176,30 @@
 					</div>
 				</Pane>
 
-				<PaneResizer class="resizer resizer-horizontal" />
+				<PaneResizer class="resizer resizer-vertical" />
 
-				<!-- Bottom: Code editor panel -->
-				<Pane defaultSize={30} minSize={10}>
-					<CodePanel
-						value={calmJson}
-						onchange={handleCodeChange}
-						parseError={codeParseError}
-						selectedNodeId={selectedNodeId}
-						selectedEdgeId={selectedEdgeId}
+				<!-- Right: Properties panel -->
+				<Pane defaultSize={15} minSize={5}>
+					<PropertiesPanel
+						{selectedNode}
+						{selectedEdge}
+						onBeforeFirstEdit={handleBeforeFirstEdit}
+						onmutate={handlePropertyMutation}
 					/>
 				</Pane>
 			</PaneGroup>
 		</Pane>
 
-		<PaneResizer class="resizer resizer-vertical" />
+		<PaneResizer class="resizer resizer-horizontal" />
 
-		<!-- Right: Properties panel -->
-		<Pane defaultSize={15} minSize={5}>
-			<PropertiesPanel
-				{selectedNode}
-				{selectedEdge}
-				onBeforeFirstEdit={handleBeforeFirstEdit}
-				onmutate={handlePropertyMutation}
+		<!-- Bottom: Code editor panel (full width) -->
+		<Pane defaultSize={30} minSize={10}>
+			<CodePanel
+				value={calmJson}
+				onchange={handleCodeChange}
+				parseError={codeParseError}
+				selectedNodeId={selectedNodeId}
+				selectedEdgeId={selectedEdgeId}
 			/>
 		</Pane>
 	</PaneGroup>
