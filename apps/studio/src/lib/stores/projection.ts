@@ -33,9 +33,10 @@ export function calmToFlow(
 		const position =
 			positionMap?.get(cn['unique-id']) ?? { x: 100 + idx * 160, y: 100 };
 
-		return {
+		const type = resolveNodeType(cn['node-type']);
+		const node: Node = {
 			id: cn['unique-id'],
-			type: resolveNodeType(cn['node-type']),
+			type,
 			position,
 			data: {
 				label: cn.name,
@@ -46,6 +47,12 @@ export function calmToFlow(
 				customMetadata: cn.customMetadata ?? {},
 			},
 		};
+		// Container nodes need initial dimensions to be droppable targets
+		if (type === 'container') {
+			node.width = 300;
+			node.height = 200;
+		}
+		return node;
 	});
 
 	const edges: Edge[] = arch.relationships.map((cr: CalmRelationship) => ({

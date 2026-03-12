@@ -17,6 +17,7 @@ function node(
   label: string,
   iconKey: string,
   description: string,
+  isContainer = false,
 ): PackDefinition['nodes'][number] {
   return {
     typeId,
@@ -24,6 +25,7 @@ function node(
     icon: k8sIcons[iconKey] ?? k8sIcons['pod']!,
     color: k8sColor,
     description,
+    ...(isContainer ? { isContainer: true } : {}),
   };
 }
 
@@ -45,7 +47,7 @@ export const kubernetesPack: PackDefinition = {
     node('k8s:secret', 'Secret', 'secret', 'Stores sensitive configuration such as credentials'),
     node('k8s:persistent-volume', 'Persistent Volume', 'persistent-volume', 'Cluster-wide storage resource provisioning'),
     node('k8s:pvc', 'PVC', 'pvc', 'Persistent Volume Claim — a pod request for storage'),
-    node('k8s:namespace', 'Namespace', 'namespace', 'Virtual cluster partition for resource isolation'),
+    node('k8s:namespace', 'Namespace', 'namespace', 'Virtual cluster partition for resource isolation', true),
     node('k8s:hpa', 'HPA', 'hpa', 'Horizontal Pod Autoscaler — scales pods based on load'),
   ],
 };

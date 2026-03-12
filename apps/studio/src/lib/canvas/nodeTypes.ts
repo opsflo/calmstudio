@@ -14,6 +14,7 @@ import DataAssetNode from './nodes/DataAssetNode.svelte';
 import GenericNode from './nodes/GenericNode.svelte';
 import ContainerNode from './nodes/ContainerNode.svelte';
 import ExtensionNode from './nodes/ExtensionNode.svelte';
+import { resolvePackNode } from '@calmstudio/extensions';
 
 /**
  * Maps CALM node type strings to their corresponding Svelte Flow node components.
@@ -50,8 +51,10 @@ const BUILT_IN_TYPES = new Set<string>([
 /**
  * Resolves a CALM node-type string to a key in the nodeTypes map.
  * Built-in types are returned as-is.
- * Colon-prefixed types (e.g. 'aws:lambda') are routed to 'extension' so
- * ExtensionNode can look up pack metadata at render time.
+ * Colon-prefixed types (e.g. 'aws:lambda') are routed to 'extension',
+ * unless the pack definition marks the type as a container (e.g. VPC,
+ * Subnet, Namespace), in which case it returns 'container' so the node
+ * renders as a droppable container box.
  * All other custom/unknown types fall back to 'generic'.
  *
  * @param calmType - The node-type value from a CALM architecture document.
@@ -62,6 +65,10 @@ export function resolveNodeType(calmType: string): keyof typeof nodeTypes {
 		return calmType as keyof typeof nodeTypes;
 	}
 	if (calmType.includes(':')) {
+		const meta = resolvePackNode(calmType);
+		if (meta?.isContainer) {
+			return 'container';
+		}
 		return 'extension';
 	}
 	return 'generic';

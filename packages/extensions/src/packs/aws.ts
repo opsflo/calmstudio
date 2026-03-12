@@ -25,6 +25,7 @@ function node(
   iconKey: string,
   description: string,
   color: PackColor = compute,
+  isContainer = false,
 ): PackDefinition['nodes'][number] {
   return {
     typeId,
@@ -32,6 +33,7 @@ function node(
     icon: awsIcons[iconKey] ?? awsIcons['ec2']!,
     color,
     description,
+    ...(isContainer ? { isContainer: true } : {}),
   };
 }
 
@@ -57,8 +59,8 @@ export const awsPack: PackDefinition = {
     node('aws:elasticache', 'ElastiCache', 'elasticache', 'Managed in-memory caching service (Redis/Memcached)', database),
     node('aws:redshift', 'Redshift', 'redshift', 'Managed petabyte-scale data warehouse', database),
     // Networking & CDN
-    node('aws:vpc', 'VPC', 'vpc', 'Virtual Private Cloud network isolation', networking),
-    node('aws:subnet', 'Subnet', 'subnet', 'VPC subnet (public or private)', networking),
+    node('aws:vpc', 'VPC', 'vpc', 'Virtual Private Cloud network isolation', networking, true),
+    node('aws:subnet', 'Subnet', 'subnet', 'VPC subnet (public or private)', networking, true),
     node('aws:internet-gateway', 'Internet Gateway', 'internet-gateway', 'VPC internet gateway for public access', networking),
     node('aws:nat-gateway', 'NAT Gateway', 'nat-gateway', 'Network address translation for private subnets', networking),
     node('aws:route-table', 'Route Table', 'route-table', 'VPC route table for network routing', networking),

@@ -22,6 +22,8 @@ export interface NodeTypeEntry {
   color: PackColor;
   /** One-line description of what this node type represents. */
   description?: string;
+  /** If true, this node renders as a container (large box that accepts children). */
+  isContainer?: boolean;
 }
 
 /** A complete pack definition containing metadata and all node type entries. */

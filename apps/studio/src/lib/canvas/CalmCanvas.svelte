@@ -154,6 +154,10 @@
 				calmType,
 			},
 		};
+		if (resolvedType === 'container') {
+			newNode.width = 300;
+			newNode.height = 200;
+		}
 
 		nodes = [...nodes, newNode];
 		applyFromCanvas(nodes, edges);
@@ -186,6 +190,10 @@
 				calmType,
 			},
 		};
+		if (resolvedType === 'container') {
+			newNode.width = 300;
+			newNode.height = 200;
+		}
 
 		nodes = [...nodes, newNode];
 		applyFromCanvas(nodes, edges);
