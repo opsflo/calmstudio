@@ -6,7 +6,10 @@ import { z } from 'zod';
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 // @ts-expect-error — elkjs-svg is a CJS module with no type declarations
 import { Renderer } from 'elkjs-svg';
-import ELK from 'elkjs/lib/elk.bundled.js';
+// elkjs/lib/elk.bundled.js is a CJS module — esModuleInterop allows default import
+import ELKImport from 'elkjs/lib/elk.bundled.js';
+// Handle both CJS default export and ESM default export shapes
+const ELK = (ELKImport as unknown as { default?: new () => { layout: (graph: unknown) => Promise<unknown> } }).default ?? ELKImport as unknown as new () => { layout: (graph: unknown) => Promise<unknown> };
 import {
   ValidateArchitectureSchema,
   RenderDiagramSchema,
@@ -62,7 +65,10 @@ export function validateArchitectureTool(args: ValidateArchitectureArgs): ToolRe
   }
 
   const lines = issues.map((issue) => {
-    const label = issue.severity === 'error' ? '[ERROR]' : '[WARNING]';
+    const label =
+      issue.severity === 'error' ? '[ERROR]' :
+      issue.severity === 'warning' ? '[WARNING]' :
+      '[INFO]';
     return `${label} ${issue.message}`;
   });
 
@@ -114,10 +120,14 @@ export async function renderDiagram(args: RenderDiagramArgs): Promise<ToolRespon
     }))
   };
 
-  let layouted: typeof graph & { children?: Array<{ id: string; x?: number; y?: number; width?: number; height?: number; labels?: Array<{ text: string }> }> };
+  type ElkChild = { id: string; x?: number; y?: number; width?: number; height?: number; labels?: Array<{ text: string }> };
+  type ElkEdgeSection = { startPoint?: { x: number; y: number }; endPoint?: { x: number; y: number }; bendPoints?: Array<{ x: number; y: number }> };
+  type ElkLayouted = { children?: ElkChild[]; edges?: Array<{ id: string; sections?: ElkEdgeSection[] }> };
+
+  let layouted: ElkLayouted;
   try {
     const elk = new ELK();
-    layouted = await elk.layout(graph) as typeof graph & { children?: Array<{ id: string; x?: number; y?: number; width?: number; height?: number; labels?: Array<{ text: string }> }> };
+    layouted = await elk.layout(graph) as ElkLayouted;
   } catch (err) {
     return toolError(`ELK layout failed: ${String(err)}`);
   }
@@ -155,7 +165,7 @@ export async function renderDiagram(args: RenderDiagramArgs): Promise<ToolRespon
 
   // Draw edges first (behind nodes)
   for (const edge of layouted.edges ?? []) {
-    const e = edge as { id: string; sections?: Array<{ startPoint?: { x: number; y: number }; endPoint?: { x: number; y: number }; bendPoints?: Array<{ x: number; y: number }> }> };
+    const e = edge;
     for (const section of e.sections ?? []) {
       const points: string[] = [];
       if (section.startPoint) {

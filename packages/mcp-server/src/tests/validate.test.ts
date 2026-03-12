@@ -18,8 +18,8 @@ describe('validate_architecture tool (dedicated)', () => {
   it('returns empty / no issues for valid architecture', () => {
     const arch = {
       nodes: [
-        { 'unique-id': 'a', 'node-type': 'system', name: 'Alpha' },
-        { 'unique-id': 'b', 'node-type': 'service', name: 'Beta' }
+        { 'unique-id': 'a', 'node-type': 'system', name: 'Alpha', description: 'The Alpha system' },
+        { 'unique-id': 'b', 'node-type': 'service', name: 'Beta', description: 'The Beta service' }
       ],
       relationships: [
         { 'unique-id': 'r1', 'relationship-type': 'connects', source: 'a', destination: 'b' }

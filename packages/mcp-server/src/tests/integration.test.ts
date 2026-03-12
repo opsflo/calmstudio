@@ -181,9 +181,9 @@ describe('E2E: create_architecture → add_node → add_relationship → validat
     createArchitecture({
       file: archFile,
       nodes: [
-        { 'unique-id': 'actor-1', 'node-type': 'actor', name: 'User' },
-        { 'unique-id': 'svc-1', 'node-type': 'service', name: 'API Gateway' },
-        { 'unique-id': 'db-1', 'node-type': 'database', name: 'PostgreSQL' }
+        { 'unique-id': 'actor-1', 'node-type': 'actor', name: 'User', description: 'End user of the system' },
+        { 'unique-id': 'svc-1', 'node-type': 'service', name: 'API Gateway', description: 'Central API routing layer' },
+        { 'unique-id': 'db-1', 'node-type': 'database', name: 'PostgreSQL', description: 'Primary relational database' }
       ],
       relationships: [
         {
@@ -286,9 +286,9 @@ describe('E2E: full workflow smoke test', () => {
     const step1 = createArchitecture({
       file: archFile,
       nodes: [
-        { 'unique-id': 'actor-1', 'node-type': 'actor', name: 'User' },
-        { 'unique-id': 'svc-1', 'node-type': 'service', name: 'API Gateway' },
-        { 'unique-id': 'db-1', 'node-type': 'database', name: 'PostgreSQL' }
+        { 'unique-id': 'actor-1', 'node-type': 'actor', name: 'User', description: 'End user' },
+        { 'unique-id': 'svc-1', 'node-type': 'service', name: 'API Gateway', description: 'API routing' },
+        { 'unique-id': 'db-1', 'node-type': 'database', name: 'PostgreSQL', description: 'Main database' }
       ],
       relationships: [
         {
@@ -312,7 +312,7 @@ describe('E2E: full workflow smoke test', () => {
     // 2. Add 4th node
     const step2 = addNode({
       file: archFile,
-      node: { 'unique-id': 'cache-1', 'node-type': 'database', name: 'Redis Cache' }
+      node: { 'unique-id': 'cache-1', 'node-type': 'database', name: 'Redis Cache', description: 'In-memory cache layer' }
     });
     assertToolSuccess(step2, 'smoke: add_node');
 

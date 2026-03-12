@@ -12,9 +12,9 @@ const tmpFile = join(tmpdir(), `render-test-${Date.now()}.calm`);
 
 const sampleArch = {
   nodes: [
-    { 'unique-id': 'node-1', 'node-type': 'system', name: 'Frontend' },
-    { 'unique-id': 'node-2', 'node-type': 'service', name: 'API' },
-    { 'unique-id': 'node-3', 'node-type': 'database', name: 'DB' }
+    { 'unique-id': 'node-1', 'node-type': 'system', name: 'Frontend', description: 'User-facing frontend' },
+    { 'unique-id': 'node-2', 'node-type': 'service', name: 'API', description: 'REST API service' },
+    { 'unique-id': 'node-3', 'node-type': 'database', name: 'DB', description: 'Relational database' }
   ],
   relationships: [
     { 'unique-id': 'rel-1', 'relationship-type': 'connects', source: 'node-1', destination: 'node-2' },
