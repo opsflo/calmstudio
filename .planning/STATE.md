@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 06-01-PLAN.md
-last_updated: "2026-03-12T12:58:09.427Z"
+stopped_at: "Completed 06-02 tasks 1-2; paused at checkpoint:human-verify Task 3"
+last_updated: "2026-03-12T13:12:28.827Z"
 last_activity: 2026-03-12 — Phase 5 Plan 03 complete; MCP server verified end-to-end via Claude Code, .json extension fix
 progress:
   total_phases: 12
-  completed_phases: 4
+  completed_phases: 5
   total_plans: 25
-  completed_plans: 23
+  completed_plans: 24
   percent: 29
 ---
 
@@ -72,6 +72,7 @@ Progress: [███░░░░░░░] 29%
 | Phase 05-mcp-server P03 | 30min | 2 tasks | 2 files |
 | Phase 06-calm-validation P00 | 5min | 1 tasks | 13 files |
 | Phase 06-calm-validation P01 | 19min | 2 tasks | 18 files |
+| Phase 06-calm-validation P02 | 10min | 2 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -141,6 +142,9 @@ Recent decisions affecting current work:
 - [Phase 06-calm-validation]: Orphan node warning fires unconditionally — empty relationships array means every node is orphaned
 - [Phase 06-calm-validation]: Module-level $effect.root for validation store — effect runs outside component lifecycle, tracks getModel() reactively with 400ms debounce
 - [Phase 06-calm-validation]: Node components do NOT import validation store — receive counts via data.validationErrors/validationWarnings injected by +page.svelte (prevents infinite update loop)
+- [Phase 06-calm-validation]: bind:this on Pane for programmatic collapse/expand (not bind:pane — pane prop non-existent)
+- [Phase 06-calm-validation]: Validation data injected into canonical nodes via $effect with change-guard — not displayNodes (avoids canvas mutation routing issues)
+- [Phase 06-calm-validation]: MCP validation.ts replaced with thin re-export alias from calm-core — preserves consumer interface
 
 ### Pending Todos
 
@@ -154,6 +158,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-12T12:58:09.425Z
-Stopped at: Completed 06-01-PLAN.md
+Last session: 2026-03-12T13:12:28.824Z
+Stopped at: Completed 06-02 tasks 1-2; paused at checkpoint:human-verify Task 3
 Resume file: None

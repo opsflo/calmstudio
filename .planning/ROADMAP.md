@@ -17,7 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 3: Properties & Bidirectional Sync** - Properties panel, CALM JSON code editor, and bidirectional visual-to-code sync engine (completed 2026-03-12)
 - [ ] **Phase 4: Import, Export & Layout** - CALM JSON import with ELK auto-layout, file export (CALM JSON, calmscript, SVG, PNG), and native file I/O
 - [x] **Phase 5: MCP Server** - Standalone MCP server enabling Claude Code and AI assistants to create/modify/validate architectures via structured tool calls (completed 2026-03-12)
-- [ ] **Phase 6: CALM Validation** - Real-time schema validation with inline indicators and severity panel
+- [x] **Phase 6: CALM Validation** - Real-time schema validation with inline indicators and severity panel (completed 2026-03-12)
 - [ ] **Phase 7: Extension Packs** - Dynamic pack system with AWS, GCP, Azure, Kubernetes, and AI/Agentic node types
 - [ ] **Phase 8: calmscript DSL** - Mermaid-competitive text format that compiles losslessly to CALM JSON and back (deferred from original Phase 5 — evaluate need after MCP usage)
 - [ ] **Phase 9: Desktop App** - Tauri 2 packaging for macOS, Windows, and Linux with native file dialogs
@@ -122,7 +122,7 @@ Plans:
   1. Nodes and edges with CALM schema violations show inline error indicators on the canvas without any user action
   2. A validation panel lists all errors, warnings, and info messages with severity levels and the offending node/edge identified
   3. Validation runs automatically after each edit with a debounce and never blocks typing or canvas interaction
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans complete
 Plans:
 - [ ] 06-00-PLAN.md — Install Ajv, bundle CALM 2025-03 schemas, create shared validation engine in calm-core with tests
 - [ ] 06-01-PLAN.md — Validation store (debounced reactive), ValidationBadge component, wire badges into all 11 node components and color overrides into all 5 edge components
@@ -207,7 +207,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 3. Properties & Bidirectional Sync | 5/5 | Complete   | 2026-03-12 |
 | 4. Import, Export & Layout | 3/5 | In Progress|  |
 | 5. MCP Server | 4/4 | Complete   | 2026-03-12 |
-| 6. CALM Validation | 2/3 | In Progress|  |
+| 6. CALM Validation | 3/3 | Complete   | 2026-03-12 |
 | 7. Extension Packs | 0/TBD | Not started | - |
 | 8. calmscript DSL | 0/TBD | Not started (deferred) | - |
 | 9. Desktop App | 0/TBD | Not started | - |

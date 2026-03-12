@@ -61,7 +61,7 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Validation
 
 - [x] **VALD-01**: Real-time CALM schema validation with inline error indicators on offending nodes/edges
-- [ ] **VALD-02**: Validation results displayed in dedicated panel with severity (error, warning, info)
+- [x] **VALD-02**: Validation results displayed in dedicated panel with severity (error, warning, info)
 - [x] **VALD-03**: Validation runs on debounced changes (not blocking the UI)
 
 ### Import & Export
@@ -252,7 +252,7 @@ Deferred to future release. Tracked but not in current roadmap.
 | CSPT-05 | Phase 5 | Pending |
 | CSPT-06 | Phase 5 | Pending |
 | VALD-01 | Phase 6 | Complete |
-| VALD-02 | Phase 6 | Pending |
+| VALD-02 | Phase 6 | Complete |
 | VALD-03 | Phase 6 | Complete |
 | EXTK-01 | Phase 7 | Pending |
 | EXTK-02 | Phase 7 | Pending |
