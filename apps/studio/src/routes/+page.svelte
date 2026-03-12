@@ -261,8 +261,9 @@
 	}
 
 	function handleExportCalmscript() {
-		// Phase 4 stub: empty string — Phase 5 will provide real calmscript content
-		exportAsCalmscript('');
+		// Phase 4 stub: export CALM JSON with a header comment — Phase 5 will provide real calmscript
+		const json = getModelJson();
+		exportAsCalmscript(`// calmscript export — full DSL support coming in Phase 5\n// CALM JSON representation:\n${json}\n`);
 	}
 
 	// ─── Auto-layout ──────────────────────────────────────────────────────────
@@ -341,11 +342,12 @@
 			}
 		}
 
-		window.addEventListener('keydown', handleKeydown);
+		// Use capture phase so we intercept before browser processes Cmd+N/Cmd+O
+		window.addEventListener('keydown', handleKeydown, true);
 		window.addEventListener('beforeunload', handleBeforeUnload);
 
 		return () => {
-			window.removeEventListener('keydown', handleKeydown);
+			window.removeEventListener('keydown', handleKeydown, true);
 			window.removeEventListener('beforeunload', handleBeforeUnload);
 		};
 	});
@@ -474,6 +476,7 @@
 									bind:edges
 									onselectionchange={handleSelectionChange}
 									onfileimport={importCalmFile}
+									oncanvaschange={markDirty}
 								/>
 							</SvelteFlowProvider>
 						</div>

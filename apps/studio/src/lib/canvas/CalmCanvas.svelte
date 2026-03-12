@@ -56,6 +56,7 @@
 		onplacenode,
 		onselectionchange,
 		onfileimport,
+		oncanvaschange,
 	}: {
 		nodes?: Node[];
 		edges?: Edge[];
@@ -65,6 +66,8 @@
 		onselectionchange?: (nodeId: string | null, edgeId: string | null) => void;
 		/** Called when a .json file is dropped onto the canvas. Receives file content and filename. */
 		onfileimport?: (content: string, filename: string) => void;
+		/** Called when canvas content changes (node drag, edge create, delete, etc.) for dirty tracking. */
+		oncanvaschange?: () => void;
 	} = $props();
 
 	// ─── Svelte Flow context ─────────────────────────────────────────────────
@@ -139,6 +142,7 @@
 
 		nodes = [...nodes, newNode];
 		applyFromCanvas(nodes, edges);
+		oncanvaschange?.();
 	}
 
 	// ─── Click-to-place ──────────────────────────────────────────────────────
@@ -170,6 +174,7 @@
 
 		nodes = [...nodes, newNode];
 		applyFromCanvas(nodes, edges);
+		oncanvaschange?.();
 	}
 
 	// ─── Edge creation ───────────────────────────────────────────────────────
@@ -193,6 +198,7 @@
 			nodes = makeContainment(connection.source, connection.target, nodes);
 		}
 		applyFromCanvas(nodes, edges);
+		oncanvaschange?.();
 	}
 
 	/**
@@ -214,6 +220,7 @@
 			nodes = makeContainment(edge.source, edge.target, nodes);
 		}
 		applyFromCanvas(nodes, edges);
+		oncanvaschange?.();
 	}
 
 	// ─── Edge context menu (right-click to change type) ─────────────────────
@@ -287,12 +294,14 @@
 					pushSnapshot(nodes, edges);
 					nodes = makeContainment(candidate.id, draggedNode.id, nodes);
 					applyFromCanvas(nodes, edges);
+					oncanvaschange?.();
 					return;
 				}
 			}
 		}
 		// Regular drag stop (position change only)
 		applyFromCanvas(nodes, edges);
+		oncanvaschange?.();
 	}
 
 	// ─── Pin toggle ───────────────────────────────────────────────────────────
@@ -300,13 +309,17 @@
 	/** Hover state for showing the pin button overlay. */
 	let hoveredNodeId = $state<string | null>(null);
 	let pinBtnPos = $state<{ x: number; y: number; width: number } | null>(null);
+	let canvasEl: HTMLDivElement;
 
 	function handleNodeMouseEnter(event: { event: MouseEvent; node: Node }) {
 		hoveredNodeId = event.node.id;
-		// Position pin button at top-right of node using screen coords
+		// Position pin button relative to canvas container (not screen)
 		const screenPos = flowToScreenPosition(event.node.position);
 		const w = event.node.measured?.width ?? event.node.width ?? 160;
-		pinBtnPos = { x: screenPos.x + w - 22, y: screenPos.y + 4, width: w };
+		const rect = canvasEl?.getBoundingClientRect();
+		const offsetX = rect?.left ?? 0;
+		const offsetY = rect?.top ?? 0;
+		pinBtnPos = { x: screenPos.x - offsetX + w - 22, y: screenPos.y - offsetY + 4, width: w };
 	}
 
 	function handleNodeMouseLeave() {
@@ -388,6 +401,7 @@
   Keyboard shortcuts are bound via @svelte-put/shortcut action on the wrapper div.
 -->
 <div
+	bind:this={canvasEl}
 	class="relative h-full w-full"
 	ondragover={handleDragOver}
 	ondrop={handleDrop}
@@ -449,9 +463,10 @@
 	<!-- Pinned node indicator dots — always visible on pinned nodes -->
 	{#each nodes.filter(n => n.data?.pinned) as pinnedNode}
 		{@const screenPos = flowToScreenPosition(pinnedNode.position)}
+		{@const rect = canvasEl?.getBoundingClientRect()}
 		<div
 			class="pin-indicator"
-			style="left: {screenPos.x + 4}px; top: {screenPos.y + 4}px;"
+			style="left: {screenPos.x - (rect?.left ?? 0) + 4}px; top: {screenPos.y - (rect?.top ?? 0) + 4}px;"
 			title="Node is pinned — stays fixed during auto-layout"
 			aria-hidden="true"
 		></div>
