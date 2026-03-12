@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: verifying
-stopped_at: Completed 04-import-export-layout/04-00-PLAN.md
-last_updated: "2026-03-12T04:35:34.932Z"
+stopped_at: Completed 04-import-export-layout 04-02-PLAN.md
+last_updated: "2026-03-12T04:37:08.412Z"
 last_activity: 2026-03-12 — Phase 3 verification passed; gap fixes confirmed; ready for Phase 4
 progress:
   total_phases: 12
   completed_phases: 3
   total_plans: 18
-  completed_plans: 14
+  completed_plans: 15
   percent: 25
 ---
 
@@ -63,6 +63,7 @@ Progress: [██░░░░░░░░] 25%
 | Phase 03-properties-bidirectional-sync P03 | 10min | 2 tasks | 5 files |
 | Phase 03-properties-bidirectional-sync P04 | 5min | 2 tasks | 2 files |
 | Phase 04-import-export-layout P00 | 4min | 2 tasks | 4 files |
+| Phase 04-import-export-layout P02 | 4min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -107,6 +108,8 @@ Recent decisions affecting current work:
 - [Phase 03-properties-bidirectional-sync]: properties panel collapsed state must not trigger on field edit focus — fixed in PropertiesPanel.svelte
 - [Phase 04-import-export-layout]: vi.stubGlobal(fn, undefined) keeps property detectable in window — use delete to remove File System Access API pickers for jsdom fallback tests
 - [Phase 04-import-export-layout]: elkLayout.ts and fileSystem.ts pre-existed — Wave 0 test stubs serve as regression tests rather than TDD scaffolding
+- [Phase 04-import-export-layout]: typeof check for FSA API feature detection (not 'in' check) — vitest stubs set property to undefined but key still exists
+- [Phase 04-import-export-layout]: exportAsCalm uses Blob + createObjectURL (not data URL) for proper JSON MIME type; calmscript export is Phase 4 stub until Phase 5 DSL compiler
 
 ### Pending Todos
 
@@ -120,6 +123,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-12T04:35:34.929Z
-Stopped at: Completed 04-import-export-layout/04-00-PLAN.md
+Last session: 2026-03-12T04:37:08.410Z
+Stopped at: Completed 04-import-export-layout 04-02-PLAN.md
 Resume file: None

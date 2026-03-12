@@ -67,10 +67,10 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Import & Export
 
 - [x] **IOEX-01**: User can import existing CALM JSON files and auto-layout the diagram (ELK.js)
-- [ ] **IOEX-02**: User can export diagram as CALM JSON
-- [ ] **IOEX-03**: User can export diagram as calmscript
-- [ ] **IOEX-04**: User can export diagram as SVG (vector, crisp)
-- [ ] **IOEX-05**: User can export diagram as PNG
+- [x] **IOEX-02**: User can export diagram as CALM JSON
+- [x] **IOEX-03**: User can export diagram as calmscript
+- [x] **IOEX-04**: User can export diagram as SVG (vector, crisp)
+- [x] **IOEX-05**: User can export diagram as PNG
 - [x] **IOEX-06**: User can save/load diagrams via native file system (Tauri 2)
 
 ### Layout
@@ -237,10 +237,10 @@ Deferred to future release. Tracked but not in current roadmap.
 | CODE-02 | Phase 3 | Complete |
 | CODE-03 | Phase 3 | Complete |
 | IOEX-01 | Phase 4 | Complete |
-| IOEX-02 | Phase 4 | Pending |
-| IOEX-03 | Phase 4 | Pending |
-| IOEX-04 | Phase 4 | Pending |
-| IOEX-05 | Phase 4 | Pending |
+| IOEX-02 | Phase 4 | Complete |
+| IOEX-03 | Phase 4 | Complete |
+| IOEX-04 | Phase 4 | Complete |
+| IOEX-05 | Phase 4 | Complete |
 | IOEX-06 | Phase 4 | Complete |
 | LAYT-01 | Phase 4 | Complete |
 | LAYT-02 | Phase 4 | Complete |

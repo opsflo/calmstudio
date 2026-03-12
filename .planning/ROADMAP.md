@@ -89,7 +89,7 @@ Plans:
   3. User can trigger auto-layout and nodes arrange cleanly; pinned nodes stay in place
   4. User can export a diagram as CALM JSON, calmscript, SVG, or PNG and the exported file opens correctly in external tools
   5. CALM JSON files from the FINOS `architecture-as-code` examples directory import without data loss
-**Plans:** 1/5 plans executed
+**Plans:** 2/5 plans executed
 Plans:
 - [ ] 04-00-PLAN.md — Install deps (elkjs, html-to-image), create test stubs for ELK layout and file system
 - [ ] 04-01-PLAN.md — ELK layout engine, CALM JSON import, drag-and-drop, auto-layout button, pin toggle
@@ -243,7 +243,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 1. Foundation & Governance | 2/2 | Complete    | 2026-03-11 |
 | 2. CALM Canvas Core | 3/6 | In Progress|  |
 | 3. Properties & Bidirectional Sync | 5/5 | Complete   | 2026-03-12 |
-| 4. Import, Export & Layout | 1/5 | In Progress|  |
+| 4. Import, Export & Layout | 2/5 | In Progress|  |
 | 5. calmscript DSL | 0/TBD | Not started | - |
 | 6. CALM Validation | 0/TBD | Not started | - |
 | 7. Extension Packs | 0/TBD | Not started | - |
