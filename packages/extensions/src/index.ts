@@ -4,18 +4,36 @@
 
 export type { PackDefinition, NodeTypeEntry, PackColor } from './types.js';
 export {
-	registerPack,
-	resolvePackNode,
-	getAllPacks,
-	getPacksForTypes,
-	resetRegistry,
+  registerPack,
+  resolvePackNode,
+  getAllPacks,
+  getPacksForTypes,
+  resetRegistry,
 } from './registry.js';
 export { corePack } from './packs/core.js';
+export { awsPack } from './packs/aws.js';
+export { gcpPack } from './packs/gcp.js';
+export { azurePack } from './packs/azure.js';
+export { kubernetesPack } from './packs/kubernetes.js';
+export { aiPack } from './packs/ai.js';
 
 import { registerPack } from './registry.js';
-import { corePack as _corePack } from './packs/core.js';
+import { corePack } from './packs/core.js';
+import { awsPack } from './packs/aws.js';
+import { gcpPack } from './packs/gcp.js';
+import { azurePack } from './packs/azure.js';
+import { kubernetesPack } from './packs/kubernetes.js';
+import { aiPack } from './packs/ai.js';
 
-/** Register all built-in packs. Call once at application startup. */
+/**
+ * Register all built-in packs (core + 5 extension packs).
+ * Call once at application startup before resolving any pack nodes.
+ */
 export function initAllPacks(): void {
-	registerPack(_corePack);
+  registerPack(corePack);
+  registerPack(awsPack);
+  registerPack(gcpPack);
+  registerPack(azurePack);
+  registerPack(kubernetesPack);
+  registerPack(aiPack);
 }

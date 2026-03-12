@@ -111,4 +111,99 @@ describe('initAllPacks', () => {
 		const packs = getAllPacks();
 		expect(packs.some((p) => p.id === 'core')).toBe(true);
 	});
+
+	it('getAllPacks() returns 6 packs after initAllPacks()', () => {
+		initAllPacks();
+		expect(getAllPacks()).toHaveLength(6);
+	});
+
+	it('AWS pack has >= 30 node entries', () => {
+		initAllPacks();
+		const aws = getAllPacks().find((p) => p.id === 'aws');
+		expect(aws).toBeDefined();
+		expect(aws!.nodes.length).toBeGreaterThanOrEqual(30);
+	});
+
+	it('GCP pack has >= 15 node entries', () => {
+		initAllPacks();
+		const gcp = getAllPacks().find((p) => p.id === 'gcp');
+		expect(gcp).toBeDefined();
+		expect(gcp!.nodes.length).toBeGreaterThanOrEqual(15);
+	});
+
+	it('Azure pack has >= 15 node entries', () => {
+		initAllPacks();
+		const azure = getAllPacks().find((p) => p.id === 'azure');
+		expect(azure).toBeDefined();
+		expect(azure!.nodes.length).toBeGreaterThanOrEqual(15);
+	});
+
+	it('K8s pack has >= 14 node entries', () => {
+		initAllPacks();
+		const k8s = getAllPacks().find((p) => p.id === 'k8s');
+		expect(k8s).toBeDefined();
+		expect(k8s!.nodes.length).toBeGreaterThanOrEqual(14);
+	});
+
+	it('AI pack has >= 14 node entries', () => {
+		initAllPacks();
+		const ai = getAllPacks().find((p) => p.id === 'ai');
+		expect(ai).toBeDefined();
+		expect(ai!.nodes.length).toBeGreaterThanOrEqual(14);
+	});
+
+	it('resolvePackNode("aws:lambda") returns entry with label "Lambda"', () => {
+		initAllPacks();
+		const entry = resolvePackNode('aws:lambda');
+		expect(entry).not.toBeNull();
+		expect(entry!.label).toBe('Lambda');
+	});
+
+	it('resolvePackNode("k8s:pod") returns entry with label "Pod"', () => {
+		initAllPacks();
+		const entry = resolvePackNode('k8s:pod');
+		expect(entry).not.toBeNull();
+		expect(entry!.label).toBe('Pod');
+	});
+
+	it('resolvePackNode("ai:agent") returns entry with label "Agent"', () => {
+		initAllPacks();
+		const entry = resolvePackNode('ai:agent');
+		expect(entry).not.toBeNull();
+		expect(entry!.label).toBe('Agent');
+	});
+
+	it('resolvePackNode("gcp:cloud-run") returns entry with label "Cloud Run"', () => {
+		initAllPacks();
+		const entry = resolvePackNode('gcp:cloud-run');
+		expect(entry).not.toBeNull();
+		expect(entry!.label).toBe('Cloud Run');
+	});
+
+	it('resolvePackNode("azure:functions") returns entry with label "Functions"', () => {
+		initAllPacks();
+		const entry = resolvePackNode('azure:functions');
+		expect(entry).not.toBeNull();
+		expect(entry!.label).toBe('Functions');
+	});
+
+	it('every pack node has non-empty icon string', () => {
+		initAllPacks();
+		for (const pack of getAllPacks()) {
+			for (const node of pack.nodes) {
+				expect(node.icon.trim().length, `${node.typeId} icon is empty`).toBeGreaterThan(0);
+			}
+		}
+	});
+
+	it('every pack node has a valid PackColor (bg, border, stroke all non-empty)', () => {
+		initAllPacks();
+		for (const pack of getAllPacks()) {
+			for (const node of pack.nodes) {
+				expect(node.color.bg.trim().length, `${node.typeId} color.bg is empty`).toBeGreaterThan(0);
+				expect(node.color.border.trim().length, `${node.typeId} color.border is empty`).toBeGreaterThan(0);
+				expect(node.color.stroke.trim().length, `${node.typeId} color.stroke is empty`).toBeGreaterThan(0);
+			}
+		}
+	});
 });
