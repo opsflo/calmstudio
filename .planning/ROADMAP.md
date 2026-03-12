@@ -2,7 +2,7 @@
 
 ## Overview
 
-CalmStudio ships in 12 phases, each delivering a coherent, independently verifiable capability. The build order follows hard dependencies: governance and CI gate everything; the CALM canvas is the root dependency for all UI features; MCP server enables AI integration early; validation and extension packs enhance both the UI and MCP; calmscript is deferred until real-world MCP usage informs whether a text DSL is needed. Phases 1-4 deliver a standalone CALM-typed desktop diagramming tool. Phases 5-8 add the AI-native differentiation (MCP, validation, extension packs, calmscript). Phases 9-12 complete the ecosystem (desktop packaging, patterns, docs, VS Code/GitHub/web component).
+CalmStudio ships in 13 phases, each delivering a coherent, independently verifiable capability. The build order follows hard dependencies: governance and CI gate everything; the CALM canvas is the root dependency for all UI features; MCP server enables AI integration early; validation and extension packs enhance both the UI and MCP; C4 view mode adds hierarchical navigation after extension packs provide rich node types; calmscript is deferred until real-world MCP usage informs whether a text DSL is needed. Phases 1-4 deliver a standalone CALM-typed desktop diagramming tool. Phases 5-8 add the AI-native differentiation (MCP, validation, extension packs, C4 views). Phases 9-13 complete the ecosystem (calmscript, desktop packaging, patterns, docs, VS Code/GitHub/web component).
 
 ## Phases
 
@@ -19,11 +19,12 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 5: MCP Server** - Standalone MCP server enabling Claude Code and AI assistants to create/modify/validate architectures via structured tool calls (completed 2026-03-12)
 - [x] **Phase 6: CALM Validation** - Real-time schema validation with inline indicators and severity panel (completed 2026-03-12)
 - [ ] **Phase 7: Extension Packs** - Dynamic pack system with AWS, GCP, Azure, Kubernetes, and AI/Agentic node types
-- [ ] **Phase 8: calmscript DSL** - Mermaid-competitive text format that compiles losslessly to CALM JSON and back (deferred from original Phase 5 — evaluate need after MCP usage)
-- [ ] **Phase 9: Desktop App** - Tauri 2 packaging for macOS, Windows, and Linux with native file dialogs
-- [ ] **Phase 10: Pattern Library & Documentation** - Architecture pattern templates and Docusaurus documentation site
-- [ ] **Phase 11: Testing Suite** - Comprehensive London School TDD — unit, integration, E2E, and component tests
-- [ ] **Phase 12: Ecosystem** - VS Code extension, GitHub Action for CI/CD, web component, and flow visualization
+- [ ] **Phase 8: C4 View Mode** - Hierarchical C4 navigation (Context, Container, Component) as zoom levels over CALM architectures
+- [ ] **Phase 9: calmscript DSL** - Mermaid-competitive text format that compiles losslessly to CALM JSON and back (deferred from original Phase 5 — evaluate need after MCP usage)
+- [ ] **Phase 10: Desktop App** - Tauri 2 packaging for macOS, Windows, and Linux with native file dialogs
+- [ ] **Phase 11: Pattern Library & Documentation** - Architecture pattern templates and Docusaurus documentation site
+- [ ] **Phase 12: Testing Suite** - Comprehensive London School TDD — unit, integration, E2E, and component tests
+- [ ] **Phase 13: Ecosystem** - VS Code extension, GitHub Action for CI/CD, web component, and flow visualization
 
 ## Phase Details
 
@@ -137,13 +138,30 @@ Plans:
   2. Diagrams using extension pack node types pass `calm validate` without modification
   3. Extension pack metadata is stored in a `.calmstudio.json` sidecar file and never embedded in the `.calm` JSON
   4. A diagram created with extension pack nodes exports valid CALM JSON that round-trips correctly through import
+**Plans:** 4 plans
+Plans:
+- [ ] 07-00-PLAN.md — Types, PackRegistry, Core CALM pack, test infrastructure for extensions package
+- [ ] 07-01-PLAN.md — AWS, GCP, Azure, Kubernetes, AI/Agentic pack definitions with SVG icons
+- [ ] 07-02-PLAN.md — ExtensionNode component, resolveNodeType extension, NodePalette refactor with collapsible pack sections
+- [ ] 07-03-PLAN.md — App startup wiring, projection round-trip tests, sidecar file I/O, visual verification
+
+### Phase 8: C4 View Mode
+**Goal**: Architects can navigate CALM architectures at C4 zoom levels (Context, Container, Component), drilling into systems to see internal structure without losing the big picture
+**Depends on**: Phase 7 (Extension Packs — richer node types make C4 views more valuable)
+**Requirements**: C4VM-01, C4VM-02, C4VM-03, C4VM-04, C4VM-05
+**Success Criteria** (what must be TRUE):
+  1. User can switch between C4 levels (Context, Container, Component) via a view selector and the canvas filters to show only nodes appropriate to that level
+  2. User can double-click a system node at Context level to drill down into its Container view, showing children linked via `composed-of` or `deployed-in` relationships
+  3. User can drill from Container into Component level for any container node, and a breadcrumb trail shows the navigation path (e.g., "All Systems > Payment System > API Gateway")
+  4. C4 view mode is a read/navigate overlay — the underlying CALM JSON is unchanged and all edits still go through the normal canvas/properties/code workflows
+  5. C4 styling conventions are applied per level (e.g., external systems greyed out at Context level, internal containers highlighted at Container level)
 **Plans:** 0/TBD
 
-### Phase 8: calmscript DSL
+### Phase 9: calmscript DSL
 **Goal**: Architects and AI tools can describe an architecture in ~20 lines of text that compiles losslessly to and from CALM JSON
-**Depends on**: Phase 4 (benefits from Phases 5-7 being complete)
+**Depends on**: Phase 4 (benefits from Phases 5-8 being complete)
 **Requirements**: CSPT-01, CSPT-02, CSPT-03, CSPT-04, CSPT-05, CSPT-06
-**Deferred from**: Original Phase 5 — MCP Server (structured tool calls) solves AI generation more reliably. calmscript value to be evaluated after real-world MCP usage. Context captured in 08-CONTEXT.md.
+**Deferred from**: Original Phase 5 — MCP Server (structured tool calls) solves AI generation more reliably. calmscript value to be evaluated after real-world MCP usage. Context captured in phases/08-calmscript-dsl/08-CONTEXT.md.
 **Success Criteria** (what must be TRUE):
   1. A 5-node architecture with typed relationships, interfaces, and controls is expressible in 20 lines or fewer of calmscript
   2. Compiling calmscript to CALM JSON and back to calmscript produces identical output (round-trip lossless)
@@ -152,9 +170,9 @@ Plans:
   5. The calmscript parser runs in a Web Worker and does not block keystrokes even on large architectures
 **Plans:** 0/TBD
 
-### Phase 9: Desktop App
+### Phase 10: Desktop App
 **Goal**: CalmStudio ships as a native desktop application on macOS, Windows, and Linux with native file system access
-**Depends on**: Phase 8
+**Depends on**: Phase 9
 **Requirements**: DESK-01, DESK-02, DESK-03
 **Success Criteria** (what must be TRUE):
   1. User can download and install CalmStudio on macOS, Windows, and Linux and launch it without installing Node.js or any runtime
@@ -162,9 +180,9 @@ Plans:
   3. CalmStudio works fully offline with no network requests required for core diagramming functionality
 **Plans:** 0/TBD
 
-### Phase 10: Pattern Library & Documentation
+### Phase 11: Pattern Library & Documentation
 **Goal**: Architects can start from proven architecture templates, and contributors and users have comprehensive documentation
-**Depends on**: Phase 9
+**Depends on**: Phase 10
 **Requirements**: PATN-01, PATN-02, PATN-03, DOCS-01, DOCS-02, DOCS-03, DOCS-04, DOCS-05, DOCS-06
 **Success Criteria** (what must be TRUE):
   1. User can browse architecture patterns by category and instantiate any pattern as an editable diagram with auto-layout applied
@@ -173,9 +191,9 @@ Plans:
   4. Architecture Decision Records exist in `docs/` for all key decisions logged in PROJECT.md
 **Plans:** 0/TBD
 
-### Phase 11: Testing Suite
+### Phase 12: Testing Suite
 **Goal**: Every feature has outside-in tests at the appropriate level so regressions are caught before they reach users
-**Depends on**: Phase 10
+**Depends on**: Phase 11
 **Requirements**: TEST-01, TEST-02, TEST-03, TEST-04, TEST-05
 **Success Criteria** (what must be TRUE):
   1. The sync engine, CALM model, calmscript parser, and CALM validation each have unit tests that run in under 30 seconds
@@ -184,9 +202,9 @@ Plans:
   4. Every custom Svelte node and edge component has component-level tests via @testing-library/svelte
 **Plans:** 0/TBD
 
-### Phase 12: Ecosystem
+### Phase 13: Ecosystem
 **Goal**: CalmStudio reaches developers in their existing tools — VS Code, GitHub PRs, and any web page — and flow visualization completes the architecture story
-**Depends on**: Phase 11
+**Depends on**: Phase 12
 **Requirements**: ECOS-01, ECOS-02, ECOS-03, ECOS-04
 **Success Criteria** (what must be TRUE):
   1. A VS Code extension is installable from the Marketplace and renders a live calmscript preview alongside the editor
@@ -198,7 +216,7 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10 -> 11 -> 12
+Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10 -> 11 -> 12 -> 13
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -208,9 +226,10 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 4. Import, Export & Layout | 3/5 | In Progress|  |
 | 5. MCP Server | 4/4 | Complete   | 2026-03-12 |
 | 6. CALM Validation | 3/3 | Complete   | 2026-03-12 |
-| 7. Extension Packs | 0/TBD | Not started | - |
-| 8. calmscript DSL | 0/TBD | Not started (deferred) | - |
-| 9. Desktop App | 0/TBD | Not started | - |
-| 10. Pattern Library & Documentation | 0/TBD | Not started | - |
-| 11. Testing Suite | 0/TBD | Not started | - |
-| 12. Ecosystem | 0/TBD | Not started | - |
+| 7. Extension Packs | 0/4 | Not started | - |
+| 8. C4 View Mode | 0/TBD | Not started | - |
+| 9. calmscript DSL | 0/TBD | Not started (deferred) | - |
+| 10. Desktop App | 0/TBD | Not started | - |
+| 11. Pattern Library & Documentation | 0/TBD | Not started | - |
+| 12. Testing Suite | 0/TBD | Not started | - |
+| 13. Ecosystem | 0/TBD | Not started | - |
