@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: verifying
-stopped_at: Completed 04-import-export-layout/04-03-PLAN.md
-last_updated: "2026-03-12T04:46:39.861Z"
+stopped_at: "Roadmap swapped: MCP Server is now Phase 5, calmscript deferred to Phase 8. Context captured for calmscript decisions."
+last_updated: "2026-03-12T07:50:34.746Z"
 last_activity: 2026-03-12 — Phase 3 verification passed; gap fixes confirmed; ready for Phase 4
 progress:
   total_phases: 12
@@ -132,6 +132,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-12T04:46:39.859Z
-Stopped at: Completed 04-import-export-layout/04-03-PLAN.md
-Resume file: None
+Last session: 2026-03-12T07:50:34.743Z
+Stopped at: Roadmap swapped: MCP Server is now Phase 5, calmscript deferred to Phase 8. Context captured for calmscript decisions.
+Resume file: .planning/phases/08-calmscript-dsl/08-CONTEXT.md
