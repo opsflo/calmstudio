@@ -10,7 +10,8 @@ import { openFile, saveFile, downloadDataUrl } from '$lib/io/fileSystem';
 describe('openFile', () => {
 	beforeEach(() => {
 		// Ensure showOpenFilePicker is NOT in window (fallback path)
-		vi.stubGlobal('showOpenFilePicker', undefined);
+		// Using delete so that 'showOpenFilePicker' in window is false
+		delete (window as unknown as Record<string, unknown>).showOpenFilePicker;
 	});
 
 	afterEach(() => {
@@ -75,7 +76,8 @@ describe('saveFile', () => {
 	});
 
 	it('fallback: when showSaveFilePicker is not in window and handle is null, creates Blob download via anchor', async () => {
-		vi.stubGlobal('showSaveFilePicker', undefined);
+		// Ensure showSaveFilePicker is NOT in window (fallback path)
+		delete (window as unknown as Record<string, unknown>).showSaveFilePicker;
 
 		const mockObjectUrl = 'blob:mock-url';
 		vi.stubGlobal('URL', {
