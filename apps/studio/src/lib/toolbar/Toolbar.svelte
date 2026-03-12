@@ -19,6 +19,7 @@
 		onsave,
 		onsaveas,
 		onnew,
+		onvalidate,
 		onexportcalm,
 		onexportsvg,
 		onexportpng,
@@ -30,6 +31,7 @@
 		onsave: () => void;
 		onsaveas: () => void;
 		onnew: () => void;
+		onvalidate: () => void;
 		onexportcalm: () => void;
 		onexportsvg: () => void;
 		onexportpng: () => void;
@@ -87,8 +89,8 @@
 			type="button"
 			class="toolbar-btn"
 			onclick={onnew}
-			aria-label="New diagram (Cmd+N)"
-			title="New (Cmd+N)"
+			aria-label="New diagram (⌥N)"
+			title="New (⌥N)"
 		>
 			<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
 				<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
@@ -127,6 +129,21 @@
 				<polyline points="7 3 7 8 15 8" />
 			</svg>
 			<span class="btn-label">Save</span>
+		</button>
+
+		<!-- Validate -->
+		<button
+			type="button"
+			class="toolbar-btn"
+			onclick={onvalidate}
+			aria-label="Validate CALM diagram"
+			title="Validate"
+		>
+			<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+				<path d="M9 12l2 2 4-4" />
+				<path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
+			</svg>
+			<span class="btn-label">Validate</span>
 		</button>
 
 		<!-- Export dropdown -->

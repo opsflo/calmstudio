@@ -3,20 +3,16 @@
 // SPDX-License-Identifier: Apache-2.0
 
 /**
- * validation.svelte.ts — Reactive debounced validation store.
+ * validation.svelte.ts — On-demand validation store.
  *
- * Tracks getModel() reactively via $effect and runs validateCalmArchitecture()
- * with a 400ms debounce. Validation results are stored in module-level $state
- * and exposed via pure accessor functions.
+ * Validation is user-triggered (via a "Validate" button), not automatic.
+ * When the user clicks Validate, runValidation() is called, issues are
+ * populated, and the panel opens. Issues remain visible until the user
+ * closes the panel or runs validation again.
  *
  * IMPORTANT: This store READS getModel() but NEVER WRITES to calmModel.
- * Validation data is injected into node.data by +page.svelte (Plan 02 wiring).
+ * Validation data is injected into node.data by +page.svelte.
  * This prevents the infinite loop described in RESEARCH Pitfall 3.
- *
- * Panel auto-open logic:
- *   - When errors appear and panelDismissed is false -> auto-open
- *   - Manual dismiss sets panelDismissed = true (persists until resetDismiss)
- *   - resetDismiss() called on new file load (clears dismissed state)
  */
 
 import { getModel } from './calmModel.svelte';
@@ -28,39 +24,29 @@ export type { ValidationIssue };
 // ─── Module-level state ───────────────────────────────────────────────────────
 
 let issues = $state<ValidationIssue[]>([]);
-let panelDismissed = $state(false);
-let panelWasAutoOpened = $state(false);
+let panelOpen = $state(false);
 let scrollToId = $state<string | null>(null);
 
-// Plain let — debounce timer has no reactivity need (per syncing mutex pattern)
-let debounceTimer: ReturnType<typeof setTimeout> | undefined;
+// ─── On-demand validation ────────────────────────────────────────────────────
 
-// ─── Reactive debounced validation effect ────────────────────────────────────
+/**
+ * Run validation on the current model and open the panel with results.
+ * Called explicitly by the user (e.g., clicking a "Validate" button).
+ */
+export function runValidation(): void {
+	issues = validateCalmArchitecture(getModel());
+	panelOpen = true;
+}
 
-$effect.root(() => {
-	$effect(() => {
-		// Reactive tracking: reading getModel() subscribes to model changes
-		const currentModel = getModel();
-
-		// Clear any pending debounce
-		clearTimeout(debounceTimer);
-
-		debounceTimer = setTimeout(() => {
-			issues = validateCalmArchitecture(currentModel);
-
-			// Auto-open panel on first errors (unless user already dismissed)
-			const hasErrors = issues.some((i) => i.severity === 'error');
-			if (hasErrors && !panelDismissed) {
-				panelWasAutoOpened = true;
-			}
-		}, 400);
-
-		// Cleanup: clear timer when effect re-runs or component unmounts
-		return () => {
-			clearTimeout(debounceTimer);
-		};
-	});
-});
+/**
+ * Clear all validation results and close the panel.
+ * Called on new file load or when user explicitly clears.
+ */
+export function clearValidation(): void {
+	issues = [];
+	panelOpen = false;
+	scrollToId = null;
+}
 
 // ─── Accessor functions ───────────────────────────────────────────────────────
 
@@ -96,20 +82,19 @@ export function getMaxSeverityForElement(id: string): 'error' | 'warning' | 'inf
 	return null;
 }
 
-/** Returns true when the validation panel should be visible (auto-opened and not dismissed). */
+/** Returns true when the validation panel should be visible. */
 export function isPanelOpen(): boolean {
-	return panelWasAutoOpened && !panelDismissed;
+	return panelOpen;
 }
 
-/** Dismiss the validation panel. Panel will not auto-reopen until resetDismiss(). */
-export function dismissPanel(): void {
-	panelDismissed = true;
+/** Close the validation panel. Issues are retained until next runValidation() or clearValidation(). */
+export function closePanel(): void {
+	panelOpen = false;
 }
 
-/** Reset dismissed state. Call on new file load to allow panel to auto-open again. */
-export function resetDismiss(): void {
-	panelDismissed = false;
-	panelWasAutoOpened = false;
+/** Open the validation panel (e.g., to review previous results). */
+export function openPanel(): void {
+	panelOpen = true;
 }
 
 /** Returns the element ID that the panel should scroll to (set by badge click). */
@@ -120,4 +105,8 @@ export function getScrollToElementId(): string | null {
 /** Set the element ID for panel scroll coordination (called by badge click). */
 export function setScrollToElementId(id: string | null): void {
 	scrollToId = id;
+	// Also open the panel if it's closed when user clicks a badge
+	if (id !== null) {
+		panelOpen = true;
+	}
 }

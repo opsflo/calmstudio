@@ -34,10 +34,11 @@
 		getWarningCountForElement,
 		getMaxSeverityForElement,
 		isPanelOpen,
-		dismissPanel,
+		closePanel,
 		getScrollToElementId,
 		setScrollToElementId,
-		resetDismiss,
+		clearValidation,
+		runValidation,
 	} from '$lib/stores/validation.svelte';
 
 	let nodes = $state.raw<Node[]>([]);
@@ -45,48 +46,51 @@
 
 	let canvas: CalmCanvas;
 
-	// ─── Validation pane ──────────────────────────────────────────────────────
-
-	type CalmPaneInstance = { collapse: () => void; expand: () => void; };
-	let validationPane = $state<CalmPaneInstance | null>(null);
-
-	/** Auto-open / auto-close the validation drawer based on store state. */
-	$effect(() => {
-		const open = isPanelOpen();
-		if (open && validationPane) {
-			validationPane.expand();
-		}
-	});
-
-	// ─── Enriched nodes/edges with validation data (display-only) ────────────
+	// ─── Validation ──────────────────────────────────────────────────────────
 
 	/**
-	 * Inject validation counts into nodes and edges for badge display.
-	 * This effect runs when issues change (from validation store) and merges
-	 * validation data into node.data / edge.data without calling applyFromCanvas.
-	 * Uses a guard to prevent infinite loops: only writes if values actually changed.
+	 * Run validation on demand and enrich nodes/edges with results.
+	 * Called by the Validate toolbar button.
 	 */
-	$effect(() => {
-		// Read issues reactively — triggers re-run when validation store updates
-		const currentIssues = getIssues();
-		if (currentIssues === undefined) return; // paranoia guard
+	function handleValidate() {
+		runValidation();
+		enrichNodesEdgesWithValidation();
+	}
 
-		// Merge validation counts into nodes (without applyFromCanvas)
+	/**
+	 * Inject validation counts into nodes and edges for badge/color display.
+	 * Only called after explicit validation run — not reactive.
+	 */
+	function enrichNodesEdgesWithValidation() {
+		const currentIssues = getIssues();
+		if (!currentIssues.length) {
+			// Clear any previous validation data from nodes/edges
+			const clearedNodes = nodes.map((n) => {
+				if (n.data?.validationErrors === 0 && n.data?.validationWarnings === 0) return n;
+				return { ...n, data: { ...n.data, validationErrors: 0, validationWarnings: 0 } };
+			});
+			if (clearedNodes.some((n, i) => n !== nodes[i])) nodes = clearedNodes;
+
+			const clearedEdges = edges.map((e) => {
+				if (e.data?.validationSeverity === null) return e;
+				return { ...e, data: { ...e.data, validationSeverity: null } };
+			});
+			if (clearedEdges.some((e, i) => e !== edges[i])) edges = clearedEdges;
+			return;
+		}
+
+		// Merge validation counts into nodes
 		const nextNodes = nodes.map((n) => {
 			const calmId = (n.data?.calmId as string) ?? n.id;
 			const errs = getErrorCountForElement(calmId);
 			const warns = getWarningCountForElement(calmId);
-			// Only update if values changed to avoid unnecessary re-renders
 			if (n.data?.validationErrors === errs && n.data?.validationWarnings === warns) return n;
 			return {
 				...n,
 				data: { ...n.data, validationErrors: errs, validationWarnings: warns },
 			};
 		});
-		// Only assign if at least one node changed
-		if (nextNodes.some((n, i) => n !== nodes[i])) {
-			nodes = nextNodes;
-		}
+		if (nextNodes.some((n, i) => n !== nodes[i])) nodes = nextNodes;
 
 		// Merge validation severity into edges
 		const nextEdges = edges.map((e) => {
@@ -98,10 +102,8 @@
 				data: { ...e.data, validationSeverity: sev },
 			};
 		});
-		if (nextEdges.some((e, i) => e !== edges[i])) {
-			edges = nextEdges;
-		}
-	});
+		if (nextEdges.some((e, i) => e !== edges[i])) edges = nextEdges;
+	}
 
 	// ─── Import error state — set by importCalmFile on invalid JSON ──────────
 
@@ -287,8 +289,8 @@
 		// Clear any previous error
 		importError = null;
 
-		// Reset dismiss state on new file load so panel can auto-open again
-		resetDismiss();
+		// Clear previous validation results on new file load
+		clearValidation();
 
 		// Push undo snapshot before mutation
 		pushSnapshot(nodes, edges);
@@ -356,7 +358,7 @@
 		resetModel();
 		resetHistory();
 		resetFileState();
-		resetDismiss();
+		clearValidation();
 		nodes = [];
 		edges = [];
 	}
@@ -496,6 +498,7 @@
 			onsave={handleSave}
 			onsaveas={handleSaveAs}
 			onnew={handleNew}
+			onvalidate={handleValidate}
 			onexportcalm={handleExportCalm}
 			onexportsvg={handleExportSvg}
 			onexportpng={handleExportPng}
@@ -633,23 +636,22 @@
 				/>
 			</Pane>
 
-			<PaneResizer class="resizer resizer-horizontal" />
+			{#if isPanelOpen()}
+				<PaneResizer class="resizer resizer-horizontal" />
 
-			<!-- Bottom: Validation panel drawer (collapsible) -->
-			<Pane
-				defaultSize={15}
-				minSize={5}
-				collapsible
-				collapsedSize={0}
-				bind:this={validationPane}
-			>
-				<ValidationPanel
-					issues={getIssues()}
-					onnavigatetonode={handleNavigateToNode}
-					ondismiss={() => { dismissPanel(); validationPane?.collapse(); }}
-					scrollToId={getScrollToElementId()}
-				/>
-			</Pane>
+				<!-- Bottom: Validation panel (shown after user clicks Validate) -->
+				<Pane
+					defaultSize={20}
+					minSize={8}
+				>
+					<ValidationPanel
+						issues={getIssues()}
+						onnavigatetonode={handleNavigateToNode}
+						ondismiss={() => { closePanel(); }}
+						scrollToId={getScrollToElementId()}
+					/>
+				</Pane>
+			{/if}
 		</PaneGroup>
 	</div>
 </DnDProvider>
