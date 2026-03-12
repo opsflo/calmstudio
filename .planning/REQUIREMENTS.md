@@ -92,12 +92,12 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### MCP Server
 
-- [ ] **MCPS-01**: MCP server exposes `create_architecture` tool (description -> calmscript + CALM JSON)
-- [ ] **MCPS-02**: MCP server exposes `add_node` and `add_relationship` tools
-- [ ] **MCPS-03**: MCP server exposes `validate_architecture` tool
-- [ ] **MCPS-04**: MCP server exposes `render_diagram` tool (-> SVG)
-- [ ] **MCPS-05**: MCP server exposes `export_calm` and `import_calm` tools
-- [ ] **MCPS-06**: MCP server installable via `npm install -g @calmstudio/mcp`
+- [x] **MCPS-01**: MCP server exposes `create_architecture` tool (description -> calmscript + CALM JSON)
+- [x] **MCPS-02**: MCP server exposes `add_node` and `add_relationship` tools
+- [x] **MCPS-03**: MCP server exposes `validate_architecture` tool
+- [x] **MCPS-04**: MCP server exposes `render_diagram` tool (-> SVG)
+- [x] **MCPS-05**: MCP server exposes `export_calm` and `import_calm` tools
+- [x] **MCPS-06**: MCP server installable via `npm install -g @calmstudio/mcp`
 - [ ] **MCPS-07**: MCP server works with Claude Code and any MCP-compatible AI assistant
 
 ### Desktop App
@@ -262,12 +262,12 @@ Deferred to future release. Tracked but not in current roadmap.
 | EXTK-06 | Phase 7 | Pending |
 | EXTK-07 | Phase 7 | Pending |
 | EXTK-08 | Phase 7 | Pending |
-| MCPS-01 | Phase 8 | Pending |
-| MCPS-02 | Phase 8 | Pending |
-| MCPS-03 | Phase 8 | Pending |
-| MCPS-04 | Phase 8 | Pending |
-| MCPS-05 | Phase 8 | Pending |
-| MCPS-06 | Phase 8 | Pending |
+| MCPS-01 | Phase 8 | Complete |
+| MCPS-02 | Phase 8 | Complete |
+| MCPS-03 | Phase 8 | Complete |
+| MCPS-04 | Phase 8 | Complete |
+| MCPS-05 | Phase 8 | Complete |
+| MCPS-06 | Phase 8 | Complete |
 | MCPS-07 | Phase 8 | Pending |
 | DESK-01 | Phase 9 | Pending |
 | DESK-02 | Phase 9 | Pending |

@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: verifying
-stopped_at: Phase 5 context gathered
-last_updated: "2026-03-12T08:33:36.716Z"
+stopped_at: Completed 05-mcp-server-00-PLAN.md
+last_updated: "2026-03-12T09:04:29.181Z"
 last_activity: 2026-03-12 — Phase 3 verification passed; gap fixes confirmed; ready for Phase 4
 progress:
   total_phases: 12
   completed_phases: 3
-  total_plans: 18
-  completed_plans: 17
+  total_plans: 22
+  completed_plans: 18
   percent: 25
 ---
 
@@ -66,6 +66,7 @@ Progress: [██░░░░░░░░] 25%
 | Phase 04-import-export-layout P02 | 4min | 2 tasks | 3 files |
 | Phase 04-import-export-layout P01 | 37min | 2 tasks | 4 files |
 | Phase 04-import-export-layout P03 | 4min | 2 tasks | 2 files |
+| Phase 05-mcp-server P00 | 8min | 2 tasks | 14 files |
 
 ## Accumulated Context
 
@@ -119,6 +120,9 @@ Recent decisions affecting current work:
 - [Phase 04-import-export-layout]: Error banner in document flow below Toolbar (not absolute positioned) — cleaner layout, no z-index conflicts
 - [Phase 04-import-export-layout]: Explicit markDirty() calls in handleCodeChange/handlePropertyMutation rather than  on nodes/edges — avoids false positives on layout runs
 - [Phase 04-import-export-layout]: handleSaveAs marks clean on Blob download fallback — content exported so dirty state resolved
+- [Phase 05-mcp-server]: Package named @calmstudio/mcp for npm distribution (not workspace stub name)
+- [Phase 05-mcp-server]: Node16 moduleResolution required for mcp-server CLI — bundler resolution fails for standalone binaries
+- [Phase 05-mcp-server]: readCalmFile auto-inits with empty arch on ENOENT — not an error (per RESEARCH Pitfall 8)
 
 ### Pending Todos
 
@@ -132,6 +136,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-12T08:33:36.712Z
-Stopped at: Phase 5 context gathered
-Resume file: .planning/phases/05-mcp-server/05-CONTEXT.md
+Last session: 2026-03-12T09:04:29.178Z
+Stopped at: Completed 05-mcp-server-00-PLAN.md
+Resume file: None
