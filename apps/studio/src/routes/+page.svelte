@@ -55,10 +55,26 @@
 	function handleValidate() {
 		if (isPanelOpen()) {
 			closePanel();
+			clearNodeEdgeValidation();
 			return;
 		}
 		runValidation();
 		enrichNodesEdgesWithValidation();
+	}
+
+	/** Strip validation data from nodes/edges so badges and edge colors disappear. */
+	function clearNodeEdgeValidation() {
+		const clearedNodes = nodes.map((n) => {
+			if (!n.data?.validationErrors && !n.data?.validationWarnings) return n;
+			return { ...n, data: { ...n.data, validationErrors: 0, validationWarnings: 0 } };
+		});
+		if (clearedNodes.some((n, i) => n !== nodes[i])) nodes = clearedNodes;
+
+		const clearedEdges = edges.map((e) => {
+			if (!e.data?.validationSeverity) return e;
+			return { ...e, data: { ...e.data, validationSeverity: null } };
+		});
+		if (clearedEdges.some((e, i) => e !== edges[i])) edges = clearedEdges;
 	}
 
 	/**
