@@ -3,18 +3,29 @@
 
 <script lang="ts">
 	import { type Node, type Edge, SvelteFlowProvider } from '@xyflow/svelte';
-	import { tick } from 'svelte';
+	import { tick, onMount } from 'svelte';
 	import { PaneGroup, Pane, PaneResizer } from 'paneforge';
 	import DnDProvider from '$lib/palette/DnDProvider.svelte';
 	import NodePalette from '$lib/palette/NodePalette.svelte';
 	import CalmCanvas from '$lib/canvas/CalmCanvas.svelte';
 	import CodePanel from '$lib/editor/CodePanel.svelte';
 	import PropertiesPanel from '$lib/properties/PropertiesPanel.svelte';
+	import Toolbar from '$lib/toolbar/Toolbar.svelte';
 	import { toggleTheme, isDark } from '$lib/stores/theme.svelte';
-	import { getModelJson, applyFromJson, getModel } from '$lib/stores/calmModel.svelte';
+	import { getModelJson, applyFromJson, getModel, resetModel } from '$lib/stores/calmModel.svelte';
 	import { calmToFlow } from '$lib/stores/projection';
-	import { pushSnapshot } from '$lib/stores/history.svelte';
+	import { pushSnapshot, resetHistory } from '$lib/stores/history.svelte';
 	import { layoutCalm, type LayoutDirection } from '$lib/layout/elkLayout';
+	import { openFile, saveFile, saveFileAs } from '$lib/io/fileSystem';
+	import {
+		getFileName,
+		getFileHandle,
+		getIsDirty,
+		markDirty,
+		markClean,
+		resetFileState
+	} from '$lib/io/fileState.svelte';
+	import { exportAsCalm, exportAsSvg, exportAsPng, exportAsCalmscript } from '$lib/io/export';
 	import type { CalmArchitecture } from '@calmstudio/calm-core';
 
 	let nodes = $state.raw<Node[]>([]);
@@ -22,7 +33,7 @@
 
 	let canvas: CalmCanvas;
 
-	// ─── Import error state — consumed by Plan 03 error banner ──────────────
+	// ─── Import error state — set by importCalmFile on invalid JSON ──────────
 
 	let importError = $state<string | null>(null);
 
@@ -91,6 +102,9 @@
 							: n
 					);
 					edges = projected.edges;
+
+					// Mark dirty on code-driven changes
+					markDirty();
 				}
 			} catch (e) {
 				codeParseError = (e as Error).message;
@@ -124,6 +138,9 @@
 				: n
 		);
 		edges = projected.edges;
+
+		// Mark dirty on property mutations
+		markDirty();
 	}
 
 	/**
@@ -178,6 +195,76 @@
 		canvas?.fitViewport();
 	}
 
+	// ─── File operations ──────────────────────────────────────────────────────
+
+	async function handleOpen() {
+		try {
+			const result = await openFile();
+			await importCalmFile(result.content, result.name);
+			// On success, importCalmFile clears importError; mark clean with new file info
+			markClean(result.name, result.handle);
+		} catch (e) {
+			// User cancelled the file picker — not an error
+		}
+	}
+
+	async function handleSave() {
+		try {
+			const json = getModelJson();
+			const handle = await saveFile(json, getFileHandle(), getFileName() ?? 'architecture.calm.json');
+			markClean(undefined, handle);
+		} catch (e) {
+			// User cancelled or save failed — remain dirty
+		}
+	}
+
+	async function handleSaveAs() {
+		try {
+			const json = getModelJson();
+			const handle = await saveFileAs(json, getFileName() ?? 'architecture.calm.json');
+			// saveFileAs returns handle (FSA API) or null (Blob download fallback)
+			if (handle) {
+				markClean(handle.name ?? getFileName() ?? undefined, handle);
+			} else {
+				// Blob download — we can mark clean since content was "saved" (downloaded)
+				markClean();
+			}
+		} catch (e) {
+			// User cancelled or save failed — remain dirty
+		}
+	}
+
+	async function handleNew() {
+		if (getIsDirty()) {
+			const confirmed = window.confirm('You have unsaved changes. Continue without saving?');
+			if (!confirmed) return;
+		}
+		resetModel();
+		resetHistory();
+		resetFileState();
+		nodes = [];
+		edges = [];
+	}
+
+	// ─── Export operations ────────────────────────────────────────────────────
+
+	function handleExportCalm() {
+		exportAsCalm(getModelJson());
+	}
+
+	async function handleExportSvg() {
+		await exportAsSvg(nodes);
+	}
+
+	async function handleExportPng() {
+		await exportAsPng(nodes);
+	}
+
+	function handleExportCalmscript() {
+		// Phase 4 stub: empty string — Phase 5 will provide real calmscript content
+		exportAsCalmscript('');
+	}
+
 	// ─── Auto-layout ──────────────────────────────────────────────────────────
 
 	/** Currently selected layout direction (used by toolbar dropdown). */
@@ -225,169 +312,218 @@
 		canvas?.fitViewport();
 	}
 
-	// ─── Cmd+O keyboard shortcut — open file picker ───────────────────────────
+	// ─── Keyboard shortcuts and beforeunload ──────────────────────────────────
 
-	function handleOpenFile() {
-		const input = document.createElement('input');
-		input.type = 'file';
-		input.accept = '.json,.calm.json';
-		input.onchange = async () => {
-			const file = input.files?.[0];
-			if (!file) return;
-			const content = await file.text();
-			await importCalmFile(content, file.name);
+	onMount(() => {
+		function handleKeydown(e: KeyboardEvent) {
+			const isMod = e.metaKey || e.ctrlKey;
+			if (!isMod) return;
+
+			if (e.key === 'o') {
+				e.preventDefault();
+				handleOpen();
+			} else if (e.key === 's' && !e.shiftKey) {
+				e.preventDefault();
+				handleSave();
+			} else if (e.key === 's' && e.shiftKey) {
+				e.preventDefault();
+				handleSaveAs();
+			} else if (e.key === 'n') {
+				e.preventDefault();
+				handleNew();
+			}
+		}
+
+		function handleBeforeUnload(e: BeforeUnloadEvent) {
+			if (getIsDirty()) {
+				e.preventDefault();
+				e.returnValue = '';
+			}
+		}
+
+		window.addEventListener('keydown', handleKeydown);
+		window.addEventListener('beforeunload', handleBeforeUnload);
+
+		return () => {
+			window.removeEventListener('keydown', handleKeydown);
+			window.removeEventListener('beforeunload', handleBeforeUnload);
 		};
-		input.click();
-	}
+	});
+
+	// ─── Document title reactive update ──────────────────────────────────────
+
+	$effect(() => {
+		const filename = getFileName();
+		const dirty = getIsDirty();
+
+		if (filename) {
+			document.title = dirty ? `${filename} \u2022 CalmStudio` : `${filename} - CalmStudio`;
+		} else {
+			document.title = 'CalmStudio';
+		}
+	});
 </script>
 
 <DnDProvider>
-	<PaneGroup direction="vertical" style="height: 100vh; overflow: hidden;">
-		<!-- Top: Three-column layout (palette | canvas | properties) -->
-		<Pane defaultSize={70} minSize={30}>
-			<PaneGroup direction="horizontal" style="height: 100%;">
-				<!-- Left: Node Palette -->
-				<Pane defaultSize={15} minSize={8}>
-					<NodePalette onplacenode={handlePalettePlace} />
-				</Pane>
+	<div class="app-shell">
+		<!-- Top: Slim toolbar -->
+		<Toolbar
+			onopen={handleOpen}
+			onsave={handleSave}
+			onsaveas={handleSaveAs}
+			onnew={handleNew}
+			onexportcalm={handleExportCalm}
+			onexportsvg={handleExportSvg}
+			onexportpng={handleExportPng}
+			onexportcalmscript={handleExportCalmscript}
+			filename={getFileName()}
+			isDirty={getIsDirty()}
+		/>
 
-				<PaneResizer class="resizer resizer-vertical" />
+		<!-- Error banner: below toolbar, above canvas panes -->
+		{#if importError}
+			<div class="error-banner" role="alert">
+				<span class="error-message">{importError}</span>
+				<button
+					type="button"
+					class="error-dismiss"
+					onclick={() => (importError = null)}
+					aria-label="Dismiss error"
+				>
+					<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+						<line x1="18" y1="6" x2="6" y2="18" />
+						<line x1="6" y1="6" x2="18" y2="18" />
+					</svg>
+				</button>
+			</div>
+		{/if}
 
-				<!-- Center: Canvas area -->
-				<Pane defaultSize={70}>
-					<div
-						class="canvas-pane"
-						onkeydown={(e) => {
-							if ((e.metaKey || e.ctrlKey) && e.key === 'o') {
-								e.preventDefault();
-								handleOpenFile();
-							}
-						}}
-						role="main"
-						tabindex="-1"
-					>
-						<!-- Floating toolbar -->
-						<div class="toolbar">
-							<!-- Auto-layout controls -->
-							<div class="layout-group" role="group" aria-label="Auto-layout controls">
-								<!-- Direction dropdown -->
-								<select
-									class="layout-select"
-									bind:value={layoutDirection}
-									aria-label="Layout direction"
-									title="Layout direction"
-								>
-									<option value="DOWN">Top to Bottom</option>
-									<option value="RIGHT">Left to Right</option>
-									<option value="UP">Hierarchical</option>
-								</select>
+		<!-- Main content: three-column canvas + bottom code panel -->
+		<PaneGroup direction="vertical" class="main-pane-group">
+			<!-- Top: Three-column layout (palette | canvas | properties) -->
+			<Pane defaultSize={70} minSize={30}>
+				<PaneGroup direction="horizontal" style="height: 100%;">
+					<!-- Left: Node Palette -->
+					<Pane defaultSize={15} minSize={8}>
+						<NodePalette onplacenode={handlePalettePlace} />
+					</Pane>
 
-								<!-- Layout button -->
+					<PaneResizer class="resizer resizer-vertical" />
+
+					<!-- Center: Canvas area -->
+					<Pane defaultSize={70}>
+						<div class="canvas-pane" role="main">
+							<!-- Floating toolbar (layout controls + dark mode toggle) -->
+							<div class="canvas-toolbar">
+								<!-- Auto-layout controls -->
+								<div class="layout-group" role="group" aria-label="Auto-layout controls">
+									<!-- Direction dropdown -->
+									<select
+										class="layout-select"
+										bind:value={layoutDirection}
+										aria-label="Layout direction"
+										title="Layout direction"
+									>
+										<option value="DOWN">Top to Bottom</option>
+										<option value="RIGHT">Left to Right</option>
+										<option value="UP">Hierarchical</option>
+									</select>
+
+									<!-- Layout button -->
+									<button
+										type="button"
+										class="canvas-toolbar-btn"
+										onclick={() => runLayout(layoutDirection)}
+										aria-label="Auto-layout diagram"
+										title="Auto-layout (ELK)"
+									>
+										<!-- Grid/arrange icon -->
+										<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+											<rect x="3" y="3" width="7" height="7" rx="1" />
+											<rect x="14" y="3" width="7" height="7" rx="1" />
+											<rect x="3" y="14" width="7" height="7" rx="1" />
+											<rect x="14" y="14" width="7" height="7" rx="1" />
+										</svg>
+									</button>
+								</div>
+
+								<!-- Dark mode toggle -->
 								<button
-									type="button"
-									class="toolbar-btn"
-									onclick={() => runLayout(layoutDirection)}
-									aria-label="Auto-layout diagram"
-									title="Auto-layout (ELK)"
+									onclick={toggleTheme}
+									class="canvas-toolbar-btn"
+									aria-label={isDark() ? 'Switch to light mode' : 'Switch to dark mode'}
+									title={isDark() ? 'Switch to light mode' : 'Switch to dark mode'}
 								>
-									<!-- Grid/arrange icon -->
-									<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-										<rect x="3" y="3" width="7" height="7" rx="1" />
-										<rect x="14" y="3" width="7" height="7" rx="1" />
-										<rect x="3" y="14" width="7" height="7" rx="1" />
-										<rect x="14" y="14" width="7" height="7" rx="1" />
-									</svg>
+									{#if isDark()}
+										<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+											<circle cx="12" cy="12" r="4" />
+											<path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+										</svg>
+									{:else}
+										<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+											<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+										</svg>
+									{/if}
 								</button>
 							</div>
 
-							<!-- Open file button (Cmd+O) -->
-							<button
-								type="button"
-								class="toolbar-btn"
-								onclick={handleOpenFile}
-								aria-label="Open CALM JSON file (Cmd+O)"
-								title="Import CALM JSON (Cmd+O)"
-							>
-								<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-									<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
-								</svg>
-							</button>
-
-							<!-- Dark mode toggle -->
-							<button
-								onclick={toggleTheme}
-								class="toolbar-btn"
-								aria-label={isDark() ? 'Switch to light mode' : 'Switch to dark mode'}
-								title={isDark() ? 'Switch to light mode' : 'Switch to dark mode'}
-							>
-								{#if isDark()}
-									<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-										<circle cx="12" cy="12" r="4" />
-										<path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
-									</svg>
-								{:else}
-									<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-										<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-									</svg>
-								{/if}
-							</button>
+							<SvelteFlowProvider>
+								<CalmCanvas
+									bind:this={canvas}
+									bind:nodes
+									bind:edges
+									onselectionchange={handleSelectionChange}
+									onfileimport={importCalmFile}
+								/>
+							</SvelteFlowProvider>
 						</div>
+					</Pane>
 
-						<!-- Import error banner -->
-						{#if importError}
-							<div class="import-error" role="alert">
-								<span>{importError}</span>
-								<button type="button" class="error-dismiss" onclick={() => (importError = null)} aria-label="Dismiss error">
-									<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-										<line x1="18" y1="6" x2="6" y2="18" />
-										<line x1="6" y1="6" x2="18" y2="18" />
-									</svg>
-								</button>
-							</div>
-						{/if}
+					<PaneResizer class="resizer resizer-vertical" />
 
-						<SvelteFlowProvider>
-							<CalmCanvas
-								bind:this={canvas}
-								bind:nodes
-								bind:edges
-								onselectionchange={handleSelectionChange}
-								onfileimport={importCalmFile}
-							/>
-						</SvelteFlowProvider>
-					</div>
-				</Pane>
+					<!-- Right: Properties panel -->
+					<Pane defaultSize={15} minSize={5}>
+						<PropertiesPanel
+							{selectedNode}
+							{selectedEdge}
+							onBeforeFirstEdit={handleBeforeFirstEdit}
+							onmutate={handlePropertyMutation}
+						/>
+					</Pane>
+				</PaneGroup>
+			</Pane>
 
-				<PaneResizer class="resizer resizer-vertical" />
+			<PaneResizer class="resizer resizer-horizontal" />
 
-				<!-- Right: Properties panel -->
-				<Pane defaultSize={15} minSize={5}>
-					<PropertiesPanel
-						{selectedNode}
-						{selectedEdge}
-						onBeforeFirstEdit={handleBeforeFirstEdit}
-						onmutate={handlePropertyMutation}
-					/>
-				</Pane>
-			</PaneGroup>
-		</Pane>
-
-		<PaneResizer class="resizer resizer-horizontal" />
-
-		<!-- Bottom: Code editor panel (full width) -->
-		<Pane defaultSize={30} minSize={10}>
-			<CodePanel
-				value={calmJson}
-				onchange={handleCodeChange}
-				parseError={codeParseError}
-				selectedNodeId={selectedNodeId}
-				selectedEdgeId={selectedEdgeId}
-			/>
-		</Pane>
-	</PaneGroup>
+			<!-- Bottom: Code editor panel (full width) -->
+			<Pane defaultSize={30} minSize={10}>
+				<CodePanel
+					value={calmJson}
+					onchange={handleCodeChange}
+					parseError={codeParseError}
+					selectedNodeId={selectedNodeId}
+					selectedEdgeId={selectedEdgeId}
+				/>
+			</Pane>
+		</PaneGroup>
+	</div>
 </DnDProvider>
 
 <style>
+	/* Full-height app shell — toolbar + pane group stack vertically */
+	.app-shell {
+		display: flex;
+		flex-direction: column;
+		height: 100vh;
+		overflow: hidden;
+	}
+
+	/* PaneGroup fills remaining height below toolbar (and error banner) */
+	:global(.main-pane-group) {
+		flex: 1;
+		min-height: 0;
+	}
+
 	/* Canvas pane fills its container with relative positioning for toolbar overlay */
 	.canvas-pane {
 		position: relative;
@@ -401,8 +537,56 @@
 		background: #0b0f1a;
 	}
 
-	/* Floating dark mode toggle toolbar */
-	.toolbar {
+	/* ─── Error banner (full-width, below top Toolbar) ──────────── */
+
+	.error-banner {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 8px;
+		background: #fef2f2;
+		border-bottom: 1px solid #fca5a5;
+		padding: 8px 16px;
+		font-size: 12px;
+		font-family: var(--font-sans);
+		color: #dc2626;
+		flex-shrink: 0;
+	}
+
+	:global(.dark) .error-banner {
+		background: #1c0a0a;
+		border-color: #7f1d1d;
+		color: #f87171;
+	}
+
+	.error-message {
+		flex: 1;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.error-dismiss {
+		background: none;
+		border: none;
+		cursor: pointer;
+		color: inherit;
+		display: flex;
+		align-items: center;
+		padding: 2px;
+		border-radius: 4px;
+		flex-shrink: 0;
+		opacity: 0.7;
+	}
+
+	.error-dismiss:hover {
+		opacity: 1;
+		background: rgba(220, 38, 38, 0.1);
+	}
+
+	/* ─── Floating canvas toolbar (layout + dark mode) ──────────── */
+
+	.canvas-toolbar {
 		position: absolute;
 		right: 12px;
 		top: 12px;
@@ -412,7 +596,7 @@
 		gap: 6px;
 	}
 
-	.toolbar-btn {
+	.canvas-toolbar-btn {
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -427,19 +611,19 @@
 		transition: all 0.15s ease;
 	}
 
-	.toolbar-btn:hover {
+	.canvas-toolbar-btn:hover {
 		background: var(--color-surface-tertiary);
 		color: var(--color-text-primary);
 	}
 
-	:global(.dark) .toolbar-btn {
+	:global(.dark) .canvas-toolbar-btn {
 		background: #111827;
 		border-color: #334155;
 		color: #94a3b8;
 		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 	}
 
-	:global(.dark) .toolbar-btn:hover {
+	:global(.dark) .canvas-toolbar-btn:hover {
 		background: #1e293b;
 		color: #e2e8f0;
 	}
@@ -532,7 +716,7 @@
 	}
 
 	/* Layout button inside layout-group has no outer border/bg */
-	.layout-group .toolbar-btn {
+	.layout-group .canvas-toolbar-btn {
 		width: 28px;
 		height: 28px;
 		border: none;
@@ -541,64 +725,15 @@
 		border-radius: 6px;
 	}
 
-	.layout-group .toolbar-btn:hover {
+	.layout-group .canvas-toolbar-btn:hover {
 		background: var(--color-surface-tertiary);
 	}
 
-	:global(.dark) .layout-group .toolbar-btn {
+	:global(.dark) .layout-group .canvas-toolbar-btn {
 		background: transparent;
 	}
 
-	:global(.dark) .layout-group .toolbar-btn:hover {
+	:global(.dark) .layout-group .canvas-toolbar-btn:hover {
 		background: #1e293b;
-	}
-
-	/* ─── Import error banner ────────────────────────────────────── */
-
-	.import-error {
-		position: absolute;
-		top: 56px;
-		left: 50%;
-		transform: translateX(-50%);
-		z-index: 50;
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		background: #fef2f2;
-		border: 1px solid #fca5a5;
-		border-radius: 8px;
-		padding: 8px 12px;
-		font-size: 12px;
-		font-family: var(--font-sans);
-		color: #dc2626;
-		max-width: 480px;
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
-	}
-
-	:global(.dark) .import-error {
-		background: #1c0a0a;
-		border-color: #7f1d1d;
-		color: #f87171;
-	}
-
-	.error-dismiss {
-		background: none;
-		border: none;
-		cursor: pointer;
-		color: inherit;
-		display: flex;
-		align-items: center;
-		padding: 2px;
-		border-radius: 4px;
-		flex-shrink: 0;
-		opacity: 0.7;
-	}
-
-	.error-dismiss:hover {
-		opacity: 1;
-		background: rgba(220, 38, 38, 0.1);
 	}
 </style>
