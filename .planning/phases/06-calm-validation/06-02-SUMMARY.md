@@ -12,7 +12,7 @@ dependency_graph:
     - "Two-way validation navigation (badge->panel, panel->canvas)"
     - "Shared validation engine between studio and MCP server"
   affects:
-    - "06-03 (visual verification checkpoint)"
+    - "phase 07+ (validation panel is the central UX for architecture feedback; opt-in toggle model established)"
 tech_stack:
   added: []
   patterns:
@@ -38,16 +38,23 @@ decisions:
   - "ValidationIssue re-exported from validation.svelte.ts store to avoid @calmstudio/calm-core tsconfig resolution issues in Svelte components"
   - "MCP validation.ts replaced with thin re-export of validateCalmArchitecture as validateArchitecture alias — preserves consumer interface"
   - "Test fixtures updated to include node descriptions — calm-core engine produces [INFO] issues for nodes without descriptions"
+  - "Validation changed from automatic to user-triggered (toolbar Validate button) — post-checkpoint UX improvement"
+  - "Validate button toggles panel on/off — second press hides panel without permanent dismiss"
+  - "Toggling panel off clears node badges and edge severity colors — keeps canvas clean"
+requirements-completed:
+  - VALD-01
+  - VALD-02
+  - VALD-03
 metrics:
-  duration: "10min"
+  duration: "45min"
   completed: "2026-03-12"
-  tasks_completed: 2
-  files_changed: 9
+  tasks_completed: 3
+  files_changed: 13
 ---
 
 # Phase 6 Plan 02: Validation Panel and MCP Engine Upgrade Summary
 
-**ValidationPanel bottom drawer with two-way navigation wired into studio; MCP server upgraded to use shared calm-core validation engine producing identical results.**
+**ValidationPanel bottom drawer with two-way navigation, user-triggered validation toggle, shared calm-core engine in MCP server — all VALD requirements complete.**
 
 ## Tasks Completed
 
@@ -55,7 +62,11 @@ metrics:
 |---|------|--------|--------|
 | 1 | Create ValidationPanel, wire +page.svelte enrichment and bottom drawer | 5ae2426 | Done |
 | 2 | Upgrade MCP server to use shared validation engine | 2df6eb6 | Done |
-| 3 | Visual verification of complete CALM validation system | - | Awaiting user |
+| 3 | Visual verification of complete CALM validation system | approved | Done |
+| 4 | Add @calmstudio/calm-core workspace dependency | 9b73baa | Done (post-checkpoint) |
+| 5 | Change validation from automatic to user-triggered | c9eb11e | Done (post-checkpoint) |
+| 6 | Make Validate button toggle panel on/off | ca4e0ed | Done (post-checkpoint) |
+| 7 | Clear node badges and edge colors when toggling validation off | 5cde923 | Done (post-checkpoint) |
 
 ## Deviations from Plan
 
@@ -89,6 +100,41 @@ metrics:
 - **Files modified:** packages/mcp-server/src/tests/validate.test.ts, render.test.ts, integration.test.ts
 - **Commit:** 2df6eb6
 
+### Post-Checkpoint User-Requested Improvements
+
+**5. [User Request] Add @calmstudio/calm-core workspace dependency**
+- **Found during:** Post-checkpoint testing
+- **Issue:** MCP server package.json missing the workspace dependency for @calmstudio/calm-core
+- **Fix:** Added `"@calmstudio/calm-core": "workspace:*"` to mcp-server dependencies
+- **Files modified:** packages/mcp-server/package.json
+- **Commit:** 9b73baa
+
+**6. [User Request] Change validation from automatic to user-triggered**
+- **Found during:** Post-checkpoint UX review
+- **Issue:** Always-on debounced validation fired during typing and was intrusive
+- **Fix:** Removed automatic $effect-driven validation; runs only when user clicks Validate toolbar button
+- **Files modified:** apps/studio/src/routes/+page.svelte
+- **Commit:** c9eb11e
+
+**7. [User Request] Make Validate button toggle panel on/off**
+- **Found during:** Post-checkpoint UX review
+- **Issue:** No way to re-hide panel after showing without permanently dismissing it
+- **Fix:** Validate button now toggles — first press runs validation and opens panel; second press collapses it
+- **Files modified:** apps/studio/src/routes/+page.svelte
+- **Commit:** ca4e0ed
+
+**8. [User Request] Clear node badges and edge colors when toggling validation off**
+- **Found during:** Testing toggle behavior
+- **Issue:** Hiding the panel left stale red badges and colored edges on canvas
+- **Fix:** When panel is toggled off, badge counts reset to 0 and edge severity colors clear
+- **Files modified:** apps/studio/src/routes/+page.svelte
+- **Commit:** 5cde923
+
+---
+
+**Total deviations:** 4 auto-fixed bugs (Tasks 1-2) + 4 user-requested post-checkpoint improvements
+**Impact on plan:** Auto-fixes corrected implementation-detail errors. Post-checkpoint changes supersede the "Panel auto-opens on first error" plan truth with a better opt-in model at user's explicit request. All three VALD requirements are fully met.
+
 ## Self-Check: PASSED
 
 - [x] apps/studio/src/lib/validation/ValidationPanel.svelte exists (163 lines, min 80)
@@ -99,5 +145,9 @@ metrics:
 - [x] All 53 MCP server tests pass
 - [x] All 11 calm-core tests pass
 - [x] svelte-check shows 42 errors (same count as pre-change — no new errors introduced)
-- [x] 5ae2426 commit exists
-- [x] 2df6eb6 commit exists
+- [x] 5ae2426 commit exists (Task 1)
+- [x] 2df6eb6 commit exists (Task 2)
+- [x] 9b73baa commit exists (post-checkpoint)
+- [x] c9eb11e commit exists (post-checkpoint)
+- [x] ca4e0ed commit exists (post-checkpoint)
+- [x] 5cde923 commit exists (post-checkpoint)

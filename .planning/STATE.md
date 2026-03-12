@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: "Completed 06-02 tasks 1-2; paused at checkpoint:human-verify Task 3"
-last_updated: "2026-03-12T13:12:28.827Z"
+stopped_at: Completed 06-02-PLAN.md — Phase 6 Plan 02 complete
+last_updated: "2026-03-12T14:54:13.745Z"
 last_activity: 2026-03-12 — Phase 5 Plan 03 complete; MCP server verified end-to-end via Claude Code, .json extension fix
 progress:
   total_phases: 12
@@ -73,6 +73,7 @@ Progress: [███░░░░░░░] 29%
 | Phase 06-calm-validation P00 | 5min | 1 tasks | 13 files |
 | Phase 06-calm-validation P01 | 19min | 2 tasks | 18 files |
 | Phase 06-calm-validation P02 | 10min | 2 tasks | 9 files |
+| Phase 06-calm-validation P02 | 45min | 7 tasks | 13 files |
 
 ## Accumulated Context
 
@@ -145,6 +146,9 @@ Recent decisions affecting current work:
 - [Phase 06-calm-validation]: bind:this on Pane for programmatic collapse/expand (not bind:pane — pane prop non-existent)
 - [Phase 06-calm-validation]: Validation data injected into canonical nodes via $effect with change-guard — not displayNodes (avoids canvas mutation routing issues)
 - [Phase 06-calm-validation]: MCP validation.ts replaced with thin re-export alias from calm-core — preserves consumer interface
+- [Phase 06-calm-validation]: Validation changed from automatic to user-triggered (toolbar Validate button) — opt-in UX is less intrusive
+- [Phase 06-calm-validation]: Validate button toggles panel on/off — second press hides without permanent dismiss
+- [Phase 06-calm-validation]: Toggling panel off clears node badges and edge colors — canvas stays clean when not in validation mode
 
 ### Pending Todos
 
@@ -158,6 +162,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-12T13:12:28.824Z
-Stopped at: Completed 06-02 tasks 1-2; paused at checkpoint:human-verify Task 3
+Last session: 2026-03-12T14:54:13.742Z
+Stopped at: Completed 06-02-PLAN.md — Phase 6 Plan 02 complete
 Resume file: None
