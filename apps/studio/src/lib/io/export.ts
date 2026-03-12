@@ -19,6 +19,8 @@ import { toSvg, toPng } from 'html-to-image';
 import { getNodesBounds, getViewportForBounds } from '@xyflow/svelte';
 import type { Node } from '@xyflow/svelte';
 import { downloadDataUrl } from '$lib/io/fileSystem';
+import { detectPacksFromArch, buildSidecarData, sidecarNameFor } from '$lib/io/sidecar';
+import type { CalmArchitecture } from '@calmstudio/calm-core';
 
 const IMAGE_WIDTH = 1920;
 const IMAGE_HEIGHT = 1080;
@@ -27,6 +29,10 @@ const IMAGE_HEIGHT = 1080;
 
 /**
  * Export the current CALM architecture as a .calm.json file.
+ *
+ * If the architecture contains extension pack nodes (colon-prefixed node types),
+ * a second download is triggered for the companion .calmstudio.json sidecar file.
+ * Diagrams with only core CALM types do NOT get a sidecar.
  *
  * @param json      Pretty-printed JSON string from getModelJson()
  * @param filename  Output filename (default: architecture.calm.json)
@@ -38,6 +44,26 @@ export function exportAsCalm(json: string, filename = 'architecture.calm.json'):
 	// Note: URL.revokeObjectURL not needed for data: URLs, but is for blob: URLs.
 	// We use a blob: URL here so we revoke after the click microtask.
 	setTimeout(() => URL.revokeObjectURL(url), 0);
+
+	// Check if the architecture uses extension pack types — if so, export sidecar too.
+	try {
+		const arch = JSON.parse(json) as CalmArchitecture;
+		const packIds = detectPacksFromArch(arch);
+		if (packIds.length > 0) {
+			const sidecarData = buildSidecarData(packIds);
+			const sidecarJson = JSON.stringify(sidecarData, null, 2);
+			const sidecarFilename = sidecarNameFor(filename);
+			const sidecarBlob = new Blob([sidecarJson], { type: 'application/json' });
+			const sidecarUrl = URL.createObjectURL(sidecarBlob);
+			// Small delay so the browser doesn't block the second download
+			setTimeout(() => {
+				downloadDataUrl(sidecarUrl, sidecarFilename);
+				setTimeout(() => URL.revokeObjectURL(sidecarUrl), 0);
+			}, 200);
+		}
+	} catch {
+		// Ignore JSON parse errors — main file was already exported
+	}
 }
 
 // ─── SVG export ───────────────────────────────────────────────────────────────

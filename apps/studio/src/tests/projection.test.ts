@@ -2,9 +2,10 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { describe, test, expect } from 'vitest';
+import { describe, test, expect, beforeAll } from 'vitest';
 import type { CalmArchitecture } from '@calmstudio/calm-core';
 import { calmToFlow, flowToCalm } from '$lib/stores/projection';
+import { initAllPacks } from '@calmstudio/extensions';
 
 // ─── Fixtures ────────────────────────────────────────────────────────────────
 
@@ -144,5 +145,73 @@ describe('flowToCalm', () => {
 		const { nodes, edges } = calmToFlow(archWithMeta);
 		const result = flowToCalm(nodes, edges);
 		expect(result.nodes[0].customMetadata).toEqual({ team: 'platform', env: 'prod' });
+	});
+});
+
+// ─── Extension pack projection tests ──────────────────────────────────────────
+
+describe('extension pack projection', () => {
+	beforeAll(() => {
+		// Register all packs so resolveNodeType can route colon-prefixed types
+		// to the 'extension' key and ExtensionNode can resolve pack metadata.
+		initAllPacks();
+	});
+
+	test('calmToFlow produces type="extension" and data.calmType="aws:lambda" for pack node', () => {
+		const arch: CalmArchitecture = {
+			nodes: [{ 'unique-id': 'fn-1', 'node-type': 'aws:lambda', name: 'My Lambda' }],
+			relationships: [],
+		};
+		const { nodes } = calmToFlow(arch);
+		expect(nodes).toHaveLength(1);
+		const node = nodes[0];
+		expect(node.type).toBe('extension');
+		expect(node.data.calmType).toBe('aws:lambda');
+		expect(node.data.label).toBe('My Lambda');
+	});
+
+	test('flowToCalm preserves "aws:lambda" node-type from data.calmType', () => {
+		const arch: CalmArchitecture = {
+			nodes: [{ 'unique-id': 'fn-1', 'node-type': 'aws:lambda', name: 'My Lambda' }],
+			relationships: [],
+		};
+		const { nodes, edges } = calmToFlow(arch);
+		const result = flowToCalm(nodes, edges);
+		expect(result.nodes[0]['node-type']).toBe('aws:lambda');
+	});
+
+	test('round-trip preserves aws:lambda as node-type string', () => {
+		const arch: CalmArchitecture = {
+			nodes: [{ 'unique-id': 'fn-2', 'node-type': 'aws:lambda', name: 'Lambda Fn' }],
+			relationships: [],
+		};
+		const { nodes, edges } = calmToFlow(arch);
+		const result = flowToCalm(nodes, edges);
+		expect(result.nodes[0]['unique-id']).toBe('fn-2');
+		expect(result.nodes[0]['node-type']).toBe('aws:lambda');
+		expect(result.nodes[0].name).toBe('Lambda Fn');
+	});
+
+	test('mixed diagram: core "service" and pack "k8s:pod" both resolve correctly', () => {
+		const arch: CalmArchitecture = {
+			nodes: [
+				{ 'unique-id': 'svc-1', 'node-type': 'service', name: 'API Service' },
+				{ 'unique-id': 'pod-1', 'node-type': 'k8s:pod', name: 'API Pod' },
+			],
+			relationships: [],
+		};
+		const { nodes } = calmToFlow(arch);
+		expect(nodes).toHaveLength(2);
+
+		const svcNode = nodes.find((n) => n.id === 'svc-1')!;
+		const podNode = nodes.find((n) => n.id === 'pod-1')!;
+
+		// Core type resolves to its canonical key
+		expect(svcNode.type).toBe('service');
+		expect(svcNode.data.calmType).toBe('service');
+
+		// Pack type resolves to 'extension' with full calmType preserved
+		expect(podNode.type).toBe('extension');
+		expect(podNode.data.calmType).toBe('k8s:pod');
 	});
 });

@@ -2,9 +2,15 @@
 <!-- SPDX-License-Identifier: Apache-2.0 -->
 
 <script lang="ts">
+	import { initAllPacks } from '@calmstudio/extensions';
 	import { type Node, type Edge, SvelteFlowProvider } from '@xyflow/svelte';
 	import { tick, onMount } from 'svelte';
 	import { PaneGroup, Pane, PaneResizer } from 'paneforge';
+
+	// Register all extension packs at module load time — before any component renders.
+	// This must be module-level (not inside onMount) so packs are available before
+	// the first paint, per RESEARCH Pattern 7: register at module load, not lazy.
+	initAllPacks();
 	import DnDProvider from '$lib/palette/DnDProvider.svelte';
 	import NodePalette from '$lib/palette/NodePalette.svelte';
 	import CalmCanvas from '$lib/canvas/CalmCanvas.svelte';
@@ -28,6 +34,7 @@
 	} from '$lib/io/fileState.svelte';
 	import { exportAsCalm, exportAsSvg, exportAsPng, exportAsCalmscript } from '$lib/io/export';
 	import type { CalmArchitecture } from '@calmstudio/calm-core';
+	import { detectPacksFromArch } from '$lib/io/sidecar';
 	import {
 		getIssues,
 		getErrorCountForElement,
@@ -128,6 +135,16 @@
 	// ─── Import error state — set by importCalmFile on invalid JSON ──────────
 
 	let importError = $state<string | null>(null);
+
+	// ─── Extension pack banner state — shown when pack types detected on import ─
+
+	/**
+	 * When true, a dismissable info banner appears below the toolbar telling the
+	 * user that extension pack types were detected in the imported file.
+	 * Since initAllPacks() runs at module startup, packs are always loaded —
+	 * the banner is informational only (v1).
+	 */
+	let extensionPackBanner = $state(false);
 
 	function handlePalettePlace(type: string) {
 		canvas?.placeNodeAtCenter(type);
@@ -306,11 +323,20 @@
 			return;
 		}
 
-		// Clear any previous error
+		// Clear any previous error and banner
 		importError = null;
+		extensionPackBanner = false;
 
 		// Clear previous validation results on new file load
 		clearValidation();
+
+		// Detect extension pack types — show info banner if pack-prefixed types found.
+		// All packs are already registered (initAllPacks ran at module load), so this
+		// is purely informational for v1.
+		const detectedPacks = detectPacksFromArch(parsed);
+		if (detectedPacks.length > 0) {
+			extensionPackBanner = true;
+		}
 
 		// Push undo snapshot before mutation
 		pushSnapshot(nodes, edges);
@@ -545,6 +571,24 @@
 			</div>
 		{/if}
 
+		<!-- Extension pack info banner: shown when pack-prefixed node types are detected on import -->
+		{#if extensionPackBanner}
+			<div class="pack-banner" role="status">
+				<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+					<circle cx="12" cy="12" r="10" />
+					<line x1="12" y1="8" x2="12" y2="12" />
+					<line x1="12" y1="16" x2="12.01" y2="16" />
+				</svg>
+				<span class="pack-banner-message">Extension pack types detected. All packs are loaded and ready.</span>
+				<button
+					type="button"
+					class="pack-banner-dismiss"
+					onclick={() => (extensionPackBanner = false)}
+					aria-label="Dismiss extension pack notice"
+				>Dismiss</button>
+			</div>
+		{/if}
+
 		<!-- Main content: three-column canvas + bottom code panel + validation drawer -->
 		<PaneGroup direction="vertical" class="main-pane-group">
 			<!-- Top: Three-column layout (palette | canvas | properties) -->
@@ -749,6 +793,49 @@
 	.error-dismiss:hover {
 		opacity: 1;
 		background: rgba(220, 38, 38, 0.1);
+	}
+
+	/* ─── Extension pack info banner ────────────────────────────── */
+
+	.pack-banner {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		background: #eff6ff;
+		border-bottom: 1px solid #bfdbfe;
+		padding: 6px 16px;
+		font-size: 12px;
+		font-family: var(--font-sans);
+		color: #1d4ed8;
+		flex-shrink: 0;
+	}
+
+	:global(.dark) .pack-banner {
+		background: #0c1a33;
+		border-color: #1e3a5f;
+		color: #60a5fa;
+	}
+
+	.pack-banner-message {
+		flex: 1;
+	}
+
+	.pack-banner-dismiss {
+		background: none;
+		border: 1px solid currentColor;
+		cursor: pointer;
+		color: inherit;
+		font-size: 11px;
+		font-family: var(--font-sans);
+		padding: 2px 8px;
+		border-radius: 4px;
+		opacity: 0.7;
+		flex-shrink: 0;
+	}
+
+	.pack-banner-dismiss:hover {
+		opacity: 1;
+		background: rgba(29, 78, 216, 0.08);
 	}
 
 	/* ─── Floating canvas toolbar (layout + dark mode) ──────────── */
