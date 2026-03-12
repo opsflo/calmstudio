@@ -3,6 +3,7 @@
 
 <script lang="ts">
 	import { type Node, type Edge, SvelteFlowProvider } from '@xyflow/svelte';
+	import { tick } from 'svelte';
 	import { PaneGroup, Pane, PaneResizer } from 'paneforge';
 	import DnDProvider from '$lib/palette/DnDProvider.svelte';
 	import NodePalette from '$lib/palette/NodePalette.svelte';
@@ -13,12 +14,17 @@
 	import { getModelJson, applyFromJson, getModel } from '$lib/stores/calmModel.svelte';
 	import { calmToFlow } from '$lib/stores/projection';
 	import { pushSnapshot } from '$lib/stores/history.svelte';
+	import { layoutCalm, type LayoutDirection } from '$lib/layout/elkLayout';
 	import type { CalmArchitecture } from '@calmstudio/calm-core';
 
 	let nodes = $state.raw<Node[]>([]);
 	let edges = $state.raw<Edge[]>([]);
 
 	let canvas: CalmCanvas;
+
+	// ─── Import error state — consumed by Plan 03 error banner ──────────────
+
+	let importError = $state<string | null>(null);
 
 	function handlePalettePlace(type: string) {
 		canvas?.placeNodeAtCenter(type);
@@ -127,6 +133,112 @@
 	function handleBeforeFirstEdit() {
 		pushSnapshot(nodes, edges);
 	}
+
+	// ─── CALM file import ─────────────────────────────────────────────────────
+
+	/**
+	 * Import a CALM JSON file from string content.
+	 * Validates JSON and presence of `nodes` array.
+	 * On success: applies to model, runs ELK layout, projects to canvas, fits view.
+	 * On error: sets importError, canvas unchanged (no partial load).
+	 */
+	async function importCalmFile(content: string, _filename?: string) {
+		let parsed: CalmArchitecture;
+		try {
+			parsed = JSON.parse(content) as CalmArchitecture;
+		} catch (e) {
+			importError = 'Malformed JSON: ' + (e as Error).message;
+			return;
+		}
+
+		if (!Array.isArray(parsed.nodes)) {
+			importError = 'Invalid CALM JSON: missing nodes array';
+			return;
+		}
+
+		// Clear any previous error
+		importError = null;
+
+		// Push undo snapshot before mutation
+		pushSnapshot(nodes, edges);
+
+		// Apply to canonical model
+		applyFromJson(parsed);
+
+		// Auto-layout with no pinned nodes on fresh import
+		const positionMap = await layoutCalm(parsed, new Set(), 'DOWN');
+
+		// Project to Svelte Flow
+		const projected = calmToFlow(parsed, positionMap);
+		nodes = projected.nodes;
+		edges = projected.edges;
+
+		// Fit view after DOM update
+		await tick();
+		canvas?.fitViewport();
+	}
+
+	// ─── Auto-layout ──────────────────────────────────────────────────────────
+
+	/** Currently selected layout direction (used by toolbar dropdown). */
+	let layoutDirection = $state<LayoutDirection>('DOWN');
+
+	/**
+	 * Run ELK auto-layout on the current diagram.
+	 * Pinned nodes are excluded from ELK; their current positions are preserved.
+	 */
+	async function runLayout(direction: LayoutDirection) {
+		const model = getModel();
+		const pinnedIds = new Set(
+			nodes.filter((n) => n.data?.pinned).map((n) => n.id)
+		);
+
+		// Run ELK for free (unpinned) nodes
+		const elkPositions = await layoutCalm(model, pinnedIds, direction);
+
+		// Build final position map: ELK results + pinned node current positions
+		const finalPositions = new Map<string, { x: number; y: number }>();
+
+		// Inject pinned positions from current canvas state
+		for (const n of nodes) {
+			if (pinnedIds.has(n.id)) {
+				finalPositions.set(n.id, { ...n.position });
+			}
+		}
+
+		// Add ELK-computed positions for free nodes
+		for (const [id, pos] of elkPositions) {
+			finalPositions.set(id, pos);
+		}
+
+		// Project via calmToFlow with combined position map
+		const projected = calmToFlow(model, finalPositions);
+
+		// Preserve pinned flag on projected nodes
+		const pinnedMap = new Map(nodes.map((n) => [n.id, n.data?.pinned ?? false]));
+		nodes = projected.nodes.map((n) =>
+			pinnedMap.get(n.id) ? { ...n, data: { ...n.data, pinned: true } } : n
+		);
+		edges = projected.edges;
+
+		await tick();
+		canvas?.fitViewport();
+	}
+
+	// ─── Cmd+O keyboard shortcut — open file picker ───────────────────────────
+
+	function handleOpenFile() {
+		const input = document.createElement('input');
+		input.type = 'file';
+		input.accept = '.json,.calm.json';
+		input.onchange = async () => {
+			const file = input.files?.[0];
+			if (!file) return;
+			const content = await file.text();
+			await importCalmFile(content, file.name);
+		};
+		input.click();
+	}
 </script>
 
 <DnDProvider>
@@ -143,9 +255,65 @@
 
 				<!-- Center: Canvas area -->
 				<Pane defaultSize={70}>
-					<div class="canvas-pane">
+					<div
+						class="canvas-pane"
+						onkeydown={(e) => {
+							if ((e.metaKey || e.ctrlKey) && e.key === 'o') {
+								e.preventDefault();
+								handleOpenFile();
+							}
+						}}
+						role="main"
+						tabindex="-1"
+					>
 						<!-- Floating toolbar -->
 						<div class="toolbar">
+							<!-- Auto-layout controls -->
+							<div class="layout-group" role="group" aria-label="Auto-layout controls">
+								<!-- Direction dropdown -->
+								<select
+									class="layout-select"
+									bind:value={layoutDirection}
+									aria-label="Layout direction"
+									title="Layout direction"
+								>
+									<option value="DOWN">Top to Bottom</option>
+									<option value="RIGHT">Left to Right</option>
+									<option value="UP">Hierarchical</option>
+								</select>
+
+								<!-- Layout button -->
+								<button
+									type="button"
+									class="toolbar-btn"
+									onclick={() => runLayout(layoutDirection)}
+									aria-label="Auto-layout diagram"
+									title="Auto-layout (ELK)"
+								>
+									<!-- Grid/arrange icon -->
+									<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+										<rect x="3" y="3" width="7" height="7" rx="1" />
+										<rect x="14" y="3" width="7" height="7" rx="1" />
+										<rect x="3" y="14" width="7" height="7" rx="1" />
+										<rect x="14" y="14" width="7" height="7" rx="1" />
+									</svg>
+								</button>
+							</div>
+
+							<!-- Open file button (Cmd+O) -->
+							<button
+								type="button"
+								class="toolbar-btn"
+								onclick={handleOpenFile}
+								aria-label="Open CALM JSON file (Cmd+O)"
+								title="Import CALM JSON (Cmd+O)"
+							>
+								<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+									<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+								</svg>
+							</button>
+
+							<!-- Dark mode toggle -->
 							<button
 								onclick={toggleTheme}
 								class="toolbar-btn"
@@ -165,12 +333,26 @@
 							</button>
 						</div>
 
+						<!-- Import error banner -->
+						{#if importError}
+							<div class="import-error" role="alert">
+								<span>{importError}</span>
+								<button type="button" class="error-dismiss" onclick={() => (importError = null)} aria-label="Dismiss error">
+									<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+										<line x1="18" y1="6" x2="6" y2="18" />
+										<line x1="6" y1="6" x2="18" y2="18" />
+									</svg>
+								</button>
+							</div>
+						{/if}
+
 						<SvelteFlowProvider>
 							<CalmCanvas
 								bind:this={canvas}
 								bind:nodes
 								bind:edges
 								onselectionchange={handleSelectionChange}
+								onfileimport={importCalmFile}
 							/>
 						</SvelteFlowProvider>
 					</div>
@@ -301,5 +483,122 @@
 	:global(.dark) :global(.resizer[data-resize-handle-active]) {
 		background: #3b82f6;
 		opacity: 1;
+	}
+
+	/* ─── Layout group (dropdown + button) ──────────────────────── */
+
+	.layout-group {
+		display: flex;
+		align-items: center;
+		gap: 2px;
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-radius: 9px;
+		padding: 2px;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+	}
+
+	:global(.dark) .layout-group {
+		background: #111827;
+		border-color: #334155;
+	}
+
+	.layout-select {
+		border: none;
+		background: transparent;
+		font-size: 11px;
+		font-family: var(--font-sans);
+		color: var(--color-text-secondary);
+		cursor: pointer;
+		padding: 4px 4px 4px 6px;
+		border-radius: 7px;
+		outline: none;
+		min-width: 100px;
+	}
+
+	.layout-select:hover,
+	.layout-select:focus {
+		background: var(--color-surface-tertiary);
+		color: var(--color-text-primary);
+	}
+
+	:global(.dark) .layout-select {
+		color: #94a3b8;
+	}
+
+	:global(.dark) .layout-select option {
+		background: #111827;
+		color: #e2e8f0;
+	}
+
+	/* Layout button inside layout-group has no outer border/bg */
+	.layout-group .toolbar-btn {
+		width: 28px;
+		height: 28px;
+		border: none;
+		background: transparent;
+		box-shadow: none;
+		border-radius: 6px;
+	}
+
+	.layout-group .toolbar-btn:hover {
+		background: var(--color-surface-tertiary);
+	}
+
+	:global(.dark) .layout-group .toolbar-btn {
+		background: transparent;
+	}
+
+	:global(.dark) .layout-group .toolbar-btn:hover {
+		background: #1e293b;
+	}
+
+	/* ─── Import error banner ────────────────────────────────────── */
+
+	.import-error {
+		position: absolute;
+		top: 56px;
+		left: 50%;
+		transform: translateX(-50%);
+		z-index: 50;
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		background: #fef2f2;
+		border: 1px solid #fca5a5;
+		border-radius: 8px;
+		padding: 8px 12px;
+		font-size: 12px;
+		font-family: var(--font-sans);
+		color: #dc2626;
+		max-width: 480px;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	:global(.dark) .import-error {
+		background: #1c0a0a;
+		border-color: #7f1d1d;
+		color: #f87171;
+	}
+
+	.error-dismiss {
+		background: none;
+		border: none;
+		cursor: pointer;
+		color: inherit;
+		display: flex;
+		align-items: center;
+		padding: 2px;
+		border-radius: 4px;
+		flex-shrink: 0;
+		opacity: 0.7;
+	}
+
+	.error-dismiss:hover {
+		opacity: 1;
+		background: rgba(220, 38, 38, 0.1);
 	}
 </style>

@@ -55,6 +55,7 @@
 		edges = $bindable<Edge[]>([]),
 		onplacenode,
 		onselectionchange,
+		onfileimport,
 	}: {
 		nodes?: Node[];
 		edges?: Edge[];
@@ -62,11 +63,20 @@
 		onplacenode?: (type: string) => void;
 		/** Called when canvas selection changes. nodeId and edgeId are the IDs of the first selected items (or null). */
 		onselectionchange?: (nodeId: string | null, edgeId: string | null) => void;
+		/** Called when a .json file is dropped onto the canvas. Receives file content and filename. */
+		onfileimport?: (content: string, filename: string) => void;
 	} = $props();
 
 	// ─── Svelte Flow context ─────────────────────────────────────────────────
 
-	const { screenToFlowPosition } = useSvelteFlow();
+	const { screenToFlowPosition, flowToScreenPosition, fitView } = useSvelteFlow();
+
+	/**
+	 * Fit all nodes into view. Called by parent after import or layout.
+	 */
+	export function fitViewport() {
+		fitView({ duration: 300 });
+	}
 
 	// ─── Search state ─────────────────────────────────────────────────────────
 
@@ -96,8 +106,17 @@
 		}
 	}
 
-	function handleDrop(event: DragEvent) {
+	async function handleDrop(event: DragEvent) {
 		event.preventDefault();
+
+		// Check for file drop first (JSON file import)
+		const file = event.dataTransfer?.files[0];
+		if (file && (file.name.endsWith('.json') || file.name.endsWith('.calm.json'))) {
+			const content = await file.text();
+			onfileimport?.(content, file.name);
+			return;
+		}
+
 		const calmType = event.dataTransfer?.getData('application/calm-node-type');
 		if (!calmType) return;
 
@@ -276,6 +295,37 @@
 		applyFromCanvas(nodes, edges);
 	}
 
+	// ─── Pin toggle ───────────────────────────────────────────────────────────
+
+	/** Hover state for showing the pin button overlay. */
+	let hoveredNodeId = $state<string | null>(null);
+	let pinBtnPos = $state<{ x: number; y: number; width: number } | null>(null);
+
+	function handleNodeMouseEnter(event: { event: MouseEvent; node: Node }) {
+		hoveredNodeId = event.node.id;
+		// Position pin button at top-right of node using screen coords
+		const screenPos = flowToScreenPosition(event.node.position);
+		const w = event.node.measured?.width ?? event.node.width ?? 160;
+		pinBtnPos = { x: screenPos.x + w - 22, y: screenPos.y + 4, width: w };
+	}
+
+	function handleNodeMouseLeave() {
+		// Small delay so user can click the pin button without it disappearing
+		setTimeout(() => {
+			hoveredNodeId = null;
+			pinBtnPos = null;
+		}, 200);
+	}
+
+	function togglePinNode(nodeId: string) {
+		nodes = nodes.map((n) =>
+			n.id === nodeId
+				? { ...n, data: { ...n.data, pinned: !n.data?.pinned } }
+				: n
+		);
+		applyFromCanvas(nodes, edges);
+	}
+
 	// ─── Keyboard shortcuts ───────────────────────────────────────────────────
 
 	function handleUndo() {
@@ -370,10 +420,42 @@
 		onnodedragstop={handleNodeDragStop}
 		onedgecontextmenu={handleEdgeContextMenu}
 		onselectionchange={handleSelectionChange}
+		onnodemouseenter={handleNodeMouseEnter}
+		onnodemouseleave={handleNodeMouseLeave}
 	>
 		<Background variant={BackgroundVariant.Dots} gap={20} size={1} />
 		<EdgeMarkers />
 	</SvelteFlow>
+
+	<!-- Floating pin button — appears on node hover -->
+	{#if hoveredNodeId && pinBtnPos}
+		<button
+			type="button"
+			class="pin-overlay-btn"
+			class:pinned={nodes.find(n => n.id === hoveredNodeId)?.data?.pinned}
+			style="left: {pinBtnPos.x}px; top: {pinBtnPos.y}px;"
+			onmouseenter={() => { /* keep visible */ }}
+			onclick={() => hoveredNodeId && togglePinNode(hoveredNodeId)}
+			aria-label={nodes.find(n => n.id === hoveredNodeId)?.data?.pinned ? 'Unpin node' : 'Pin node'}
+			title={nodes.find(n => n.id === hoveredNodeId)?.data?.pinned ? 'Unpin node (will move in auto-layout)' : 'Pin node (stays fixed in auto-layout)'}
+		>
+			<svg width="11" height="11" viewBox="0 0 24 24" fill={nodes.find(n => n.id === hoveredNodeId)?.data?.pinned ? 'currentColor' : 'none'} stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+				<path d="M12 2L8 8H4l4 6v4l4-2 4 2v-4l4-6h-4L12 2z" stroke-linecap="round" stroke-linejoin="round" />
+				<line x1="12" y1="18" x2="12" y2="22" stroke-linecap="round" />
+			</svg>
+		</button>
+	{/if}
+
+	<!-- Pinned node indicator dots — always visible on pinned nodes -->
+	{#each nodes.filter(n => n.data?.pinned) as pinnedNode}
+		{@const screenPos = flowToScreenPosition(pinnedNode.position)}
+		<div
+			class="pin-indicator"
+			style="left: {screenPos.x + 4}px; top: {screenPos.y + 4}px;"
+			title="Node is pinned — stays fixed during auto-layout"
+			aria-hidden="true"
+		></div>
+	{/each}
 
 	<!-- Floating search panel — shown when Cmd+F is pressed -->
 	{#if searchOpen}
@@ -468,5 +550,69 @@
 
 	:global(.dark) .edge-menu-item:hover {
 		background: #1e293b;
+	}
+
+	/* ─── Pin overlay button ─────────────────────────────────── */
+
+	.pin-overlay-btn {
+		position: absolute;
+		width: 20px;
+		height: 20px;
+		border: 1px solid var(--color-border);
+		background: var(--color-surface);
+		border-radius: 4px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+		color: var(--color-text-tertiary);
+		z-index: 20;
+		padding: 0;
+		box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+		transition: all 0.1s;
+	}
+
+	.pin-overlay-btn:hover {
+		background: var(--color-surface-tertiary);
+		color: var(--color-text-primary);
+	}
+
+	.pin-overlay-btn.pinned {
+		color: var(--color-accent, #3b82f6);
+		border-color: var(--color-accent, #3b82f6);
+	}
+
+	:global(.dark) .pin-overlay-btn {
+		background: #111827;
+		border-color: #334155;
+		color: #64748b;
+	}
+
+	:global(.dark) .pin-overlay-btn:hover {
+		background: #1e293b;
+		color: #e2e8f0;
+	}
+
+	:global(.dark) .pin-overlay-btn.pinned {
+		color: #60a5fa;
+		border-color: #60a5fa;
+	}
+
+	/* ─── Pin indicator dot ──────────────────────────────────── */
+
+	.pin-indicator {
+		position: absolute;
+		width: 8px;
+		height: 8px;
+		border-radius: 50%;
+		background: var(--color-accent, #3b82f6);
+		z-index: 15;
+		pointer-events: none;
+		box-shadow: 0 0 0 2px var(--color-surface);
+	}
+
+	:global(.dark) .pin-indicator {
+		background: #60a5fa;
+		box-shadow: 0 0 0 2px #111827;
 	}
 </style>
