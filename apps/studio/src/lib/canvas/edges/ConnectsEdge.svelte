@@ -28,13 +28,22 @@
 	);
 
 	const protocolLabel = $derived((data as Record<string, unknown>)?.protocol ?? label);
+
+	const validationStyle = $derived(
+		(data as Record<string, unknown>)?.validationSeverity === 'error'
+			? 'stroke: #dc2626; stroke-width: 2.5;'
+			: (data as Record<string, unknown>)?.validationSeverity === 'warning'
+				? 'stroke: #d97706; stroke-width: 2;'
+				: undefined
+	);
+	const finalStyle = $derived(validationStyle ? `${style ?? ''} ${validationStyle}` : style);
 </script>
 
 <BaseEdge
 	{id}
 	path={edgePath}
 	markerEnd="url(#marker-arrow-filled)"
-	{style}
+	style={finalStyle}
 />
 
 {#if protocolLabel}

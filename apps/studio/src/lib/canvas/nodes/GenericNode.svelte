@@ -2,7 +2,10 @@
 <!-- SPDX-License-Identifier: Apache-2.0 -->
 <script lang="ts">
 	import { Handle, Position, NodeResizer, type NodeProps } from '@xyflow/svelte';
+	import ValidationBadge from './ValidationBadge.svelte';
 	let { id, data, selected }: NodeProps = $props();
+	const errorCount = $derived((data as Record<string, unknown>).validationErrors as number ?? 0);
+	const warnCount = $derived((data as Record<string, unknown>).validationWarnings as number ?? 0);
 </script>
 
 <NodeResizer minWidth={80} minHeight={40} isVisible={selected} />
@@ -18,6 +21,7 @@
 {/if}
 
 <div class="node" class:selected>
+	<ValidationBadge {errorCount} {warnCount} nodeId={(data as Record<string, unknown>).calmId as string ?? id} />
 	<span class="label">{data.label ?? data.calmId}</span>
 	{#if data.calmType}
 		<span class="badge">{data.calmType}</span>
@@ -26,6 +30,7 @@
 
 <style>
 	.node {
+		position: relative;
 		display: flex;
 		flex-direction: column;
 		align-items: center;

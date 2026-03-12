@@ -2,7 +2,10 @@
 <!-- SPDX-License-Identifier: Apache-2.0 -->
 <script lang="ts">
 	import { Handle, Position, type NodeProps } from '@xyflow/svelte';
+	import ValidationBadge from './ValidationBadge.svelte';
 	let { id, data, selected }: NodeProps = $props();
+	const errorCount = $derived((data as Record<string, unknown>).validationErrors as number ?? 0);
+	const warnCount = $derived((data as Record<string, unknown>).validationWarnings as number ?? 0);
 </script>
 
 <Handle type="target" position={Position.Top} />
@@ -17,6 +20,7 @@
 {/if}
 
 <div class="node" class:selected>
+	<ValidationBadge {errorCount} {warnCount} nodeId={(data as Record<string, unknown>).calmId as string ?? id} />
 	<svg width="56" height="40" viewBox="0 0 56 40" fill="none" aria-hidden="true">
 		<rect x="2" y="2" width="52" height="36" rx="3" fill="var(--node-webclient-bg)" stroke="var(--node-webclient-stroke)" stroke-width="1.5" />
 		<line x1="2" y1="12" x2="54" y2="12" stroke="var(--node-webclient-stroke)" stroke-width="1.2" />
@@ -29,6 +33,7 @@
 
 <style>
 	.node {
+		position: relative;
 		display: flex;
 		flex-direction: column;
 		align-items: center;

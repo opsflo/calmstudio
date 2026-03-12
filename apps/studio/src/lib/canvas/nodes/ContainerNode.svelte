@@ -2,9 +2,12 @@
 <!-- SPDX-License-Identifier: Apache-2.0 -->
 <script lang="ts">
 	import { Handle, Position, NodeResizer, type NodeProps } from '@xyflow/svelte';
+	import ValidationBadge from './ValidationBadge.svelte';
 	let { id, data, selected }: NodeProps = $props();
 
 	let collapsed = $state(data.collapsed ?? false);
+	const errorCount = $derived((data as Record<string, unknown>).validationErrors as number ?? 0);
+	const warnCount = $derived((data as Record<string, unknown>).validationWarnings as number ?? 0);
 
 	function toggleCollapse() {
 		collapsed = !collapsed;
@@ -34,6 +37,7 @@
 
 {#if collapsed}
 	<div class="container collapsed" class:selected>
+		<ValidationBadge {errorCount} {warnCount} nodeId={(data as Record<string, unknown>).calmId as string ?? id} />
 		<div class="collapsed-row">
 			<div class="dot"></div>
 			<span class="label">{data.label ?? data.calmId}</span>
@@ -44,6 +48,7 @@
 	</div>
 {:else}
 	<div class="container expanded" class:selected>
+		<ValidationBadge {errorCount} {warnCount} nodeId={(data as Record<string, unknown>).calmId as string ?? id} />
 		<div class="header">
 			<div class="header-left">
 				<div class="dot"></div>
@@ -59,6 +64,7 @@
 
 <style>
 	.container {
+		position: relative;
 		font-family: var(--node-font);
 		cursor: default;
 		user-select: none;
