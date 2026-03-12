@@ -11,8 +11,9 @@
 	import CodePanel from '$lib/editor/CodePanel.svelte';
 	import PropertiesPanel from '$lib/properties/PropertiesPanel.svelte';
 	import Toolbar from '$lib/toolbar/Toolbar.svelte';
+	import ValidationPanel from '$lib/validation/ValidationPanel.svelte';
 	import { toggleTheme, isDark } from '$lib/stores/theme.svelte';
-	import { getModelJson, applyFromJson, getModel, resetModel } from '$lib/stores/calmModel.svelte';
+	import { getModelJson, applyFromJson, applyFromCanvas, getModel, resetModel } from '$lib/stores/calmModel.svelte';
 	import { calmToFlow } from '$lib/stores/projection';
 	import { pushSnapshot, resetHistory } from '$lib/stores/history.svelte';
 	import { layoutCalm, type LayoutDirection } from '$lib/layout/elkLayout';
@@ -27,11 +28,80 @@
 	} from '$lib/io/fileState.svelte';
 	import { exportAsCalm, exportAsSvg, exportAsPng, exportAsCalmscript } from '$lib/io/export';
 	import type { CalmArchitecture } from '@calmstudio/calm-core';
+	import {
+		getIssues,
+		getErrorCountForElement,
+		getWarningCountForElement,
+		getMaxSeverityForElement,
+		isPanelOpen,
+		dismissPanel,
+		getScrollToElementId,
+		setScrollToElementId,
+		resetDismiss,
+	} from '$lib/stores/validation.svelte';
 
 	let nodes = $state.raw<Node[]>([]);
 	let edges = $state.raw<Edge[]>([]);
 
 	let canvas: CalmCanvas;
+
+	// ─── Validation pane ──────────────────────────────────────────────────────
+
+	type CalmPaneInstance = { collapse: () => void; expand: () => void; };
+	let validationPane = $state<CalmPaneInstance | null>(null);
+
+	/** Auto-open / auto-close the validation drawer based on store state. */
+	$effect(() => {
+		const open = isPanelOpen();
+		if (open && validationPane) {
+			validationPane.expand();
+		}
+	});
+
+	// ─── Enriched nodes/edges with validation data (display-only) ────────────
+
+	/**
+	 * Inject validation counts into nodes and edges for badge display.
+	 * This effect runs when issues change (from validation store) and merges
+	 * validation data into node.data / edge.data without calling applyFromCanvas.
+	 * Uses a guard to prevent infinite loops: only writes if values actually changed.
+	 */
+	$effect(() => {
+		// Read issues reactively — triggers re-run when validation store updates
+		const currentIssues = getIssues();
+		if (currentIssues === undefined) return; // paranoia guard
+
+		// Merge validation counts into nodes (without applyFromCanvas)
+		const nextNodes = nodes.map((n) => {
+			const calmId = (n.data?.calmId as string) ?? n.id;
+			const errs = getErrorCountForElement(calmId);
+			const warns = getWarningCountForElement(calmId);
+			// Only update if values changed to avoid unnecessary re-renders
+			if (n.data?.validationErrors === errs && n.data?.validationWarnings === warns) return n;
+			return {
+				...n,
+				data: { ...n.data, validationErrors: errs, validationWarnings: warns },
+			};
+		});
+		// Only assign if at least one node changed
+		if (nextNodes.some((n, i) => n !== nodes[i])) {
+			nodes = nextNodes;
+		}
+
+		// Merge validation severity into edges
+		const nextEdges = edges.map((e) => {
+			const calmId = (e.data?.calmId as string) ?? e.id;
+			const sev = getMaxSeverityForElement(calmId);
+			if (e.data?.validationSeverity === sev) return e;
+			return {
+				...e,
+				data: { ...e.data, validationSeverity: sev },
+			};
+		});
+		if (nextEdges.some((e, i) => e !== edges[i])) {
+			edges = nextEdges;
+		}
+	});
 
 	// ─── Import error state — set by importCalmFile on invalid JSON ──────────
 
@@ -61,6 +131,36 @@
 	function handleSelectionChange(nodeId: string | null, edgeId: string | null) {
 		selectedNodeId = nodeId;
 		selectedEdgeId = edgeId;
+	}
+
+	// ─── Validation panel navigation ──────────────────────────────────────────
+
+	/**
+	 * Called when user clicks an issue row in the ValidationPanel.
+	 * Centers canvas on the element and selects it.
+	 */
+	function handleNavigateToNode(elementId: string) {
+		// Check nodes first
+		const node = nodes.find(
+			(n) => (n.data?.calmId as string) === elementId || n.id === elementId
+		);
+		if (node) {
+			selectedNodeId = (node.data?.calmId as string) ?? null;
+			selectedEdgeId = null;
+			canvas?.navigateToNode(elementId);
+			// Clear scroll-to after navigation
+			setScrollToElementId(null);
+			return;
+		}
+		// Check edges
+		const edge = edges.find(
+			(e) => (e.data?.calmId as string) === elementId || e.id === elementId
+		);
+		if (edge) {
+			selectedEdgeId = (edge.data?.calmId as string) ?? edge.id;
+			selectedNodeId = null;
+			setScrollToElementId(null);
+		}
 	}
 
 	// ─── Reverse sync: code editor -> model -> canvas ────────────────────────
@@ -151,6 +251,17 @@
 		pushSnapshot(nodes, edges);
 	}
 
+	// ─── Pin toggle ──────────────────────────────────────────────────────────
+
+	function handleTogglePin(nodeId: string) {
+		nodes = nodes.map((n) =>
+			n.id === nodeId
+				? { ...n, data: { ...n.data, pinned: !n.data?.pinned } }
+				: n
+		);
+		applyFromCanvas(nodes, edges);
+	}
+
 	// ─── CALM file import ─────────────────────────────────────────────────────
 
 	/**
@@ -175,6 +286,9 @@
 
 		// Clear any previous error
 		importError = null;
+
+		// Reset dismiss state on new file load so panel can auto-open again
+		resetDismiss();
 
 		// Push undo snapshot before mutation
 		pushSnapshot(nodes, edges);
@@ -242,6 +356,7 @@
 		resetModel();
 		resetHistory();
 		resetFileState();
+		resetDismiss();
 		nodes = [];
 		edges = [];
 	}
@@ -317,6 +432,14 @@
 
 	onMount(() => {
 		function handleKeydown(e: KeyboardEvent) {
+			// Option+N (Mac) / Alt+N: new diagram
+			// Use e.code because Option+N produces 'ñ' for e.key on Mac
+			if (e.altKey && e.code === 'KeyN') {
+				e.preventDefault();
+				handleNew();
+				return;
+			}
+
 			const isMod = e.metaKey || e.ctrlKey;
 			if (!isMod) return;
 
@@ -329,30 +452,18 @@
 			} else if (e.key === 's' && e.shiftKey) {
 				e.preventDefault();
 				handleSaveAs();
-			} else if (e.key === 'n') {
-				e.preventDefault();
-				handleNew();
-			}
-		}
-
-		function handleBeforeUnload(e: BeforeUnloadEvent) {
-			if (getIsDirty()) {
-				e.preventDefault();
-				e.returnValue = '';
 			}
 		}
 
 		// Use capture phase so we intercept before browser processes Cmd+N/Cmd+O
 		window.addEventListener('keydown', handleKeydown, true);
-		window.addEventListener('beforeunload', handleBeforeUnload);
 
 		return () => {
 			window.removeEventListener('keydown', handleKeydown, true);
-			window.removeEventListener('beforeunload', handleBeforeUnload);
 		};
 	});
 
-	// ─── Document title reactive update ──────────────────────────────────────
+	// ─── Document title + beforeunload reactive update ──────────────────────
 
 	$effect(() => {
 		const filename = getFileName();
@@ -361,7 +472,18 @@
 		if (filename) {
 			document.title = dirty ? `${filename} \u2022 CalmStudio` : `${filename} - CalmStudio`;
 		} else {
-			document.title = 'CalmStudio';
+			document.title = dirty ? 'CalmStudio \u2022 Unsaved' : 'CalmStudio';
+		}
+
+		// Reactively set/clear onbeforeunload based on dirty state
+		if (dirty) {
+			window.onbeforeunload = (e: BeforeUnloadEvent) => {
+				e.preventDefault();
+				e.returnValue = '';
+				return '';
+			};
+		} else {
+			window.onbeforeunload = null;
 		}
 	});
 </script>
@@ -400,10 +522,10 @@
 			</div>
 		{/if}
 
-		<!-- Main content: three-column canvas + bottom code panel -->
+		<!-- Main content: three-column canvas + bottom code panel + validation drawer -->
 		<PaneGroup direction="vertical" class="main-pane-group">
 			<!-- Top: Three-column layout (palette | canvas | properties) -->
-			<Pane defaultSize={70} minSize={30}>
+			<Pane defaultSize={60} minSize={30}>
 				<PaneGroup direction="horizontal" style="height: 100%;">
 					<!-- Left: Node Palette -->
 					<Pane defaultSize={15} minSize={8}>
@@ -424,6 +546,7 @@
 										class="layout-select"
 										bind:value={layoutDirection}
 										aria-label="Layout direction"
+										onchange={() => runLayout(layoutDirection)}
 										title="Layout direction"
 									>
 										<option value="DOWN">Top to Bottom</option>
@@ -491,6 +614,7 @@
 							{selectedEdge}
 							onBeforeFirstEdit={handleBeforeFirstEdit}
 							onmutate={handlePropertyMutation}
+							ontogglepin={handleTogglePin}
 						/>
 					</Pane>
 				</PaneGroup>
@@ -498,14 +622,32 @@
 
 			<PaneResizer class="resizer resizer-horizontal" />
 
-			<!-- Bottom: Code editor panel (full width) -->
-			<Pane defaultSize={30} minSize={10}>
+			<!-- Middle: Code editor panel (full width) -->
+			<Pane defaultSize={25} minSize={10}>
 				<CodePanel
 					value={calmJson}
 					onchange={handleCodeChange}
 					parseError={codeParseError}
 					selectedNodeId={selectedNodeId}
 					selectedEdgeId={selectedEdgeId}
+				/>
+			</Pane>
+
+			<PaneResizer class="resizer resizer-horizontal" />
+
+			<!-- Bottom: Validation panel drawer (collapsible) -->
+			<Pane
+				defaultSize={15}
+				minSize={5}
+				collapsible
+				collapsedSize={0}
+				bind:this={validationPane}
+			>
+				<ValidationPanel
+					issues={getIssues()}
+					onnavigatetonode={handleNavigateToNode}
+					ondismiss={() => { dismissPanel(); validationPane?.collapse(); }}
+					scrollToId={getScrollToElementId()}
 				/>
 			</Pane>
 		</PaneGroup>

@@ -22,6 +22,9 @@
 import { getModel } from './calmModel.svelte';
 import { validateCalmArchitecture, type ValidationIssue } from '@calmstudio/calm-core';
 
+// Re-export ValidationIssue for consumers that cannot resolve @calmstudio/calm-core via tsconfig
+export type { ValidationIssue };
+
 // ─── Module-level state ───────────────────────────────────────────────────────
 
 let issues = $state<ValidationIssue[]>([]);
