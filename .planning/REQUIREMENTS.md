@@ -81,8 +81,8 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Extension Packs
 
-- [ ] **EXTK-01**: Extension pack system loads node types, icons, colors, and default handles dynamically
-- [ ] **EXTK-02**: Core pack ships with all 9 CALM node types
+- [x] **EXTK-01**: Extension pack system loads node types, icons, colors, and default handles dynamically
+- [x] **EXTK-02**: Core pack ships with all 9 CALM node types
 - [ ] **EXTK-03**: AWS pack ships with top 20 AWS service types (Lambda, S3, DynamoDB, ECS, EKS, SQS, API Gateway, RDS, etc.)
 - [ ] **EXTK-04**: Kubernetes pack ships with core K8s resources (Pod, Deployment, Service, Ingress, ConfigMap, etc.)
 - [ ] **EXTK-05**: AI/Agentic pack ships with AI architecture types (LLM, Agent, Orchestrator, Vector Store, Tool, Memory, Guardrail)
@@ -254,8 +254,8 @@ Deferred to future release. Tracked but not in current roadmap.
 | VALD-01 | Phase 6 | Complete |
 | VALD-02 | Phase 6 | Complete |
 | VALD-03 | Phase 6 | Complete |
-| EXTK-01 | Phase 7 | Pending |
-| EXTK-02 | Phase 7 | Pending |
+| EXTK-01 | Phase 7 | Complete |
+| EXTK-02 | Phase 7 | Complete |
 | EXTK-03 | Phase 7 | Pending |
 | EXTK-04 | Phase 7 | Pending |
 | EXTK-05 | Phase 7 | Pending |

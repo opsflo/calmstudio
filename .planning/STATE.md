@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Phase 7 context gathered
-last_updated: "2026-03-12T15:53:25.674Z"
+stopped_at: Completed 07-extension-packs 07-00-PLAN.md
+last_updated: "2026-03-12T16:24:17.873Z"
 last_activity: 2026-03-12 — Phase 5 Plan 03 complete; MCP server verified end-to-end via Claude Code, .json extension fix
 progress:
   total_phases: 13
   completed_phases: 5
-  total_plans: 25
-  completed_plans: 24
+  total_plans: 29
+  completed_plans: 25
   percent: 29
 ---
 
@@ -74,6 +74,7 @@ Progress: [███░░░░░░░] 29%
 | Phase 06-calm-validation P01 | 19min | 2 tasks | 18 files |
 | Phase 06-calm-validation P02 | 10min | 2 tasks | 9 files |
 | Phase 06-calm-validation P02 | 45min | 7 tasks | 13 files |
+| Phase 07-extension-packs P00 | 3min | 2 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -149,6 +150,9 @@ Recent decisions affecting current work:
 - [Phase 06-calm-validation]: Validation changed from automatic to user-triggered (toolbar Validate button) — opt-in UX is less intrusive
 - [Phase 06-calm-validation]: Validate button toggles panel on/off — second press hides without permanent dismiss
 - [Phase 06-calm-validation]: Toggling panel off clears node badges and edge colors — canvas stays clean when not in validation mode
+- [Phase 07-extension-packs]: PackRegistry uses module-level Map singleton — avoids class instance pattern, simpler for tree-shaking
+- [Phase 07-extension-packs]: resolvePackNode returns null for unprefixed types — core type resolution stays in nodeTypes.ts resolveNodeType()
+- [Phase 07-extension-packs]: Pack typeId convention: unprefixed for core (actor), colon-prefixed for extension packs (aws:lambda)
 
 ### Pending Todos
 
@@ -162,6 +166,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-12T15:53:25.663Z
-Stopped at: Phase 7 context gathered
-Resume file: .planning/phases/07-extension-packs/07-CONTEXT.md
+Last session: 2026-03-12T16:24:17.870Z
+Stopped at: Completed 07-extension-packs 07-00-PLAN.md
+Resume file: None
