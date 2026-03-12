@@ -66,4 +66,12 @@ export const awsIcons: Record<string, string> = {
   elb: `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="8" cy="8" r="2.5"/><path d="M1 8h4.5M10.5 8H15"/><path d="M8 1v4.5M8 10.5V15"/><path d="M3 3l3.2 3.2M9.8 9.8l3.2 3.2M3 13l3.2-3.2M9.8 6.2L13 3" stroke-linecap="round"/></svg>`,
 
   efs: `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M2 6h12v4H2z" rx="1"/><path d="M5 6V4M8 6V4M11 6V4M5 10v2M8 10v2M11 10v2" stroke-linecap="round"/><path d="M2 8h12" stroke-linecap="round"/></svg>`,
+
+  subnet: `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2" y="2" width="12" height="12" rx="1.5" stroke-dasharray="3 1.5"/><path d="M2 6h12M2 10h12" stroke-dasharray="2 1.5"/></svg>`,
+
+  'internet-gateway': `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="8" cy="8" r="5.5"/><path d="M8 2.5v11M2.5 8h11" stroke-linecap="round"/><path d="M4 4l8 8M12 4l-8 8" stroke-linecap="round" opacity="0.4"/></svg>`,
+
+  'nat-gateway': `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2" y="4" width="12" height="8" rx="1.5"/><path d="M5 8h3l-1.5-2M8 8l1.5 2H6" stroke-linecap="round" stroke-linejoin="round"/><path d="M11 6v4" stroke-linecap="round"/></svg>`,
+
+  'route-table': `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2" y="2" width="12" height="12" rx="1.5"/><path d="M2 5.5h12M2 9h12M6 5.5v8.5" stroke-linecap="round"/></svg>`,
 };
