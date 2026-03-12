@@ -14,13 +14,12 @@ describe('resolveNodeType — built-in types', () => {
 	});
 });
 
-describe('resolveNodeType — extension pack types (Plan 03)', () => {
-	// Enable after Plan 03 wires resolveNodeType to pack registry
-	it.skip('resolveNodeType("aws:lambda") returns "extension"', () => {
+describe('resolveNodeType — extension pack types', () => {
+	it('resolveNodeType("aws:lambda") returns "extension"', () => {
 		expect(resolveNodeType('aws:lambda')).toBe('extension');
 	});
 
-	it.skip('resolveNodeType("k8s:pod") returns "extension"', () => {
+	it('resolveNodeType("k8s:pod") returns "extension"', () => {
 		expect(resolveNodeType('k8s:pod')).toBe('extension');
 	});
 });

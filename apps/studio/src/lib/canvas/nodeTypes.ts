@@ -13,6 +13,7 @@ import LdapNode from './nodes/LdapNode.svelte';
 import DataAssetNode from './nodes/DataAssetNode.svelte';
 import GenericNode from './nodes/GenericNode.svelte';
 import ContainerNode from './nodes/ContainerNode.svelte';
+import ExtensionNode from './nodes/ExtensionNode.svelte';
 
 /**
  * Maps CALM node type strings to their corresponding Svelte Flow node components.
@@ -30,6 +31,7 @@ export const nodeTypes = {
 	'data-asset': DataAssetNode,
 	generic: GenericNode,
 	container: ContainerNode,
+	extension: ExtensionNode,
 } as const;
 
 /** The set of built-in CALM node type strings (for runtime lookup). */
@@ -47,14 +49,20 @@ const BUILT_IN_TYPES = new Set<string>([
 
 /**
  * Resolves a CALM node-type string to a key in the nodeTypes map.
- * Built-in types are returned as-is; custom/unknown types fall back to 'generic'.
+ * Built-in types are returned as-is.
+ * Colon-prefixed types (e.g. 'aws:lambda') are routed to 'extension' so
+ * ExtensionNode can look up pack metadata at render time.
+ * All other custom/unknown types fall back to 'generic'.
  *
  * @param calmType - The node-type value from a CALM architecture document.
- * @returns A key from the nodeTypes map — one of the 9 built-in types or 'generic'.
+ * @returns A key from the nodeTypes map.
  */
 export function resolveNodeType(calmType: string): keyof typeof nodeTypes {
 	if (BUILT_IN_TYPES.has(calmType)) {
 		return calmType as keyof typeof nodeTypes;
+	}
+	if (calmType.includes(':')) {
+		return 'extension';
 	}
 	return 'generic';
 }

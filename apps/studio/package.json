@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@calmstudio/calm-core": "workspace:*",
+    "@calmstudio/extensions": "workspace:*",
     "@codemirror/lang-json": "^6.0.2",
     "@codemirror/lint": "^6.9.5",
     "@codemirror/state": "^6.5.4",
