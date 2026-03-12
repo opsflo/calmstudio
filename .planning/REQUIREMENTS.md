@@ -88,7 +88,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **EXTK-05**: AI/Agentic pack ships with AI architecture types (LLM, Agent, Orchestrator, Vector Store, Tool, Memory, Guardrail)
 - [x] **EXTK-06**: GCP pack ships with top 15 GCP service types
 - [x] **EXTK-07**: Azure pack ships with top 15 Azure service types
-- [ ] **EXTK-08**: Node palette organizes types by extension pack with search/filter
+- [x] **EXTK-08**: Node palette organizes types by extension pack with search/filter
 
 ### MCP Server
 
@@ -261,7 +261,7 @@ Deferred to future release. Tracked but not in current roadmap.
 | EXTK-05 | Phase 7 | Complete |
 | EXTK-06 | Phase 7 | Complete |
 | EXTK-07 | Phase 7 | Complete |
-| EXTK-08 | Phase 7 | Pending |
+| EXTK-08 | Phase 7 | Complete |
 | MCPS-01 | Phase 8 | Complete |
 | MCPS-02 | Phase 8 | Complete |
 | MCPS-03 | Phase 8 | Complete |

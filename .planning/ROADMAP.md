@@ -138,7 +138,7 @@ Plans:
   2. Diagrams using extension pack node types pass `calm validate` without modification
   3. Extension pack metadata is stored in a `.calmstudio.json` sidecar file and never embedded in the `.calm` JSON
   4. A diagram created with extension pack nodes exports valid CALM JSON that round-trips correctly through import
-**Plans:** 2/4 plans executed
+**Plans:** 3/4 plans executed
 Plans:
 - [ ] 07-00-PLAN.md — Types, PackRegistry, Core CALM pack, test infrastructure for extensions package
 - [ ] 07-01-PLAN.md — AWS, GCP, Azure, Kubernetes, AI/Agentic pack definitions with SVG icons
@@ -226,7 +226,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 4. Import, Export & Layout | 3/5 | In Progress|  |
 | 5. MCP Server | 4/4 | Complete   | 2026-03-12 |
 | 6. CALM Validation | 3/3 | Complete   | 2026-03-12 |
-| 7. Extension Packs | 2/4 | In Progress|  |
+| 7. Extension Packs | 3/4 | In Progress|  |
 | 8. C4 View Mode | 0/TBD | Not started | - |
 | 9. calmscript DSL | 0/TBD | Not started (deferred) | - |
 | 10. Desktop App | 0/TBD | Not started | - |
