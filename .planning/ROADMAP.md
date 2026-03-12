@@ -2,7 +2,7 @@
 
 ## Overview
 
-CalmStudio ships in 12 phases, each delivering a coherent, independently verifiable capability. The build order follows hard dependencies: governance and CI gate everything; the CALM canvas is the root dependency for all UI features; calmscript must be stable before the MCP server; extension packs must exist before the pattern library. Phases 1-4 deliver a standalone CALM-typed desktop diagramming tool. Phases 5-8 add the AI-native differentiation (calmscript, validation, extension packs, MCP). Phases 9-12 complete the ecosystem (desktop packaging, patterns, docs, VS Code/GitHub/web component).
+CalmStudio ships in 12 phases, each delivering a coherent, independently verifiable capability. The build order follows hard dependencies: governance and CI gate everything; the CALM canvas is the root dependency for all UI features; MCP server enables AI integration early; validation and extension packs enhance both the UI and MCP; calmscript is deferred until real-world MCP usage informs whether a text DSL is needed. Phases 1-4 deliver a standalone CALM-typed desktop diagramming tool. Phases 5-8 add the AI-native differentiation (MCP, validation, extension packs, calmscript). Phases 9-12 complete the ecosystem (desktop packaging, patterns, docs, VS Code/GitHub/web component).
 
 ## Phases
 
@@ -16,10 +16,10 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 2: CALM Canvas Core** - Typed drag-and-drop canvas with all 9 CALM node types, 5 relationship types, and table-stakes UX
 - [x] **Phase 3: Properties & Bidirectional Sync** - Properties panel, CALM JSON code editor, and bidirectional visual-to-code sync engine (completed 2026-03-12)
 - [ ] **Phase 4: Import, Export & Layout** - CALM JSON import with ELK auto-layout, file export (CALM JSON, calmscript, SVG, PNG), and native file I/O
-- [ ] **Phase 5: calmscript DSL** - Mermaid-competitive text format that compiles losslessly to CALM JSON and back
+- [ ] **Phase 5: MCP Server** - Standalone MCP server enabling Claude Code and AI assistants to create/modify/validate architectures via structured tool calls
 - [ ] **Phase 6: CALM Validation** - Real-time schema validation with inline indicators and severity panel
 - [ ] **Phase 7: Extension Packs** - Dynamic pack system with AWS, GCP, Azure, Kubernetes, and AI/Agentic node types
-- [ ] **Phase 8: MCP Server** - Standalone MCP server enabling Claude Code and AI assistants to create/modify/validate architectures
+- [ ] **Phase 8: calmscript DSL** - Mermaid-competitive text format that compiles losslessly to CALM JSON and back (deferred from original Phase 5 — evaluate need after MCP usage)
 - [ ] **Phase 9: Desktop App** - Tauri 2 packaging for macOS, Windows, and Linux with native file dialogs
 - [ ] **Phase 10: Pattern Library & Documentation** - Architecture pattern templates and Docusaurus documentation site
 - [ ] **Phase 11: Testing Suite** - Comprehensive London School TDD — unit, integration, E2E, and component tests
@@ -97,23 +97,17 @@ Plans:
 - [ ] 04-03-PLAN.md — Toolbar component, keyboard shortcuts, beforeunload, wire all features into page
 - [ ] 04-04-PLAN.md — Visual verification checkpoint
 
-### Phase 5: calmscript DSL
-**Goal**: Architects and AI tools can describe an architecture in ~20 lines of text that compiles losslessly to and from CALM JSON
+### Phase 5: MCP Server
+**Goal**: Claude Code and any MCP-compatible AI assistant can create, modify, and export CALM architectures through structured tool calls
 **Depends on**: Phase 4
-**Requirements**: CSPT-01, CSPT-02, CSPT-03, CSPT-04, CSPT-05, CSPT-06
+**Requirements**: MCPS-01, MCPS-02, MCPS-03, MCPS-04, MCPS-05, MCPS-06, MCPS-07
 **Success Criteria** (what must be TRUE):
-  1. A 5-node architecture with typed relationships, interfaces, and controls is expressible in 20 lines or fewer of calmscript
-  2. Compiling calmscript to CALM JSON and back to calmscript produces identical output (round-trip lossless)
-  3. calmscript supports all CALM concepts: nodes, relationships, interfaces, controls, flows, metadata, and extension pack imports (`@use aws`)
-  4. The CodeMirror calmscript editor provides syntax highlighting and shows inline error indicators for invalid syntax
-  5. The calmscript parser runs in a Web Worker and does not block keystrokes even on large architectures
-**Plans:** 5 plans
-Plans:
-- [ ] 04-00-PLAN.md — Install deps (elkjs, html-to-image), create test stubs for ELK layout and file system
-- [ ] 04-01-PLAN.md — ELK layout engine, CALM JSON import, drag-and-drop, auto-layout button, pin toggle
-- [ ] 04-02-PLAN.md — File I/O (open, save, save-as), dirty state store, export functions (CALM JSON, SVG, PNG, calmscript)
-- [ ] 04-03-PLAN.md — Toolbar component, keyboard shortcuts, beforeunload, wire all features into page
-- [ ] 04-04-PLAN.md — Visual verification checkpoint
+  1. User can install the MCP server via `npm install -g @calmstudio/mcp` and register it in Claude Code's MCP config
+  2. Claude Code can create a complete 5-node architecture from a text description using the `create_architecture` tool, producing valid CALM JSON
+  3. Claude Code can add nodes, add relationships, export/import CALM files, and render to SVG through dedicated MCP tools
+  4. All MCP tools pass MCP Inspector compliance validation and return properly structured `content` responses
+  5. The MCP server works without the desktop app running — it operates on `.calm` files directly
+**Plans:** 0/TBD
 
 ### Phase 6: CALM Validation
 **Goal**: Architects get immediate, precise feedback when their diagram violates the CALM schema
@@ -148,23 +142,18 @@ Plans:
 - [ ] 04-03-PLAN.md — Toolbar component, keyboard shortcuts, beforeunload, wire all features into page
 - [ ] 04-04-PLAN.md — Visual verification checkpoint
 
-### Phase 8: MCP Server
-**Goal**: Claude Code and any MCP-compatible AI assistant can create, modify, validate, and render CALM architectures through natural language
-**Depends on**: Phase 7
-**Requirements**: MCPS-01, MCPS-02, MCPS-03, MCPS-04, MCPS-05, MCPS-06, MCPS-07
+### Phase 8: calmscript DSL
+**Goal**: Architects and AI tools can describe an architecture in ~20 lines of text that compiles losslessly to and from CALM JSON
+**Depends on**: Phase 4 (benefits from Phases 5-7 being complete)
+**Requirements**: CSPT-01, CSPT-02, CSPT-03, CSPT-04, CSPT-05, CSPT-06
+**Deferred from**: Original Phase 5 — MCP Server (structured tool calls) solves AI generation more reliably. calmscript value to be evaluated after real-world MCP usage. Context captured in 08-CONTEXT.md.
 **Success Criteria** (what must be TRUE):
-  1. User can install the MCP server via `npm install -g @calmstudio/mcp` and register it in Claude Code's MCP config
-  2. Claude Code can create a complete 5-node architecture from a text description using the `create_architecture` tool, producing valid calmscript and CALM JSON
-  3. Claude Code can add nodes, add relationships, validate, render to SVG, and export/import CALM files through dedicated MCP tools
-  4. All MCP tools pass MCP Inspector compliance validation and return properly structured `content` responses
-  5. The MCP server works without the desktop app running — it operates on `.calm` files directly
-**Plans:** 5 plans
-Plans:
-- [ ] 04-00-PLAN.md — Install deps (elkjs, html-to-image), create test stubs for ELK layout and file system
-- [ ] 04-01-PLAN.md — ELK layout engine, CALM JSON import, drag-and-drop, auto-layout button, pin toggle
-- [ ] 04-02-PLAN.md — File I/O (open, save, save-as), dirty state store, export functions (CALM JSON, SVG, PNG, calmscript)
-- [ ] 04-03-PLAN.md — Toolbar component, keyboard shortcuts, beforeunload, wire all features into page
-- [ ] 04-04-PLAN.md — Visual verification checkpoint
+  1. A 5-node architecture with typed relationships, interfaces, and controls is expressible in 20 lines or fewer of calmscript
+  2. Compiling calmscript to CALM JSON and back to calmscript produces identical output (round-trip lossless)
+  3. calmscript supports all CALM concepts: nodes, relationships, interfaces, controls, flows, metadata, and extension pack imports (`@use aws`)
+  4. The CodeMirror calmscript editor provides syntax highlighting and shows inline error indicators for invalid syntax
+  5. The calmscript parser runs in a Web Worker and does not block keystrokes even on large architectures
+**Plans:** 0/TBD
 
 ### Phase 9: Desktop App
 **Goal**: CalmStudio ships as a native desktop application on macOS, Windows, and Linux with native file system access
@@ -244,10 +233,10 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 2. CALM Canvas Core | 3/6 | In Progress|  |
 | 3. Properties & Bidirectional Sync | 5/5 | Complete   | 2026-03-12 |
 | 4. Import, Export & Layout | 3/5 | In Progress|  |
-| 5. calmscript DSL | 0/TBD | Not started | - |
+| 5. MCP Server | 0/TBD | Not started | - |
 | 6. CALM Validation | 0/TBD | Not started | - |
 | 7. Extension Packs | 0/TBD | Not started | - |
-| 8. MCP Server | 0/TBD | Not started | - |
+| 8. calmscript DSL | 0/TBD | Not started (deferred) | - |
 | 9. Desktop App | 0/TBD | Not started | - |
 | 10. Pattern Library & Documentation | 0/TBD | Not started | - |
 | 11. Testing Suite | 0/TBD | Not started | - |
