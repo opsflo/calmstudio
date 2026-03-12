@@ -107,7 +107,12 @@ Plans:
   3. Claude Code can add nodes, add relationships, export/import CALM files, and render to SVG through dedicated MCP tools
   4. All MCP tools pass MCP Inspector compliance validation and return properly structured `content` responses
   5. The MCP server works without the desktop app running — it operates on `.calm` files directly
-**Plans:** 0/TBD
+**Plans:** 4 plans
+Plans:
+- [ ] 05-00-PLAN.md — Package setup, deps, build pipeline, Zod schemas, file I/O layer, validation, test stubs
+- [ ] 05-01-PLAN.md — Architecture CRUD, node CRUD, relationship CRUD, and file I/O tool handlers
+- [ ] 05-02-PLAN.md — Validate, render, guide, view tools + server wiring + CLI entry point with dual transport
+- [ ] 05-03-PLAN.md — End-to-end integration test + MCP Inspector compliance verification
 
 ### Phase 6: CALM Validation
 **Goal**: Architects get immediate, precise feedback when their diagram violates the CALM schema
@@ -117,13 +122,7 @@ Plans:
   1. Nodes and edges with CALM schema violations show inline error indicators on the canvas without any user action
   2. A validation panel lists all errors, warnings, and info messages with severity levels and the offending node/edge identified
   3. Validation runs automatically after each edit with a debounce and never blocks typing or canvas interaction
-**Plans:** 5 plans
-Plans:
-- [ ] 04-00-PLAN.md — Install deps (elkjs, html-to-image), create test stubs for ELK layout and file system
-- [ ] 04-01-PLAN.md — ELK layout engine, CALM JSON import, drag-and-drop, auto-layout button, pin toggle
-- [ ] 04-02-PLAN.md — File I/O (open, save, save-as), dirty state store, export functions (CALM JSON, SVG, PNG, calmscript)
-- [ ] 04-03-PLAN.md — Toolbar component, keyboard shortcuts, beforeunload, wire all features into page
-- [ ] 04-04-PLAN.md — Visual verification checkpoint
+**Plans:** 0/TBD
 
 ### Phase 7: Extension Packs
 **Goal**: Architects can diagram AWS, GCP, Azure, Kubernetes, and AI/Agentic architectures with domain-specific node types that produce valid CALM output
@@ -134,13 +133,7 @@ Plans:
   2. Diagrams using extension pack node types pass `calm validate` without modification
   3. Extension pack metadata is stored in a `.calmstudio.json` sidecar file and never embedded in the `.calm` JSON
   4. A diagram created with extension pack nodes exports valid CALM JSON that round-trips correctly through import
-**Plans:** 5 plans
-Plans:
-- [ ] 04-00-PLAN.md — Install deps (elkjs, html-to-image), create test stubs for ELK layout and file system
-- [ ] 04-01-PLAN.md — ELK layout engine, CALM JSON import, drag-and-drop, auto-layout button, pin toggle
-- [ ] 04-02-PLAN.md — File I/O (open, save, save-as), dirty state store, export functions (CALM JSON, SVG, PNG, calmscript)
-- [ ] 04-03-PLAN.md — Toolbar component, keyboard shortcuts, beforeunload, wire all features into page
-- [ ] 04-04-PLAN.md — Visual verification checkpoint
+**Plans:** 0/TBD
 
 ### Phase 8: calmscript DSL
 **Goal**: Architects and AI tools can describe an architecture in ~20 lines of text that compiles losslessly to and from CALM JSON
@@ -163,13 +156,7 @@ Plans:
   1. User can download and install CalmStudio on macOS, Windows, and Linux and launch it without installing Node.js or any runtime
   2. User can open and save `.calm` and `.calmscript` files using native file dialogs (not a browser file picker)
   3. CalmStudio works fully offline with no network requests required for core diagramming functionality
-**Plans:** 5 plans
-Plans:
-- [ ] 04-00-PLAN.md — Install deps (elkjs, html-to-image), create test stubs for ELK layout and file system
-- [ ] 04-01-PLAN.md — ELK layout engine, CALM JSON import, drag-and-drop, auto-layout button, pin toggle
-- [ ] 04-02-PLAN.md — File I/O (open, save, save-as), dirty state store, export functions (CALM JSON, SVG, PNG, calmscript)
-- [ ] 04-03-PLAN.md — Toolbar component, keyboard shortcuts, beforeunload, wire all features into page
-- [ ] 04-04-PLAN.md — Visual verification checkpoint
+**Plans:** 0/TBD
 
 ### Phase 10: Pattern Library & Documentation
 **Goal**: Architects can start from proven architecture templates, and contributors and users have comprehensive documentation
@@ -180,13 +167,7 @@ Plans:
   2. The five bundled patterns (aws/microservices-eks, aws/serverless-api, kubernetes/standard-deployment, ai/rag-pipeline, ai/multi-agent) load and pass `calm validate`
   3. A Docusaurus site is live with getting started guide, calmscript language reference, extension pack development guide, MCP usage guide, and contributor guide
   4. Architecture Decision Records exist in `docs/` for all key decisions logged in PROJECT.md
-**Plans:** 5 plans
-Plans:
-- [ ] 04-00-PLAN.md — Install deps (elkjs, html-to-image), create test stubs for ELK layout and file system
-- [ ] 04-01-PLAN.md — ELK layout engine, CALM JSON import, drag-and-drop, auto-layout button, pin toggle
-- [ ] 04-02-PLAN.md — File I/O (open, save, save-as), dirty state store, export functions (CALM JSON, SVG, PNG, calmscript)
-- [ ] 04-03-PLAN.md — Toolbar component, keyboard shortcuts, beforeunload, wire all features into page
-- [ ] 04-04-PLAN.md — Visual verification checkpoint
+**Plans:** 0/TBD
 
 ### Phase 11: Testing Suite
 **Goal**: Every feature has outside-in tests at the appropriate level so regressions are caught before they reach users
@@ -197,13 +178,7 @@ Plans:
   2. Integration tests cover bidirectional sync, MCP server tool calls, and extension pack loading end-to-end
   3. Playwright E2E tests cover the full create-diagram, edit-code, export, and import workflows
   4. Every custom Svelte node and edge component has component-level tests via @testing-library/svelte
-**Plans:** 5 plans
-Plans:
-- [ ] 04-00-PLAN.md — Install deps (elkjs, html-to-image), create test stubs for ELK layout and file system
-- [ ] 04-01-PLAN.md — ELK layout engine, CALM JSON import, drag-and-drop, auto-layout button, pin toggle
-- [ ] 04-02-PLAN.md — File I/O (open, save, save-as), dirty state store, export functions (CALM JSON, SVG, PNG, calmscript)
-- [ ] 04-03-PLAN.md — Toolbar component, keyboard shortcuts, beforeunload, wire all features into page
-- [ ] 04-04-PLAN.md — Visual verification checkpoint
+**Plans:** 0/TBD
 
 ### Phase 12: Ecosystem
 **Goal**: CalmStudio reaches developers in their existing tools — VS Code, GitHub PRs, and any web page — and flow visualization completes the architecture story
@@ -214,13 +189,7 @@ Plans:
   2. A GitHub Action validates CALM JSON and renders calmscript diagrams as PR comments on every pull request
   3. A `<calm-diagram>` web component is installable via npm and renders any CALM JSON in any web page with a single HTML tag
   4. User can enable flow visualization and see data flows as stepped overlays on existing architecture edges
-**Plans:** 5 plans
-Plans:
-- [ ] 04-00-PLAN.md — Install deps (elkjs, html-to-image), create test stubs for ELK layout and file system
-- [ ] 04-01-PLAN.md — ELK layout engine, CALM JSON import, drag-and-drop, auto-layout button, pin toggle
-- [ ] 04-02-PLAN.md — File I/O (open, save, save-as), dirty state store, export functions (CALM JSON, SVG, PNG, calmscript)
-- [ ] 04-03-PLAN.md — Toolbar component, keyboard shortcuts, beforeunload, wire all features into page
-- [ ] 04-04-PLAN.md — Visual verification checkpoint
+**Plans:** 0/TBD
 
 ## Progress
 
@@ -233,7 +202,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 2. CALM Canvas Core | 3/6 | In Progress|  |
 | 3. Properties & Bidirectional Sync | 5/5 | Complete   | 2026-03-12 |
 | 4. Import, Export & Layout | 3/5 | In Progress|  |
-| 5. MCP Server | 0/TBD | Not started | - |
+| 5. MCP Server | 0/4 | Not started | - |
 | 6. CALM Validation | 0/TBD | Not started | - |
 | 7. Extension Packs | 0/TBD | Not started | - |
 | 8. calmscript DSL | 0/TBD | Not started (deferred) | - |
