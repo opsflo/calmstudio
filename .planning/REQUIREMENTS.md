@@ -83,11 +83,11 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [x] **EXTK-01**: Extension pack system loads node types, icons, colors, and default handles dynamically
 - [x] **EXTK-02**: Core pack ships with all 9 CALM node types
-- [ ] **EXTK-03**: AWS pack ships with top 20 AWS service types (Lambda, S3, DynamoDB, ECS, EKS, SQS, API Gateway, RDS, etc.)
-- [ ] **EXTK-04**: Kubernetes pack ships with core K8s resources (Pod, Deployment, Service, Ingress, ConfigMap, etc.)
-- [ ] **EXTK-05**: AI/Agentic pack ships with AI architecture types (LLM, Agent, Orchestrator, Vector Store, Tool, Memory, Guardrail)
-- [ ] **EXTK-06**: GCP pack ships with top 15 GCP service types
-- [ ] **EXTK-07**: Azure pack ships with top 15 Azure service types
+- [x] **EXTK-03**: AWS pack ships with top 20 AWS service types (Lambda, S3, DynamoDB, ECS, EKS, SQS, API Gateway, RDS, etc.)
+- [x] **EXTK-04**: Kubernetes pack ships with core K8s resources (Pod, Deployment, Service, Ingress, ConfigMap, etc.)
+- [x] **EXTK-05**: AI/Agentic pack ships with AI architecture types (LLM, Agent, Orchestrator, Vector Store, Tool, Memory, Guardrail)
+- [x] **EXTK-06**: GCP pack ships with top 15 GCP service types
+- [x] **EXTK-07**: Azure pack ships with top 15 Azure service types
 - [ ] **EXTK-08**: Node palette organizes types by extension pack with search/filter
 
 ### MCP Server
@@ -256,11 +256,11 @@ Deferred to future release. Tracked but not in current roadmap.
 | VALD-03 | Phase 6 | Complete |
 | EXTK-01 | Phase 7 | Complete |
 | EXTK-02 | Phase 7 | Complete |
-| EXTK-03 | Phase 7 | Pending |
-| EXTK-04 | Phase 7 | Pending |
-| EXTK-05 | Phase 7 | Pending |
-| EXTK-06 | Phase 7 | Pending |
-| EXTK-07 | Phase 7 | Pending |
+| EXTK-03 | Phase 7 | Complete |
+| EXTK-04 | Phase 7 | Complete |
+| EXTK-05 | Phase 7 | Complete |
+| EXTK-06 | Phase 7 | Complete |
+| EXTK-07 | Phase 7 | Complete |
 | EXTK-08 | Phase 7 | Pending |
 | MCPS-01 | Phase 8 | Complete |
 | MCPS-02 | Phase 8 | Complete |
