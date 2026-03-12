@@ -14,7 +14,8 @@
 	let {
 		nodeId,
 		metadata = {},
-	}: { nodeId: string; metadata: Record<string, string> } = $props();
+		onmutate,
+	}: { nodeId: string; metadata: Record<string, string>; onmutate?: () => void } = $props();
 
 	// Local state for the "new row" form
 	let newKey = $state('');
@@ -31,11 +32,13 @@
 		clearTimeout(debounceTimers[key]);
 		debounceTimers[key] = setTimeout(() => {
 			addCustomMetadata(nodeId, key, value);
+			onmutate?.();
 		}, 300);
 	}
 
 	function handleDelete(key: string) {
 		removeCustomMetadata(nodeId, key);
+		onmutate?.();
 	}
 
 	function handleAddClick() {
@@ -48,6 +51,7 @@
 		const trimmed = newKey.trim();
 		if (trimmed) {
 			addCustomMetadata(nodeId, trimmed, newValue);
+			onmutate?.();
 			newKey = '';
 			newValue = '';
 			showNewRow = false;

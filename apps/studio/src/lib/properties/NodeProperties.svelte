@@ -209,7 +209,7 @@
 	</div>
 
 	<!-- Interfaces section -->
-	<InterfaceList nodeId={node.data?.calmId} interfaces={node.data?.interfaces ?? []} />
+	<InterfaceList nodeId={node.data?.calmId} interfaces={node.data?.interfaces ?? []} {onmutate} />
 
 	<!-- Controls placeholder (Phase 6) -->
 	<div class="section controls-placeholder">
@@ -223,7 +223,7 @@
 	</div>
 
 	<!-- Custom metadata section -->
-	<CustomMetadata nodeId={node.data?.calmId} metadata={node.data?.customMetadata ?? {}} />
+	<CustomMetadata nodeId={node.data?.calmId} metadata={node.data?.customMetadata ?? {}} {onmutate} />
 </div>
 
 <style>

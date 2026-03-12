@@ -17,7 +17,8 @@
 	let {
 		nodeId,
 		interfaces = [],
-	}: { nodeId: string; interfaces: CalmInterface[] } = $props();
+		onmutate,
+	}: { nodeId: string; interfaces: CalmInterface[]; onmutate?: () => void } = $props();
 
 	const INTERFACE_TYPES = ['url', 'host-port', 'container-image', 'port', 'custom'] as const;
 
@@ -26,21 +27,25 @@
 
 	function handleTypeChange(iface: CalmInterface, newType: string) {
 		updateInterface(nodeId, iface['unique-id'], { type: newType });
+		onmutate?.();
 	}
 
 	function handleValueChange(iface: CalmInterface, newValue: string) {
 		clearTimeout(debounceTimers[iface['unique-id']]);
 		debounceTimers[iface['unique-id']] = setTimeout(() => {
 			updateInterface(nodeId, iface['unique-id'], { value: newValue });
+			onmutate?.();
 		}, 300);
 	}
 
 	function handleDelete(iface: CalmInterface) {
 		removeInterface(nodeId, iface['unique-id']);
+		onmutate?.();
 	}
 
 	function handleAdd() {
 		addInterface(nodeId, { 'unique-id': nanoid(), type: 'url', value: '' });
+		onmutate?.();
 	}
 </script>
 
