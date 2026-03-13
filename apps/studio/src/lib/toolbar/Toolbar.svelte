@@ -25,7 +25,9 @@
 		onexportpng,
 		onexportcalmscript,
 		filename = null,
-		isDirty = false
+		isDirty = false,
+		c4Level = null,
+		onc4levelchange,
 	}: {
 		onopen: () => void;
 		onsave: () => void;
@@ -38,7 +40,18 @@
 		onexportcalmscript: () => void;
 		filename?: string | null;
 		isDirty?: boolean;
+		/** Current C4 view level. null = "All" (show everything), or 'context' | 'container' | 'component'. */
+		c4Level?: string | null;
+		/** Called when user clicks a C4 level segment button. level is null for "All". */
+		onc4levelchange?: (level: string | null) => void;
 	} = $props();
+
+	const C4_SEGMENTS = [
+		{ key: null, label: 'All' },
+		{ key: 'context', label: 'Context' },
+		{ key: 'container', label: 'Container' },
+		{ key: 'component', label: 'Component' },
+	] as const;
 
 	let showExportMenu = $state(false);
 
@@ -62,9 +75,22 @@
 <svelte:window onclick={handleClickOutside} />
 
 <header class="toolbar" role="banner">
-	<!-- Left: App name -->
+	<!-- Left: App name + C4 view selector -->
 	<div class="toolbar-left">
 		<span class="app-name">CalmStudio</span>
+		<div class="c4-selector" role="group" aria-label="C4 view level">
+			{#each C4_SEGMENTS as seg}
+				<button
+					type="button"
+					class="c4-btn"
+					class:active={c4Level === seg.key}
+					onclick={() => onc4levelchange?.(seg.key)}
+					aria-pressed={c4Level === seg.key}
+				>
+					{seg.label}
+				</button>
+			{/each}
+		</div>
 	</div>
 
 	<!-- Center: Filename + dirty indicator -->
@@ -234,6 +260,7 @@
 	.toolbar-left {
 		display: flex;
 		align-items: center;
+		gap: 10px;
 		min-width: 120px;
 	}
 
@@ -404,5 +431,63 @@
 
 	:global(.dark) .export-menu-item:hover {
 		background: #1e293b;
+	}
+
+	/* ─── C4 view level segmented control ────────────────────── */
+
+	.c4-selector {
+		display: flex;
+		gap: 0;
+		border: 1px solid var(--color-border, #e2e8f0);
+		border-radius: 6px;
+		overflow: hidden;
+	}
+
+	.c4-btn {
+		padding: 2px 10px;
+		height: 22px;
+		font-size: 11px;
+		font-family: var(--font-sans);
+		font-weight: 500;
+		border: none;
+		border-right: 1px solid var(--color-border, #e2e8f0);
+		background: transparent;
+		cursor: pointer;
+		color: var(--color-text-secondary);
+		transition: background 0.15s, color 0.15s;
+		white-space: nowrap;
+	}
+
+	.c4-btn:last-child {
+		border-right: none;
+	}
+
+	.c4-btn.active {
+		background: var(--color-accent, #3b82f6);
+		color: white;
+	}
+
+	.c4-btn:hover:not(.active) {
+		background: var(--color-surface-tertiary, #f1f5f9);
+		color: var(--color-text-primary);
+	}
+
+	:global(.dark) .c4-selector {
+		border-color: #334155;
+	}
+
+	:global(.dark) .c4-btn {
+		color: #94a3b8;
+		border-right-color: #334155;
+	}
+
+	:global(.dark) .c4-btn.active {
+		background: #60a5fa;
+		color: #0f172a;
+	}
+
+	:global(.dark) .c4-btn:hover:not(.active) {
+		background: #1e293b;
+		color: #e2e8f0;
 	}
 </style>
