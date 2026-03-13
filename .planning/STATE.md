@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Phase 7 Plan 02 complete — ExtensionNode, NodePalette collapsible sections, and sidecar utilities wired into studio
-last_updated: "2026-03-12T16:38:12.932Z"
-last_activity: 2026-03-12 — Phase 5 Plan 03 complete; MCP server verified end-to-end via Claude Code, .json extension fix
+stopped_at: Phase 7 Plan 03 complete — Full extension pack system wired end-to-end with visual verification
+last_updated: "2026-03-13T03:44:11.000Z"
+last_activity: 2026-03-13 — Phase 7 Plan 03 complete; extension pack system fully integrated and visually verified
 progress:
   total_phases: 13
   completed_phases: 5
   total_plans: 29
-  completed_plans: 27
-  percent: 29
+  completed_plans: 28
+  percent: 30
 ---
 
 # Project State
@@ -25,12 +25,12 @@ See: .planning/PROJECT.md (updated 2026-03-11)
 
 ## Current Position
 
-Phase: 5 of 12 (MCP Server)
-Plan: 3 of 3 in current phase (3 complete — Phase 5 DONE)
-Status: Phase 5 complete — all 3 plans done
-Last activity: 2026-03-12 — Phase 5 Plan 03 complete; MCP server verified end-to-end via Claude Code, .json extension fix
+Phase: 7 of 13 (Extension Packs)
+Plan: 3 of 3 in current phase (3 complete — Phase 7 DONE)
+Status: Phase 7 complete — all 3 plans done
+Last activity: 2026-03-13 — Phase 7 Plan 03 complete; extension pack system fully integrated and visually verified
 
-Progress: [███░░░░░░░] 29%
+Progress: [███░░░░░░░] 30%
 
 ## Performance Metrics
 
@@ -77,6 +77,7 @@ Progress: [███░░░░░░░] 29%
 | Phase 07-extension-packs P00 | 3min | 2 tasks | 9 files |
 | Phase 07-extension-packs P01 | 9min | 2 tasks | 15 files |
 | Phase 07-extension-packs P02 | 4min | 2 tasks | 7 files |
+| Phase 07-extension-packs P03 | 30min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -160,6 +161,9 @@ Recent decisions affecting current work:
 - [Phase 07-extension-packs]: Pack node() factory function pattern reduces boilerplate and enforces consistent color application per pack
 - [Phase 07-extension-packs]: ExtensionNode calls resolvePackNode() at render time — nodeTypes.ts stays lightweight, no registry side-effects on import
 - [Phase 07-extension-packs]: NodePalette calls initAllPacks() at module level — packs guaranteed registered before first render without page/app involvement
+- [Phase 07-extension-packs P03]: initAllPacks() also called at module level in +page.svelte — belt-and-suspenders, ensures packs available even before NodePalette mounts
+- [Phase 07-extension-packs P03]: Extension pack banner is informational in v1 — packs always loaded at startup so Enable Packs = dismiss
+- [Phase 07-extension-packs P03]: Sidecar generated only when detectPacksFromArch() returns non-empty — pure CALM diagrams never create sidecar
 
 ### Pending Todos
 

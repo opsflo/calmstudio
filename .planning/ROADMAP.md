@@ -18,7 +18,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 4: Import, Export & Layout** - CALM JSON import with ELK auto-layout, file export (CALM JSON, calmscript, SVG, PNG), and native file I/O
 - [x] **Phase 5: MCP Server** - Standalone MCP server enabling Claude Code and AI assistants to create/modify/validate architectures via structured tool calls (completed 2026-03-12)
 - [x] **Phase 6: CALM Validation** - Real-time schema validation with inline indicators and severity panel (completed 2026-03-12)
-- [ ] **Phase 7: Extension Packs** - Dynamic pack system with AWS, GCP, Azure, Kubernetes, and AI/Agentic node types
+- [x] **Phase 7: Extension Packs** - Dynamic pack system with AWS, GCP, Azure, Kubernetes, and AI/Agentic node types (completed 2026-03-13)
 - [ ] **Phase 8: C4 View Mode** - Hierarchical C4 navigation (Context, Container, Component) as zoom levels over CALM architectures
 - [ ] **Phase 9: calmscript DSL** - Mermaid-competitive text format that compiles losslessly to CALM JSON and back (deferred from original Phase 5 — evaluate need after MCP usage)
 - [ ] **Phase 10: Desktop App** - Tauri 2 packaging for macOS, Windows, and Linux with native file dialogs
@@ -138,7 +138,7 @@ Plans:
   2. Diagrams using extension pack node types pass `calm validate` without modification
   3. Extension pack metadata is stored in a `.calmstudio.json` sidecar file and never embedded in the `.calm` JSON
   4. A diagram created with extension pack nodes exports valid CALM JSON that round-trips correctly through import
-**Plans:** 3/4 plans executed
+**Plans:** 4/4 plans complete
 Plans:
 - [ ] 07-00-PLAN.md — Types, PackRegistry, Core CALM pack, test infrastructure for extensions package
 - [ ] 07-01-PLAN.md — AWS, GCP, Azure, Kubernetes, AI/Agentic pack definitions with SVG icons
@@ -226,7 +226,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 4. Import, Export & Layout | 3/5 | In Progress|  |
 | 5. MCP Server | 4/4 | Complete   | 2026-03-12 |
 | 6. CALM Validation | 3/3 | Complete   | 2026-03-12 |
-| 7. Extension Packs | 3/4 | In Progress|  |
+| 7. Extension Packs | 4/4 | Complete   | 2026-03-13 |
 | 8. C4 View Mode | 0/TBD | Not started | - |
 | 9. calmscript DSL | 0/TBD | Not started (deferred) | - |
 | 10. Desktop App | 0/TBD | Not started | - |
