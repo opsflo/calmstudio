@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 08-c4-view-mode 08-01-PLAN.md
-last_updated: "2026-03-13T05:56:09.721Z"
+stopped_at: Completed 08-c4-view-mode 08-02-PLAN.md
+last_updated: "2026-03-13T06:03:06.540Z"
 last_activity: 2026-03-13 — Phase 7 Plan 03 complete; extension pack system fully integrated and visually verified
 progress:
   total_phases: 13
   completed_phases: 6
   total_plans: 32
-  completed_plans: 29
+  completed_plans: 30
   percent: 30
 ---
 
@@ -79,6 +79,7 @@ Progress: [███░░░░░░░] 30%
 | Phase 07-extension-packs P02 | 4min | 2 tasks | 7 files |
 | Phase 07-extension-packs P03 | 30min | 2 tasks | 3 files |
 | Phase 08-c4-view-mode P01 | 3min | 2 tasks | 3 files |
+| Phase 08-c4-view-mode P02 | 12min | 3 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -168,6 +169,8 @@ Recent decisions affecting current work:
 - [Phase 08-c4-view-mode]: CONTEXT_TYPES Set(['actor','system','ecosystem']); CONTAINER_TYPES Set(['service','database','webclient','network','ldap','data-asset']); all other types default to 'component'
 - [Phase 08-c4-view-mode]: filterNodesForLevel excludes nodes with parentId at all top-level C4 views (Pitfall 3)
 - [Phase 08-c4-view-mode]: drillUpTo(0) clears drill stack to root — breadcrumb click at index 0 returns to top-level view (Pitfall 5)
+- [Phase 08-c4-view-mode]: notifyChange() helper wraps oncanvaschange to prevent isDirty firing in C4 readonly mode (Pitfall 2)
+- [Phase 08-c4-view-mode]: C4 selector in toolbar-left section keeps toolbar-center absolute positioning intact
 
 ### Pending Todos
 
@@ -181,6 +184,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-13T05:56:09.719Z
-Stopped at: Completed 08-c4-view-mode 08-01-PLAN.md
+Last session: 2026-03-13T06:03:06.537Z
+Stopped at: Completed 08-c4-view-mode 08-02-PLAN.md
 Resume file: None
