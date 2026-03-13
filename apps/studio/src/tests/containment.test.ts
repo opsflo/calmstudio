@@ -66,6 +66,27 @@ describe('makeContainment', () => {
 		expect(updatedParent.type).toBe('container');
 	});
 
+	test('sets zIndex on child for click-through in nested containers', () => {
+		const vpc = makeNode('vpc', 'container');
+		const subnet = makeNode('subnet', 'service');
+
+		const result = makeContainment('vpc', 'subnet', [vpc, subnet]);
+
+		const child = result.find((n) => n.id === 'subnet')!;
+		expect(child.zIndex).toBe(1);
+	});
+
+	test('sets higher zIndex for deeply nested children', () => {
+		const vpc = makeNode('vpc', 'container');
+		const subnet = makeNode('subnet', 'container', { parentId: 'vpc', extent: 'parent' as const });
+		const ec2 = makeNode('ec2', 'extension');
+
+		const result = makeContainment('subnet', 'ec2', [vpc, subnet, ec2]);
+
+		const child = result.find((n) => n.id === 'ec2')!;
+		expect(child.zIndex).toBe(2);
+	});
+
 	test('does not mutate the original nodes array', () => {
 		const parent = makeNode('parent-1', 'container');
 		const child = makeNode('child-1', 'service');

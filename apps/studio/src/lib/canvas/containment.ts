@@ -42,6 +42,20 @@ export function isContainmentType(edgeType: string): boolean {
  * @param nodes    - Current nodes array.
  */
 export function makeContainment(parentId: string, childId: string, nodes: Node[]): Node[] {
+	// Compute the nesting depth of the parent so child gets a higher z-index.
+	// This ensures clicking a deeply-nested child selects it, not the container.
+	let depth = 1;
+	let currentId: string | undefined = parentId;
+	while (currentId) {
+		const parent = nodes.find((n) => n.id === currentId);
+		if (parent?.parentId) {
+			depth++;
+			currentId = parent.parentId;
+		} else {
+			break;
+		}
+	}
+
 	return nodes.map((node) => {
 		if (node.id === parentId) {
 			// Promote to container type if not already
@@ -49,7 +63,7 @@ export function makeContainment(parentId: string, childId: string, nodes: Node[]
 			return { ...node, type: 'container' };
 		}
 		if (node.id === childId) {
-			return { ...node, parentId, extent: 'parent' as const };
+			return { ...node, parentId, extent: 'parent' as const, zIndex: depth };
 		}
 		return node;
 	});
