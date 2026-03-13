@@ -57,6 +57,8 @@
 		onselectionchange,
 		onfileimport,
 		oncanvaschange,
+		readonly = false,
+		ondblclicknode,
 	}: {
 		nodes?: Node[];
 		edges?: Edge[];
@@ -68,7 +70,19 @@
 		onfileimport?: (content: string, filename: string) => void;
 		/** Called when canvas content changes (node drag, edge create, delete, etc.) for dirty tracking. */
 		oncanvaschange?: () => void;
+		/** When true, disables dragging, connecting, delete keys, and all mutation handlers. Used for C4 navigation mode. */
+		readonly?: boolean;
+		/** Called when a node is double-clicked in readonly mode. Used for C4 drill-down navigation. */
+		ondblclicknode?: (node: Node) => void;
 	} = $props();
+
+	/**
+	 * Notify parent of canvas changes. Guards against readonly mode to prevent
+	 * isDirty from becoming true during C4 browsing (Pitfall 2).
+	 */
+	function notifyChange() {
+		if (!readonly) oncanvaschange?.();
+	}
 
 	// ─── Svelte Flow context ─────────────────────────────────────────────────
 
@@ -127,6 +141,9 @@
 	async function handleDrop(event: DragEvent) {
 		event.preventDefault();
 
+		// In readonly mode, only allow file imports — no new node drops
+		if (readonly) return;
+
 		// Check for file drop first (JSON file import)
 		const file = event.dataTransfer?.files[0];
 		if (file && (file.name.endsWith('.json') || file.name.endsWith('.calm.json'))) {
@@ -161,7 +178,7 @@
 
 		nodes = [...nodes, newNode];
 		applyFromCanvas(nodes, edges);
-		oncanvaschange?.();
+		notifyChange();
 	}
 
 	// ─── Click-to-place ──────────────────────────────────────────────────────
@@ -197,12 +214,14 @@
 
 		nodes = [...nodes, newNode];
 		applyFromCanvas(nodes, edges);
-		oncanvaschange?.();
+		notifyChange();
 	}
 
 	// ─── Edge creation ───────────────────────────────────────────────────────
 
 	function handleConnect(connection: Connection) {
+		if (readonly) return;
+
 		// Prevent duplicate edges between the same source and target
 		const duplicate = edges.find(
 			(e) =>
@@ -229,7 +248,7 @@
 			nodes = makeContainment(connection.source, connection.target, nodes);
 		}
 		applyFromCanvas(nodes, edges);
-		oncanvaschange?.();
+		notifyChange();
 	}
 
 	/**
@@ -251,7 +270,7 @@
 			nodes = makeContainment(edge.source, edge.target, nodes);
 		}
 		applyFromCanvas(nodes, edges);
-		oncanvaschange?.();
+		notifyChange();
 	}
 
 	// ─── Edge context menu (right-click to change type) ─────────────────────
@@ -267,6 +286,7 @@
 	];
 
 	function handleEdgeContextMenu(event: { event: MouseEvent; edge: Edge }) {
+		if (readonly) return;
 		event.event.preventDefault();
 		edgeMenu = {
 			x: event.event.clientX,
@@ -306,6 +326,8 @@
 	}
 
 	function handleNodeDragStop(event: NodeDragEvent) {
+		if (readonly) return;
+
 		const draggedNode = event.node;
 		// Don't reparent nodes that are already parented or are containers
 		if (draggedNode.type === 'container' || draggedNode.parentId) return;
@@ -325,19 +347,20 @@
 					pushSnapshot(nodes, edges);
 					nodes = makeContainment(candidate.id, draggedNode.id, nodes);
 					applyFromCanvas(nodes, edges);
-					oncanvaschange?.();
+					notifyChange();
 					return;
 				}
 			}
 		}
 		// Regular drag stop (position change only)
 		applyFromCanvas(nodes, edges);
-		oncanvaschange?.();
+		notifyChange();
 	}
 
 	// ─── Keyboard shortcuts ───────────────────────────────────────────────────
 
 	function handleUndo() {
+		if (readonly) return;
 		const snapshot = undo();
 		if (snapshot) {
 			nodes = snapshot.nodes;
@@ -347,6 +370,7 @@
 	}
 
 	function handleRedo() {
+		if (readonly) return;
 		const snapshot = redo();
 		if (snapshot) {
 			nodes = snapshot.nodes;
@@ -356,10 +380,12 @@
 	}
 
 	function handleCopy() {
+		if (readonly) return;
 		copy(nodes);
 	}
 
 	function handlePaste() {
+		if (readonly) return;
 		const newNodes = paste(nodes);
 		if (newNodes.length > 0) {
 			pushSnapshot(nodes, edges);
@@ -418,7 +444,9 @@
 		bind:edges
 		{nodeTypes}
 		{edgeTypes}
-		deleteKey={['Delete', 'Backspace']}
+		deleteKey={readonly ? [] : ['Delete', 'Backspace']}
+		nodesDraggable={!readonly}
+		nodesConnectable={!readonly}
 		selectionKey="Shift"
 		multiSelectionKey="Meta"
 		fitView
@@ -430,6 +458,11 @@
 		onnodedragstop={handleNodeDragStop}
 		onedgecontextmenu={handleEdgeContextMenu}
 		onselectionchange={handleSelectionChange}
+		onnodedblclick={(e) => {
+			if (readonly && ondblclicknode) {
+				ondblclicknode(e.node);
+			}
+		}}
 	>
 		<Background variant={BackgroundVariant.Dots} gap={20} size={1} />
 		<EdgeMarkers />
