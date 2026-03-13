@@ -16,6 +16,8 @@
 		selectedEdge = null,
 		onBeforeFirstEdit,
 		onmutate,
+		ontogglepin,
+		readonly = false,
 	}: {
 		selectedNode?: Node | null;
 		selectedEdge?: Edge | null;
@@ -23,6 +25,10 @@
 		onBeforeFirstEdit?: () => void;
 		/** Called after each property mutation to re-project canvas and code panel. */
 		onmutate?: () => void;
+		/** Called to toggle pin state for a node. */
+		ontogglepin?: (nodeId: string) => void;
+		/** When true, renders node/edge info but disables all editing (C4 view mode). */
+		readonly?: boolean;
 	} = $props();
 
 	/** Prefer node when both are somehow selected. */
@@ -41,11 +47,20 @@
 
 <aside class="properties-panel" class:collapsed={!hasSelection} aria-label="Properties panel">
 	{#if hasSelection}
-		<div class="panel-content">
+		<div class="panel-content" class:readonly={readonly}>
 			{#if activeNode}
-				<NodeProperties node={activeNode} {onBeforeFirstEdit} {onmutate} />
+				<NodeProperties
+					node={activeNode}
+					onBeforeFirstEdit={readonly ? undefined : onBeforeFirstEdit}
+					onmutate={readonly ? undefined : onmutate}
+					ontogglepin={readonly ? undefined : ontogglepin}
+				/>
 			{:else if activeEdge}
-				<EdgeProperties edge={activeEdge} {onBeforeFirstEdit} {onmutate} />
+				<EdgeProperties
+					edge={activeEdge}
+					onBeforeFirstEdit={readonly ? undefined : onBeforeFirstEdit}
+					onmutate={readonly ? undefined : onmutate}
+				/>
 			{/if}
 		</div>
 	{:else}
@@ -89,6 +104,12 @@
 		flex: 1;
 		overflow-y: auto;
 		min-height: 0;
+	}
+
+	/* Readonly state — show node info but prevent editing (C4 view mode) */
+	.panel-content.readonly {
+		pointer-events: none;
+		opacity: 0.7;
 	}
 
 	/* Collapsed state — ~40px wide strip */

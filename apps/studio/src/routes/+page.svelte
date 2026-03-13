@@ -3,7 +3,7 @@
 
 <script lang="ts">
 	import { initAllPacks } from '@calmstudio/extensions';
-	import { type Node, type Edge, SvelteFlowProvider } from '@xyflow/svelte';
+	import { type Node, type Edge, SvelteFlowProvider, type Viewport } from '@xyflow/svelte';
 	import { tick, onMount } from 'svelte';
 	import { PaneGroup, Pane, PaneResizer } from 'paneforge';
 
@@ -18,6 +18,26 @@
 	import PropertiesPanel from '$lib/properties/PropertiesPanel.svelte';
 	import Toolbar from '$lib/toolbar/Toolbar.svelte';
 	import ValidationPanel from '$lib/validation/ValidationPanel.svelte';
+	import C4Breadcrumb from '$lib/c4/C4Breadcrumb.svelte';
+	import {
+		isC4Mode,
+		getC4Level,
+		getC4DrillStack,
+		getCurrentDrillParentId,
+		enterC4Mode,
+		exitC4Mode,
+		setC4Level,
+		drillDown,
+		drillUpTo,
+	} from '$lib/c4/c4State.svelte';
+	import {
+		filterNodesForLevel,
+		filterEdgesForVisibleNodes,
+		applyC4Styles,
+		hasDrillableChildren,
+		classifyNodeC4Level,
+	} from '$lib/c4/c4Filter';
+	import type { C4Level } from '$lib/c4/c4Filter';
 	import { toggleTheme, isDark } from '$lib/stores/theme.svelte';
 	import { getModelJson, applyFromJson, applyFromCanvas, getModel, resetModel } from '$lib/stores/calmModel.svelte';
 	import { calmToFlow } from '$lib/stores/projection';
@@ -52,6 +72,58 @@
 	let edges = $state.raw<Edge[]>([]);
 
 	let canvas: CalmCanvas;
+
+	// ─── C4 View Mode ─────────────────────────────────────────────────────────
+
+	/** Saved viewport before entering C4 mode — restored on exit. */
+	let savedViewport: Viewport | null = null;
+
+	/**
+	 * Derived C4 display nodes. When C4 mode is active, filters and styles nodes
+	 * for the current level and drill position. Returns raw nodes when not in C4 mode.
+	 */
+	const c4DisplayNodes = $derived.by(() => {
+		if (!isC4Mode()) return nodes;
+		const level = getC4Level()!;
+		const drillParentId = getCurrentDrillParentId();
+		let filtered = filterNodesForLevel(nodes, level, drillParentId);
+		// Add faded peer nodes when drilled into a container
+		if (drillParentId) {
+			const parentNode = nodes.find((n) => n.id === drillParentId);
+			if (parentNode?.parentId) {
+				// Peers = siblings of the parent (same grandparent), minus the drilled parent
+				const peers = nodes.filter(
+					(n) => n.parentId === parentNode.parentId && n.id !== drillParentId
+				);
+				const fadedPeers = peers.map((n) => ({ ...n, data: { ...n.data, c4Peer: true } }));
+				filtered = [...filtered, ...fadedPeers];
+			} else {
+				// Parent is top-level — peers are other top-level nodes of same level
+				const peers = nodes.filter(
+					(n) =>
+						!n.parentId &&
+						n.id !== drillParentId &&
+						classifyNodeC4Level(String(n.data?.calmType ?? '')) === level
+				);
+				// Limit to a few peers for context
+				const fadedPeers = peers
+					.slice(0, 5)
+					.map((n) => ({ ...n, data: { ...n.data, c4Peer: true } }));
+				filtered = [...filtered, ...fadedPeers];
+			}
+		}
+		return applyC4Styles(filtered, level);
+	});
+
+	/**
+	 * Derived C4 display edges. When C4 mode is active, shows only edges whose
+	 * both endpoints are visible in the current C4 view.
+	 */
+	const c4DisplayEdges = $derived.by(() => {
+		if (!isC4Mode()) return edges;
+		const visibleIds = new Set(c4DisplayNodes.map((n) => n.id));
+		return filterEdgesForVisibleNodes(edges, visibleIds);
+	});
 
 	// ─── Validation ──────────────────────────────────────────────────────────
 
@@ -130,6 +202,51 @@
 			};
 		});
 		if (nextEdges.some((e, i) => e !== edges[i])) edges = nextEdges;
+	}
+
+	// ─── C4 level change handler ─────────────────────────────────────────────
+
+	function handleC4LevelChange(level: string | null) {
+		if (level === null) {
+			// Exit C4 mode — restore viewport
+			exitC4Mode();
+			tick().then(() => {
+				if (savedViewport) {
+					canvas?.restoreViewport?.(savedViewport);
+					savedViewport = null;
+				}
+			});
+		} else {
+			if (!isC4Mode()) {
+				// Entering C4 mode — save viewport
+				savedViewport = canvas?.saveViewport?.() ?? null;
+			}
+			if (isC4Mode()) {
+				setC4Level(level as C4Level);
+			} else {
+				enterC4Mode(level as C4Level);
+			}
+			tick().then(() => canvas?.fitViewport());
+		}
+	}
+
+	// ─── Drill-down handler ───────────────────────────────────────────────────
+
+	function handleC4DrillDown(node: Node) {
+		if (!isC4Mode()) return;
+		// Skip peer nodes (they are faded context-only nodes, not drillable)
+		if (node.data?.c4Peer) return;
+		if (!hasDrillableChildren(node.id, nodes)) return;
+		const label = String(node.data?.label ?? node.data?.calmId ?? node.id);
+		drillDown(node.id, label);
+		tick().then(() => canvas?.fitViewport());
+	}
+
+	// ─── Breadcrumb navigate handler ─────────────────────────────────────────
+
+	function handleBreadcrumbNavigate(index: number) {
+		drillUpTo(index);
+		tick().then(() => canvas?.fitViewport());
 	}
 
 	// ─── Import error state — set by importCalmFile on invalid JSON ──────────
@@ -488,6 +605,37 @@
 				return;
 			}
 
+			// C4 view shortcuts (1-4) — only when not editing text (Pitfall 6)
+			if (!e.metaKey && !e.ctrlKey && !e.altKey) {
+				const tag = document.activeElement?.tagName;
+				if (
+					tag !== 'INPUT' &&
+					tag !== 'TEXTAREA' &&
+					!document.activeElement?.closest('[contenteditable]')
+				) {
+					if (e.key === '1') {
+						e.preventDefault();
+						handleC4LevelChange(null);
+						return;
+					}
+					if (e.key === '2') {
+						e.preventDefault();
+						handleC4LevelChange('context');
+						return;
+					}
+					if (e.key === '3') {
+						e.preventDefault();
+						handleC4LevelChange('container');
+						return;
+					}
+					if (e.key === '4') {
+						e.preventDefault();
+						handleC4LevelChange('component');
+						return;
+					}
+				}
+			}
+
 			const isMod = e.metaKey || e.ctrlKey;
 			if (!isMod) return;
 
@@ -551,6 +699,8 @@
 			onexportcalmscript={handleExportCalmscript}
 			filename={getFileName()}
 			isDirty={getIsDirty()}
+			c4Level={getC4Level()}
+			onc4levelchange={handleC4LevelChange}
 		/>
 
 		<!-- Error banner: below toolbar, above canvas panes -->
@@ -594,16 +744,34 @@
 			<!-- Top: Three-column layout (palette | canvas | properties) -->
 			<Pane defaultSize={60} minSize={30}>
 				<PaneGroup direction="horizontal" style="height: 100%;">
-					<!-- Left: Node Palette -->
-					<Pane defaultSize={15} minSize={8}>
-						<NodePalette onplacenode={handlePalettePlace} />
-					</Pane>
+					<!-- Left: Node Palette (hidden in C4 mode) -->
+					{#if !isC4Mode()}
+						<Pane defaultSize={15} minSize={8}>
+							<NodePalette onplacenode={handlePalettePlace} />
+						</Pane>
 
-					<PaneResizer class="resizer resizer-vertical" />
+						<PaneResizer class="resizer resizer-vertical" />
+					{/if}
 
 					<!-- Center: Canvas area -->
 					<Pane defaultSize={70}>
-						<div class="canvas-pane" role="main">
+						<div
+							class="canvas-pane"
+							class:c4-context={getC4Level() === 'context'}
+							class:c4-container={getC4Level() === 'container'}
+							class:c4-component={getC4Level() === 'component'}
+							role="main"
+						>
+							<!-- C4 Breadcrumb navigation bar (visible only in C4 mode) -->
+							{#if isC4Mode()}
+								<C4Breadcrumb
+									level={getC4Level()!}
+									drillStack={getC4DrillStack()}
+									onnavigate={handleBreadcrumbNavigate}
+									levelBadge={getC4Level()!.charAt(0).toUpperCase() + getC4Level()!.slice(1)}
+								/>
+							{/if}
+
 							<!-- Floating toolbar (layout controls + dark mode toggle) -->
 							<div class="canvas-toolbar">
 								<!-- Auto-layout controls -->
@@ -660,14 +828,28 @@
 							</div>
 
 							<SvelteFlowProvider>
-								<CalmCanvas
-									bind:this={canvas}
-									bind:nodes
-									bind:edges
-									onselectionchange={handleSelectionChange}
-									onfileimport={importCalmFile}
-									oncanvaschange={markDirty}
-								/>
+								{#if isC4Mode()}
+									<!-- C4 mode: pass derived display arrays (cannot bind: to derived) -->
+									<CalmCanvas
+										bind:this={canvas}
+										nodes={c4DisplayNodes}
+										edges={c4DisplayEdges}
+										readonly={true}
+										ondblclicknode={handleC4DrillDown}
+										onselectionchange={handleSelectionChange}
+									/>
+								{:else}
+									<!-- Normal mode: bind nodes/edges for two-way sync -->
+									<CalmCanvas
+										bind:this={canvas}
+										bind:nodes
+										bind:edges
+										onplacenode={handlePalettePlace}
+										onselectionchange={handleSelectionChange}
+										onfileimport={importCalmFile}
+										oncanvaschange={markDirty}
+									/>
+								{/if}
 							</SvelteFlowProvider>
 						</div>
 					</Pane>
@@ -682,6 +864,7 @@
 							onBeforeFirstEdit={handleBeforeFirstEdit}
 							onmutate={handlePropertyMutation}
 							ontogglepin={handleTogglePin}
+							readonly={isC4Mode()}
 						/>
 					</Pane>
 				</PaneGroup>
@@ -746,6 +929,63 @@
 
 	:global(.dark) .canvas-pane {
 		background: #0b0f1a;
+	}
+
+	/* ─── C4 level background tints ─────────────────────────────── */
+
+	.canvas-pane.c4-context {
+		background-color: #fafafa;
+	}
+
+	.canvas-pane.c4-container {
+		background-color: #f8faff;
+	}
+
+	.canvas-pane.c4-component {
+		background-color: #f8fff8;
+	}
+
+	:global(.dark) .canvas-pane.c4-context {
+		background-color: #1a1a1a;
+	}
+
+	:global(.dark) .canvas-pane.c4-container {
+		background-color: #1a1a2a;
+	}
+
+	:global(.dark) .canvas-pane.c4-component {
+		background-color: #1a2a1a;
+	}
+
+	/* ─── C4 node visual states ──────────────────────────────────── */
+
+	:global(.c4-external .svelte-flow__node) {
+		opacity: 0.5;
+		filter: grayscale(0.5);
+	}
+
+	:global(.c4-peer) {
+		opacity: 0.3;
+		pointer-events: none;
+	}
+
+	/* [External] badge positioned above external nodes */
+	:global(.c4-external::after) {
+		content: '[External]';
+		position: absolute;
+		top: -16px;
+		right: 4px;
+		font-size: 9px;
+		color: #888;
+		background: #f0f0f0;
+		padding: 0 4px;
+		border-radius: 3px;
+		z-index: 1;
+	}
+
+	:global(.dark) :global(.c4-external::after) {
+		background: #333;
+		color: #999;
 	}
 
 	/* ─── Error banner (full-width, below top Toolbar) ──────────── */

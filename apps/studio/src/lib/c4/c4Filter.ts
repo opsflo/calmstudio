@@ -153,12 +153,24 @@ export function hasDrillableChildren(nodeId: string, nodes: Node[]): boolean {
  * @param level - The current C4 level being displayed.
  */
 export function applyC4Styles(nodes: Node[], level: C4Level): Node[] {
-	return nodes.map((node) => ({
-		...node,
-		data: {
-			...node.data,
-			c4Level: level,
-			c4External: isExternalNode(node),
-		},
-	}));
+	return nodes.map((node) => {
+		const external = isExternalNode(node);
+		const peer = node.data?.c4Peer === true;
+
+		// Build CSS class string for Svelte Flow node wrapper
+		const classes: string[] = [];
+		if (external) classes.push('c4-external');
+		if (peer) classes.push('c4-peer');
+		const classValue = classes.length > 0 ? classes.join(' ') : undefined;
+
+		return {
+			...node,
+			...(classValue !== undefined ? { class: classValue } : {}),
+			data: {
+				...node.data,
+				c4Level: level,
+				c4External: external,
+			},
+		};
+	});
 }

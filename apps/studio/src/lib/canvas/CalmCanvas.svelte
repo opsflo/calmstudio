@@ -33,6 +33,7 @@
 		type Edge,
 		type Connection,
 		type NodeDragEvent,
+		type Viewport,
 	} from '@xyflow/svelte';
 	import { shortcut } from '@svelte-put/shortcut';
 	import { nanoid } from 'nanoid';
@@ -86,13 +87,29 @@
 
 	// ─── Svelte Flow context ─────────────────────────────────────────────────
 
-	const { screenToFlowPosition, fitView, setCenter } = useSvelteFlow();
+	const { screenToFlowPosition, fitView, setCenter, getViewport, setViewport } = useSvelteFlow();
 
 	/**
 	 * Fit all nodes into view. Called by parent after import or layout.
 	 */
 	export function fitViewport() {
 		fitView({ duration: 300, maxZoom: 1.2, padding: 0.2 });
+	}
+
+	/**
+	 * Save the current viewport state (position + zoom).
+	 * Called by parent before entering C4 mode so it can be restored on exit.
+	 */
+	export function saveViewport(): Viewport {
+		return getViewport();
+	}
+
+	/**
+	 * Restore a previously saved viewport state with animation.
+	 * Called by parent after exiting C4 mode.
+	 */
+	export function restoreViewport(vp: Viewport): void {
+		setViewport(vp, { duration: 300 });
 	}
 
 	/**
