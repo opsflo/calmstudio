@@ -19,7 +19,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 5: MCP Server** - Standalone MCP server enabling Claude Code and AI assistants to create/modify/validate architectures via structured tool calls (completed 2026-03-12)
 - [x] **Phase 6: CALM Validation** - Real-time schema validation with inline indicators and severity panel (completed 2026-03-12)
 - [x] **Phase 7: Extension Packs** - Dynamic pack system with AWS, GCP, Azure, Kubernetes, and AI/Agentic node types (completed 2026-03-13)
-- [ ] **Phase 8: C4 View Mode** - Hierarchical C4 navigation (Context, Container, Component) as zoom levels over CALM architectures
+- [x] **Phase 8: C4 View Mode** - Hierarchical C4 navigation (Context, Container, Component) as zoom levels over CALM architectures (completed 2026-03-13)
 - [ ] **Phase 9: calmscript DSL** - Mermaid-competitive text format that compiles losslessly to CALM JSON and back (deferred from original Phase 5 — evaluate need after MCP usage)
 - [ ] **Phase 10: Desktop App** - Tauri 2 packaging for macOS, Windows, and Linux with native file dialogs
 - [ ] **Phase 11: Pattern Library & Documentation** - Architecture pattern templates and Docusaurus documentation site
@@ -155,7 +155,7 @@ Plans:
   3. User can drill from Container into Component level for any container node, and a breadcrumb trail shows the navigation path (e.g., "All Systems > Payment System > API Gateway")
   4. C4 view mode is a read/navigate overlay — the underlying CALM JSON is unchanged and all edits still go through the normal canvas/properties/code workflows
   5. C4 styling conventions are applied per level (e.g., external systems greyed out at Context level, internal containers highlighted at Container level)
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans complete
 Plans:
 - [ ] 08-01-PLAN.md — C4 filter pure functions, C4 state store, unit tests
 - [ ] 08-02-PLAN.md — CalmCanvas readonly mode, Toolbar segmented control, C4Breadcrumb component
@@ -231,7 +231,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 5. MCP Server | 4/4 | Complete   | 2026-03-12 |
 | 6. CALM Validation | 3/3 | Complete   | 2026-03-12 |
 | 7. Extension Packs | 4/4 | Complete   | 2026-03-13 |
-| 8. C4 View Mode | 2/3 | In Progress|  |
+| 8. C4 View Mode | 3/3 | Complete   | 2026-03-13 |
 | 9. calmscript DSL | 0/TBD | Not started (deferred) | - |
 | 10. Desktop App | 0/TBD | Not started | - |
 | 11. Pattern Library & Documentation | 0/TBD | Not started | - |

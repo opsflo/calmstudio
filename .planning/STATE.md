@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 08-c4-view-mode 08-02-PLAN.md
-last_updated: "2026-03-13T06:03:06.540Z"
+stopped_at: Completed 08-c4-view-mode 08-03-PLAN.md
+last_updated: "2026-03-13T06:35:43.082Z"
 last_activity: 2026-03-13 — Phase 7 Plan 03 complete; extension pack system fully integrated and visually verified
 progress:
   total_phases: 13
-  completed_phases: 6
+  completed_phases: 7
   total_plans: 32
-  completed_plans: 30
+  completed_plans: 31
   percent: 30
 ---
 
@@ -80,6 +80,7 @@ Progress: [███░░░░░░░] 30%
 | Phase 07-extension-packs P03 | 30min | 2 tasks | 3 files |
 | Phase 08-c4-view-mode P01 | 3min | 2 tasks | 3 files |
 | Phase 08-c4-view-mode P02 | 12min | 3 tasks | 3 files |
+| Phase 08-c4-view-mode P03 | 20min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -171,6 +172,8 @@ Recent decisions affecting current work:
 - [Phase 08-c4-view-mode]: drillUpTo(0) clears drill stack to root — breadcrumb click at index 0 returns to top-level view (Pitfall 5)
 - [Phase 08-c4-view-mode]: notifyChange() helper wraps oncanvaschange to prevent isDirty firing in C4 readonly mode (Pitfall 2)
 - [Phase 08-c4-view-mode]: C4 selector in toolbar-left section keeps toolbar-center absolute positioning intact
+- [Phase 08-c4-view-mode]: if/else CalmCanvas branching — cannot use bind: on derived arrays in Svelte 5 (C4 mode integration)
+- [Phase 08-c4-view-mode]: savedViewport as plain variable — not reactive state, only read once on C4 mode exit
 
 ### Pending Todos
 
@@ -184,6 +187,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-13T06:03:06.537Z
-Stopped at: Completed 08-c4-view-mode 08-02-PLAN.md
+Last session: 2026-03-13T06:35:43.078Z
+Stopped at: Completed 08-c4-view-mode 08-03-PLAN.md
 Resume file: None
