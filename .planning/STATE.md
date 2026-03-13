@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Phase 8 context gathered
-last_updated: "2026-03-13T05:26:55.493Z"
+stopped_at: Completed 08-c4-view-mode 08-01-PLAN.md
+last_updated: "2026-03-13T05:56:09.721Z"
 last_activity: 2026-03-13 — Phase 7 Plan 03 complete; extension pack system fully integrated and visually verified
 progress:
   total_phases: 13
   completed_phases: 6
-  total_plans: 29
-  completed_plans: 28
+  total_plans: 32
+  completed_plans: 29
   percent: 30
 ---
 
@@ -78,6 +78,7 @@ Progress: [███░░░░░░░] 30%
 | Phase 07-extension-packs P01 | 9min | 2 tasks | 15 files |
 | Phase 07-extension-packs P02 | 4min | 2 tasks | 7 files |
 | Phase 07-extension-packs P03 | 30min | 2 tasks | 3 files |
+| Phase 08-c4-view-mode P01 | 3min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -164,6 +165,9 @@ Recent decisions affecting current work:
 - [Phase 07-extension-packs P03]: initAllPacks() also called at module level in +page.svelte — belt-and-suspenders, ensures packs available even before NodePalette mounts
 - [Phase 07-extension-packs P03]: Extension pack banner is informational in v1 — packs always loaded at startup so Enable Packs = dismiss
 - [Phase 07-extension-packs P03]: Sidecar generated only when detectPacksFromArch() returns non-empty — pure CALM diagrams never create sidecar
+- [Phase 08-c4-view-mode]: CONTEXT_TYPES Set(['actor','system','ecosystem']); CONTAINER_TYPES Set(['service','database','webclient','network','ldap','data-asset']); all other types default to 'component'
+- [Phase 08-c4-view-mode]: filterNodesForLevel excludes nodes with parentId at all top-level C4 views (Pitfall 3)
+- [Phase 08-c4-view-mode]: drillUpTo(0) clears drill stack to root — breadcrumb click at index 0 returns to top-level view (Pitfall 5)
 
 ### Pending Todos
 
@@ -177,6 +181,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-13T05:26:55.488Z
-Stopped at: Phase 8 context gathered
-Resume file: .planning/phases/08-c4-view-mode/08-CONTEXT.md
+Last session: 2026-03-13T05:56:09.719Z
+Stopped at: Completed 08-c4-view-mode 08-01-PLAN.md
+Resume file: None
