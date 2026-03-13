@@ -155,7 +155,11 @@ Plans:
   3. User can drill from Container into Component level for any container node, and a breadcrumb trail shows the navigation path (e.g., "All Systems > Payment System > API Gateway")
   4. C4 view mode is a read/navigate overlay — the underlying CALM JSON is unchanged and all edits still go through the normal canvas/properties/code workflows
   5. C4 styling conventions are applied per level (e.g., external systems greyed out at Context level, internal containers highlighted at Container level)
-**Plans:** 0/TBD
+**Plans:** 3 plans
+Plans:
+- [ ] 08-01-PLAN.md — C4 filter pure functions, C4 state store, unit tests
+- [ ] 08-02-PLAN.md — CalmCanvas readonly mode, Toolbar segmented control, C4Breadcrumb component
+- [ ] 08-03-PLAN.md — +page.svelte wiring, PropertiesPanel readonly, visual verification
 
 ### Phase 9: calmscript DSL
 **Goal**: Architects and AI tools can describe an architecture in ~20 lines of text that compiles losslessly to and from CALM JSON
@@ -227,7 +231,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 5. MCP Server | 4/4 | Complete   | 2026-03-12 |
 | 6. CALM Validation | 3/3 | Complete   | 2026-03-12 |
 | 7. Extension Packs | 4/4 | Complete   | 2026-03-13 |
-| 8. C4 View Mode | 0/TBD | Not started | - |
+| 8. C4 View Mode | 0/3 | Not started | - |
 | 9. calmscript DSL | 0/TBD | Not started (deferred) | - |
 | 10. Desktop App | 0/TBD | Not started | - |
 | 11. Pattern Library & Documentation | 0/TBD | Not started | - |
