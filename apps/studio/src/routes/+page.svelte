@@ -53,7 +53,7 @@
 		resetFileState
 	} from '$lib/io/fileState.svelte';
 	import { exportAsCalm, exportAsSvg, exportAsPng, exportAsCalmscript } from '$lib/io/export';
-	import type { CalmArchitecture } from '@calmstudio/calm-core';
+	import type { CalmArchitecture, CalmRelationship } from '@calmstudio/calm-core';
 	import { detectPacksFromArch } from '$lib/io/sidecar';
 	import {
 		getIssues,
@@ -77,6 +77,9 @@
 
 	/** Saved viewport before entering C4 mode — restored on exit. */
 	let savedViewport: Viewport | null = null;
+
+	/** Position overrides for C4 views — computed by running ELK on the filtered subset. */
+	let c4PositionOverrides = $state.raw<Map<string, { x: number; y: number; width?: number; height?: number }>>(new Map());
 
 	/**
 	 * Derived C4 display nodes. When C4 mode is active, filters and styles nodes
@@ -112,7 +115,22 @@
 				filtered = [...filtered, ...fadedPeers];
 			}
 		}
-		return applyC4Styles(filtered, level);
+		let styled = applyC4Styles(filtered, level);
+
+		// Apply compact C4 layout positions if available
+		if (c4PositionOverrides.size > 0) {
+			styled = styled.map((n) => {
+				const pos = c4PositionOverrides.get(n.id);
+				if (!pos) return n;
+				return {
+					...n,
+					position: { x: pos.x, y: pos.y },
+					...(pos.width !== undefined ? { width: pos.width, height: pos.height } : {}),
+				};
+			});
+		}
+
+		return styled;
 	});
 
 	/**
@@ -204,12 +222,52 @@
 		if (nextEdges.some((e, i) => e !== edges[i])) edges = nextEdges;
 	}
 
+	// ─── C4 compact layout ──────────────────────────────────────────────────
+
+	/**
+	 * Runs ELK layout on the C4-filtered CALM subset so nodes are positioned
+	 * compactly instead of retaining scattered "All" positions.
+	 */
+	async function layoutC4View() {
+		const level = getC4Level();
+		const drillParentId = getCurrentDrillParentId();
+		if (!level) return;
+
+		// Wait for derived nodes to settle
+		await tick();
+
+		// Get the IDs of visible (non-peer) nodes
+		const visibleIds = new Set(
+			c4DisplayNodes
+				.filter((n) => !n.data?.c4Peer)
+				.map((n) => n.id)
+		);
+
+		// Build a sub-CALM architecture with just the visible nodes
+		const model = getModel();
+		const subArch: CalmArchitecture = {
+			nodes: model.nodes.filter((n) => visibleIds.has(n['unique-id'])),
+			relationships: model.relationships.filter(
+				(r) => visibleIds.has(r.source) && visibleIds.has(r.destination)
+			),
+		};
+
+		if (subArch.nodes.length === 0) return;
+
+		const positions = await layoutCalm(subArch, new Set(), layoutDirection);
+		c4PositionOverrides = positions;
+
+		await tick();
+		canvas?.fitViewport();
+	}
+
 	// ─── C4 level change handler ─────────────────────────────────────────────
 
 	function handleC4LevelChange(level: string | null) {
 		if (level === null) {
-			// Exit C4 mode — restore viewport
+			// Exit C4 mode — restore viewport, clear layout overrides
 			exitC4Mode();
+			c4PositionOverrides = new Map();
 			tick().then(() => {
 				if (savedViewport) {
 					canvas?.restoreViewport?.(savedViewport);
@@ -226,7 +284,7 @@
 			} else {
 				enterC4Mode(level as C4Level);
 			}
-			tick().then(() => canvas?.fitViewport());
+			layoutC4View();
 		}
 	}
 
@@ -239,14 +297,14 @@
 		if (!hasDrillableChildren(node.id, nodes)) return;
 		const label = String(node.data?.label ?? node.data?.calmId ?? node.id);
 		drillDown(node.id, label);
-		tick().then(() => canvas?.fitViewport());
+		layoutC4View();
 	}
 
 	// ─── Breadcrumb navigate handler ─────────────────────────────────────────
 
 	function handleBreadcrumbNavigate(index: number) {
 		drillUpTo(index);
-		tick().then(() => canvas?.fitViewport());
+		layoutC4View();
 	}
 
 	// ─── Import error state — set by importCalmFile on invalid JSON ──────────
@@ -378,22 +436,49 @@
 	 */
 	function handlePropertyMutation() {
 		const model = getModel();
-		const positionMap = new Map<string, { x: number; y: number }>();
+		const positionMap = new Map<string, { x: number; y: number; width?: number; height?: number }>();
 		const selectionMap = new Map<string, boolean>();
 		for (const n of nodes) {
 			if (n.data?.calmId) {
-				positionMap.set(n.data.calmId as string, { ...n.position });
+				positionMap.set(n.data.calmId as string, {
+					...n.position,
+					width: n.measured?.width ?? n.width,
+					height: n.measured?.height ?? n.height,
+				});
 				if (n.selected) selectionMap.set(n.data.calmId as string, true);
 			}
 		}
+
 		const projected = calmToFlow(model, positionMap);
-		// Preserve selection state so SvelteFlow doesn't fire deselection
+		// Preserve node selection state so SvelteFlow doesn't fire deselection
 		nodes = projected.nodes.map((n) =>
 			selectionMap.has(n.data?.calmId as string)
 				? { ...n, selected: true }
 				: n
 		);
-		edges = projected.edges;
+
+		// Update edge data in place rather than replacing the array.
+		// Replacing edges causes Svelte Flow to lose internal state (selection,
+		// animation, hover) which makes edges disappear or deselect.
+		const modelRelMap = new Map<string, CalmRelationship>();
+		for (const r of model.relationships) {
+			modelRelMap.set(r['unique-id'], r);
+		}
+		edges = edges.map((e) => {
+			const rel = modelRelMap.get(e.id);
+			if (rel) {
+				return {
+					...e,
+					type: rel['relationship-type'],
+					data: {
+						...e.data,
+						protocol: rel.protocol ?? '',
+						description: rel.description ?? '',
+					},
+				};
+			}
+			return e;
+		});
 
 		// Mark dirty on property mutations
 		markDirty();
@@ -485,6 +570,13 @@
 		} catch (e) {
 			// User cancelled the file picker — not an error
 		}
+	}
+
+	async function handleLoadDemo(demo: { id: string; name: string; path: string }) {
+		const response = await fetch(demo.path);
+		const content = await response.text();
+		await importCalmFile(content, demo.name);
+		markClean(demo.name + '.calm.json', null);
 	}
 
 	async function handleSave() {
@@ -697,6 +789,7 @@
 			onexportsvg={handleExportSvg}
 			onexportpng={handleExportPng}
 			onexportcalmscript={handleExportCalmscript}
+			onloaddemo={handleLoadDemo}
 			filename={getFileName()}
 			isDirty={getIsDirty()}
 			c4Level={getC4Level()}
@@ -900,6 +993,18 @@
 				</Pane>
 			{/if}
 		</PaneGroup>
+
+		<!-- Bottom: Status bar -->
+		<footer class="status-bar">
+			<span class="beta-badge">BETA</span>
+			<span class="status-text">CalmStudio is open source under Apache 2.0</span>
+			<a
+				class="report-link"
+				href="https://github.com/opsflo/calmstudio/issues"
+				target="_blank"
+				rel="noopener noreferrer"
+			>Report an issue</a>
+		</footer>
 	</div>
 </DnDProvider>
 
@@ -910,6 +1015,56 @@
 		flex-direction: column;
 		height: 100vh;
 		overflow: hidden;
+	}
+
+	/* ─── Status bar ────────────────────────────────────────────── */
+
+	.status-bar {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		height: 22px;
+		padding: 0 10px;
+		background: var(--color-surface-secondary, #f8fafc);
+		border-top: 1px solid var(--color-border, #e2e8f0);
+		font-size: 10px;
+		font-family: var(--font-sans, system-ui, sans-serif);
+		color: var(--color-text-tertiary, #94a3b8);
+		flex-shrink: 0;
+	}
+
+	:global(.dark) .status-bar {
+		background: #0b0f1a;
+		border-color: #1e293b;
+		color: #475569;
+	}
+
+	.beta-badge {
+		font-size: 9px;
+		font-weight: 700;
+		letter-spacing: 0.08em;
+		padding: 1px 5px;
+		border-radius: 3px;
+		background: #f59e0b;
+		color: #fff;
+	}
+
+	.status-text {
+		flex: 1;
+	}
+
+	.report-link {
+		color: var(--color-accent, #6366f1);
+		text-decoration: none;
+		font-weight: 500;
+	}
+
+	.report-link:hover {
+		text-decoration: underline;
+	}
+
+	:global(.dark) .report-link {
+		color: #818cf8;
 	}
 
 	/* PaneGroup fills remaining height below toolbar (and error banner) */
