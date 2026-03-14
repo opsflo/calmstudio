@@ -175,10 +175,14 @@ Plans:
   3. CALM 1.2 controls are visible and editable in both NodeProperties and EdgeProperties as collapsible sections; data-classification renders as colored tags on canvas nodes
   4. AIGF governance panel (right sidebar tab) shows applicable risks and mitigations for selected AI nodes with "Apply mitigation" adding CALM controls; architecture-level governance score displays in panel header and toolbar badge
   5. AIGF validation rules fire in ValidationPanel alongside structural rules; governance decorator auto-generated on CALM JSON export
-**Plans:** 0 plans
+**Plans:** 5 plans
 
 Plans:
-- [ ] TBD (run /gsd:plan-phase 08.1 to break down)
+- [ ] 08.1-01-PLAN.md — CALM 1.2 types (controls, decorators, evidence) + AIGF data package with node-to-risk mappings
+- [ ] 08.1-02-PLAN.md — FluxNova extension pack: 10 node types, SVG icons, pack registration
+- [ ] 08.1-03-PLAN.md — Template system: 4 new templates, registry, full-screen picker modal, toolbar + page wiring
+- [ ] 08.1-04-PLAN.md — Controls UI in properties panel, data-classification canvas badges, AIGF validation rules
+- [ ] 08.1-05-PLAN.md — Governance panel (right sidebar tab), live score store, toolbar badge, decorator export
 
 ### Phase 9: Testing Suite
 **Goal**: Every feature has outside-in tests at the appropriate level so regressions are caught before they reach users — required for FINOS project acceptance
@@ -264,6 +268,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 6. CALM Validation | 3/3 | Complete   | 2026-03-12 |
 | 7. Extension Packs | 4/4 | Complete   | 2026-03-13 |
 | 8. C4 View Mode | 3/3 | Complete   | 2026-03-13 |
+| 8.1 FluxNova & AIGF | 0/5 | Not started | - |
 | 9. Testing Suite | 0/TBD | Not started | - |
 | 10. Documentation & calm-core Publish | 0/TBD | Not started | - |
 | 11. calmscript DSL | 0/TBD | Not started (deferred) | - |
