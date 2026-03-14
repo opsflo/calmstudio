@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 08.1-01-PLAN.md — CALM 1.2 types + AIGF data foundation
-last_updated: "2026-03-14T19:24:33.226Z"
+stopped_at: Completed 08.1-04-PLAN.md — controls UI + AIGF validation rules
+last_updated: "2026-03-14T19:33:22.247Z"
 last_activity: 2026-03-13 — Phase 7 Plan 03 complete; extension pack system fully integrated and visually verified
 progress:
   total_phases: 14
   completed_phases: 8
   total_plans: 37
-  completed_plans: 34
+  completed_plans: 35
   percent: 30
 ---
 
@@ -84,6 +84,7 @@ Progress: [███░░░░░░░] 30%
 | Phase 04-import-export-layout P04 | 5min | 2 tasks | 0 files |
 | Phase 08.1-fluxnova-templates-aigf-governance P02 | 18min | 2 tasks | 5 files |
 | Phase 08.1-fluxnova-templates-aigf-governance P01 | 15min | 2 tasks | 8 files |
+| Phase 08.1-fluxnova-templates-aigf-governance P04 | 6min | 2 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -185,6 +186,9 @@ Recent decisions affecting current work:
 - [Phase 08.1-fluxnova-templates-aigf-governance]: AIGF data inlined as TypeScript constants in catalogue.ts — tsconfig.base.json has no resolveJsonModule so JSON imports would fail
 - [Phase 08.1-fluxnova-templates-aigf-governance]: ai:guardrail, ai:human-in-the-loop, ai:eval-monitor have empty applicableRisks — these node types ARE the mitigations in AIGF v2.0
 - [Phase 08.1-fluxnova-templates-aigf-governance]: isAINode accepts union type (string | {node-type: string}) — enables both node objects and plain strings as callers
+- [Phase 08.1-fluxnova-templates-aigf-governance]: aigf-rules.ts imports only from @calmstudio/calm-core — pure TypeScript for vitest testability, no .svelte.ts dependencies
+- [Phase 08.1-fluxnova-templates-aigf-governance]: Data-classification badge uses inline style string on canvas nodes — avoids Svelte scoped CSS limitations with dynamic color values
+- [Phase 08.1-fluxnova-templates-aigf-governance]: ControlsList section collapsed by default — minimizes vertical space when controls not relevant to current node
 
 ### Roadmap Evolution
 
@@ -202,6 +206,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-14T19:24:33.223Z
-Stopped at: Completed 08.1-01-PLAN.md — CALM 1.2 types + AIGF data foundation
+Last session: 2026-03-14T19:33:22.243Z
+Stopped at: Completed 08.1-04-PLAN.md — controls UI + AIGF validation rules
 Resume file: None

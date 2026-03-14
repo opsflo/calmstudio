@@ -168,7 +168,7 @@ Requirements for initial release. Each maps to roadmap phases.
 ### CALM 1.2 Controls, Decorators & Evidence
 
 - [x] **CTRL-01**: CALM 1.2 controls (CalmControls type with pattern-keyed domains, description, requirements with requirement-url + config-url/config) on both CalmNode and CalmRelationship, with data-classification and metadata properties
-- [ ] **CTRL-02**: Controls visible and editable in both NodeProperties and EdgeProperties as collapsible sections; data-classification renders as colored tag (PII=red, Confidential=amber, Public=green) below node name on canvas
+- [x] **CTRL-02**: Controls visible and editable in both NodeProperties and EdgeProperties as collapsible sections; data-classification renders as colored tag (PII=red, Confidential=amber, Public=green) below node name on canvas
 - [x] **CTRL-03**: CALM 1.2 decorator and evidence types in calm-core for roundtrip support; AIGF governance decorator auto-generated on export summarizing assessed risks, score, and regulatory mappings
 
 ### AIGF Design-Time Governance
@@ -177,7 +177,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **AIGF-02**: Governance panel as right sidebar tab alongside properties showing applicable risks (OP=amber, SEC=red, RC=blue) and recommended mitigations with "Apply" buttons for selected AI nodes; manual tab switch with badge indicator
 - [ ] **AIGF-03**: Architecture-level governance score in panel header and toolbar colored percentage badge (green >80%, amber 50-80%, red <50%); badge hidden when no AI nodes; score updates live on control apply/remove
 - [x] **AIGF-04**: Node-to-risk mappings for all AI pack node types (llm, agent, orchestrator, vector-store, tool, memory, guardrail, rag-pipeline, knowledge-base, embedding-model, api-gateway, human-in-the-loop, eval-monitor) with MCP special-case detection
-- [ ] **AIGF-05**: 10 AIGF validation rules (aigf-001 through aigf-010) integrated into existing ValidationPanel alongside structural validations, with framework ref display (top 3 inline, expandable full list)
+- [x] **AIGF-05**: 10 AIGF validation rules (aigf-001 through aigf-010) integrated into existing ValidationPanel alongside structural validations, with framework ref display (top 3 inline, expandable full list)
 
 ### Ecosystem (v1 stretch)
 
@@ -306,13 +306,13 @@ Deferred to future release. Tracked but not in current roadmap.
 | TMPL-02 | Phase 08.1 | Pending |
 | TMPL-03 | Phase 08.1 | Pending |
 | CTRL-01 | Phase 08.1 | Complete |
-| CTRL-02 | Phase 08.1 | Pending |
+| CTRL-02 | Phase 08.1 | Complete |
 | CTRL-03 | Phase 08.1 | Complete |
 | AIGF-01 | Phase 08.1 | Complete |
 | AIGF-02 | Phase 08.1 | Pending |
 | AIGF-03 | Phase 08.1 | Pending |
 | AIGF-04 | Phase 08.1 | Complete |
-| AIGF-05 | Phase 08.1 | Pending |
+| AIGF-05 | Phase 08.1 | Complete |
 | TEST-01 | Phase 9 | Pending |
 | TEST-02 | Phase 9 | Pending |
 | TEST-03 | Phase 9 | Pending |
