@@ -155,9 +155,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### FluxNova Extension Pack
 
-- [ ] **FLXN-01**: FluxNova extension pack with 10 node types (engine, rest-api, cockpit, admin, tasklist, modeler, external-task-worker, dmn-engine, process-db, platform container) with orange/amber color family and hand-crafted SVG icons
-- [ ] **FLXN-02**: FluxNova pack appears in NodePalette organized alongside existing packs, all node types drag-droppable onto canvas
-- [ ] **FLXN-03**: FluxNova container node (fluxnova:platform) accepts child nodes with visual containment
+- [x] **FLXN-01**: FluxNova extension pack with 10 node types (engine, rest-api, cockpit, admin, tasklist, modeler, external-task-worker, dmn-engine, process-db, platform container) with orange/amber color family and hand-crafted SVG icons
+- [x] **FLXN-02**: FluxNova pack appears in NodePalette organized alongside existing packs, all node types drag-droppable onto canvas
+- [x] **FLXN-03**: FluxNova container node (fluxnova:platform) accepts child nodes with visual containment
 
 ### Architecture Templates
 
@@ -167,16 +167,16 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### CALM 1.2 Controls, Decorators & Evidence
 
-- [ ] **CTRL-01**: CALM 1.2 controls (CalmControls type with pattern-keyed domains, description, requirements with requirement-url + config-url/config) on both CalmNode and CalmRelationship, with data-classification and metadata properties
+- [x] **CTRL-01**: CALM 1.2 controls (CalmControls type with pattern-keyed domains, description, requirements with requirement-url + config-url/config) on both CalmNode and CalmRelationship, with data-classification and metadata properties
 - [ ] **CTRL-02**: Controls visible and editable in both NodeProperties and EdgeProperties as collapsible sections; data-classification renders as colored tag (PII=red, Confidential=amber, Public=green) below node name on canvas
-- [ ] **CTRL-03**: CALM 1.2 decorator and evidence types in calm-core for roundtrip support; AIGF governance decorator auto-generated on export summarizing assessed risks, score, and regulatory mappings
+- [x] **CTRL-03**: CALM 1.2 decorator and evidence types in calm-core for roundtrip support; AIGF governance decorator auto-generated on export summarizing assessed risks, score, and regulatory mappings
 
 ### AIGF Design-Time Governance
 
-- [ ] **AIGF-01**: AIGF data package in calm-core with 23 risks + 23 mitigations from AIGF v2.0 catalogue, cross-referenced to 7 external frameworks (ISO 42001, NIST, OWASP LLM, EU AI Act, FFIEC, MITRE ATLAS, NIST AI 600)
+- [x] **AIGF-01**: AIGF data package in calm-core with 23 risks + 23 mitigations from AIGF v2.0 catalogue, cross-referenced to 7 external frameworks (ISO 42001, NIST, OWASP LLM, EU AI Act, FFIEC, MITRE ATLAS, NIST AI 600)
 - [ ] **AIGF-02**: Governance panel as right sidebar tab alongside properties showing applicable risks (OP=amber, SEC=red, RC=blue) and recommended mitigations with "Apply" buttons for selected AI nodes; manual tab switch with badge indicator
 - [ ] **AIGF-03**: Architecture-level governance score in panel header and toolbar colored percentage badge (green >80%, amber 50-80%, red <50%); badge hidden when no AI nodes; score updates live on control apply/remove
-- [ ] **AIGF-04**: Node-to-risk mappings for all AI pack node types (llm, agent, orchestrator, vector-store, tool, memory, guardrail, rag-pipeline, knowledge-base, embedding-model, api-gateway, human-in-the-loop, eval-monitor) with MCP special-case detection
+- [x] **AIGF-04**: Node-to-risk mappings for all AI pack node types (llm, agent, orchestrator, vector-store, tool, memory, guardrail, rag-pipeline, knowledge-base, embedding-model, api-gateway, human-in-the-loop, eval-monitor) with MCP special-case detection
 - [ ] **AIGF-05**: 10 AIGF validation rules (aigf-001 through aigf-010) integrated into existing ValidationPanel alongside structural validations, with framework ref display (top 3 inline, expandable full list)
 
 ### Ecosystem (v1 stretch)
@@ -299,19 +299,19 @@ Deferred to future release. Tracked but not in current roadmap.
 | MCPS-05 | Phase 8 | Complete |
 | MCPS-06 | Phase 8 | Complete |
 | MCPS-07 | Phase 8 | Complete |
-| FLXN-01 | Phase 08.1 | Pending |
-| FLXN-02 | Phase 08.1 | Pending |
-| FLXN-03 | Phase 08.1 | Pending |
+| FLXN-01 | Phase 08.1 | Complete |
+| FLXN-02 | Phase 08.1 | Complete |
+| FLXN-03 | Phase 08.1 | Complete |
 | TMPL-01 | Phase 08.1 | Pending |
 | TMPL-02 | Phase 08.1 | Pending |
 | TMPL-03 | Phase 08.1 | Pending |
-| CTRL-01 | Phase 08.1 | Pending |
+| CTRL-01 | Phase 08.1 | Complete |
 | CTRL-02 | Phase 08.1 | Pending |
-| CTRL-03 | Phase 08.1 | Pending |
-| AIGF-01 | Phase 08.1 | Pending |
+| CTRL-03 | Phase 08.1 | Complete |
+| AIGF-01 | Phase 08.1 | Complete |
 | AIGF-02 | Phase 08.1 | Pending |
 | AIGF-03 | Phase 08.1 | Pending |
-| AIGF-04 | Phase 08.1 | Pending |
+| AIGF-04 | Phase 08.1 | Complete |
 | AIGF-05 | Phase 08.1 | Pending |
 | TEST-01 | Phase 9 | Pending |
 | TEST-02 | Phase 9 | Pending |

@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 08.1-02-PLAN.md — FluxNova BPM extension pack
-last_updated: "2026-03-14T18:38:49.615Z"
+stopped_at: Completed 08.1-01-PLAN.md — CALM 1.2 types + AIGF data foundation
+last_updated: "2026-03-14T19:24:33.226Z"
 last_activity: 2026-03-13 — Phase 7 Plan 03 complete; extension pack system fully integrated and visually verified
 progress:
   total_phases: 14
   completed_phases: 8
   total_plans: 37
-  completed_plans: 33
+  completed_plans: 34
   percent: 30
 ---
 
@@ -83,6 +83,7 @@ Progress: [███░░░░░░░] 30%
 | Phase 08-c4-view-mode P03 | 20min | 2 tasks | 3 files |
 | Phase 04-import-export-layout P04 | 5min | 2 tasks | 0 files |
 | Phase 08.1-fluxnova-templates-aigf-governance P02 | 18min | 2 tasks | 5 files |
+| Phase 08.1-fluxnova-templates-aigf-governance P01 | 15min | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -181,6 +182,9 @@ Recent decisions affecting current work:
 - [Phase 08.1-fluxnova-templates-aigf-governance]: FluxNova pack color bg=#fff7ed, border=#f97316, stroke=#ea580c (orange/amber per PRD)
 - [Phase 08.1-fluxnova-templates-aigf-governance]: fluxnova:platform is only container node — matches BPM deployment topology
 - [Phase 08.1-fluxnova-templates-aigf-governance]: initAllPacks() now registers 7 packs — FluxNova appended after aiPack
+- [Phase 08.1-fluxnova-templates-aigf-governance]: AIGF data inlined as TypeScript constants in catalogue.ts — tsconfig.base.json has no resolveJsonModule so JSON imports would fail
+- [Phase 08.1-fluxnova-templates-aigf-governance]: ai:guardrail, ai:human-in-the-loop, ai:eval-monitor have empty applicableRisks — these node types ARE the mitigations in AIGF v2.0
+- [Phase 08.1-fluxnova-templates-aigf-governance]: isAINode accepts union type (string | {node-type: string}) — enables both node objects and plain strings as callers
 
 ### Roadmap Evolution
 
@@ -198,6 +202,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-14T18:38:49.604Z
-Stopped at: Completed 08.1-02-PLAN.md — FluxNova BPM extension pack
+Last session: 2026-03-14T19:24:33.223Z
+Stopped at: Completed 08.1-01-PLAN.md — CALM 1.2 types + AIGF data foundation
 Resume file: None
