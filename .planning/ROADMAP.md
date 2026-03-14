@@ -2,7 +2,9 @@
 
 ## Overview
 
-CalmStudio ships in 13 phases, each delivering a coherent, independently verifiable capability. The build order follows hard dependencies: governance and CI gate everything; the CALM canvas is the root dependency for all UI features; MCP server enables AI integration early; validation and extension packs enhance both the UI and MCP; C4 view mode adds hierarchical navigation after extension packs provide rich node types; calmscript is deferred until real-world MCP usage informs whether a text DSL is needed. Phases 1-4 deliver a standalone CALM-typed desktop diagramming tool. Phases 5-8 add the AI-native differentiation (MCP, validation, extension packs, C4 views). Phases 9-13 complete the ecosystem (calmscript, desktop packaging, patterns, docs, VS Code/GitHub/web component).
+CalmStudio ships in 13 phases, each delivering a coherent, independently verifiable capability. The build order follows hard dependencies: governance and CI gate everything; the CALM canvas is the root dependency for all UI features; MCP server enables AI integration early; validation and extension packs enhance both the UI and MCP; C4 view mode adds hierarchical navigation after extension packs provide rich node types. Phases 1-4 deliver a standalone CALM-typed diagramming tool. Phases 5-8 add the AI-native differentiation (MCP, validation, extension packs, C4 views). Phases 9-13 complete the FINOS-ready ecosystem: testing and documentation come first (required for FINOS project acceptance), followed by calmscript DSL, desktop packaging, and ecosystem integrations.
+
+CalmStudio is part of the Calm platform — an open-source FINOS ecosystem alongside CalmGuard (architecture governance). IaC generation, CI/CD policy enforcement, and compliance analysis are CalmGuard's responsibility, not CalmStudio's. `@calmstudio/calm-core` serves as the shared foundation consumed by both products.
 
 ## Phases
 
@@ -15,16 +17,16 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Foundation & Governance** - Project skeleton, Apache 2.0 licensing, FINOS governance files, and CI/CD pipeline (completed 2026-03-11)
 - [ ] **Phase 2: CALM Canvas Core** - Typed drag-and-drop canvas with all 9 CALM node types, 5 relationship types, and table-stakes UX
 - [x] **Phase 3: Properties & Bidirectional Sync** - Properties panel, CALM JSON code editor, and bidirectional visual-to-code sync engine (completed 2026-03-12)
-- [ ] **Phase 4: Import, Export & Layout** - CALM JSON import with ELK auto-layout, file export (CALM JSON, calmscript, SVG, PNG), and native file I/O
+- [x] **Phase 4: Import, Export & Layout** - CALM JSON import with ELK auto-layout, file export (CALM JSON, calmscript, SVG, PNG), and native file I/O (completed 2026-03-14)
 - [x] **Phase 5: MCP Server** - Standalone MCP server enabling Claude Code and AI assistants to create/modify/validate architectures via structured tool calls (completed 2026-03-12)
 - [x] **Phase 6: CALM Validation** - Real-time schema validation with inline indicators and severity panel (completed 2026-03-12)
 - [x] **Phase 7: Extension Packs** - Dynamic pack system with AWS, GCP, Azure, Kubernetes, and AI/Agentic node types (completed 2026-03-13)
 - [x] **Phase 8: C4 View Mode** - Hierarchical C4 navigation (Context, Container, Component) as zoom levels over CALM architectures (completed 2026-03-13)
-- [ ] **Phase 9: calmscript DSL** - Mermaid-competitive text format that compiles losslessly to CALM JSON and back (deferred from original Phase 5 — evaluate need after MCP usage)
-- [ ] **Phase 10: Desktop App** - Tauri 2 packaging for macOS, Windows, and Linux with native file dialogs
-- [ ] **Phase 11: Pattern Library & Documentation** - Architecture pattern templates and Docusaurus documentation site
-- [ ] **Phase 12: Testing Suite** - Comprehensive London School TDD — unit, integration, E2E, and component tests
-- [ ] **Phase 13: Ecosystem** - VS Code extension, GitHub Action for CI/CD, web component, and flow visualization
+- [ ] **Phase 9: Testing Suite** - Comprehensive London School TDD — unit, integration, E2E, and component tests (moved up from Phase 12 — required for FINOS project acceptance)
+- [ ] **Phase 10: Documentation & calm-core Publish** - Docusaurus documentation site, ADRs, and publish `@calmstudio/calm-core` as standalone package for CalmGuard and community consumers
+- [ ] **Phase 11: calmscript DSL** - Mermaid-competitive text format that compiles losslessly to CALM JSON and back (deferred from original Phase 5 — evaluate need after MCP usage)
+- [ ] **Phase 12: Desktop App** - Tauri 2 packaging for macOS, Windows, and Linux with native file dialogs
+- [ ] **Phase 13: Ecosystem** - VS Code extension, GitHub Action for diagram rendering, web component, and flow visualization
 
 ## Phase Details
 
@@ -90,7 +92,7 @@ Plans:
   3. User can trigger auto-layout and nodes arrange cleanly; pinned nodes stay in place
   4. User can export a diagram as CALM JSON, calmscript, SVG, or PNG and the exported file opens correctly in external tools
   5. CALM JSON files from the FINOS `architecture-as-code` examples directory import without data loss
-**Plans:** 3/5 plans executed
+**Plans:** 5/5 plans complete
 Plans:
 - [ ] 04-00-PLAN.md — Install deps (elkjs, html-to-image), create test stubs for ELK layout and file system
 - [ ] 04-01-PLAN.md — ELK layout engine, CALM JSON import, drag-and-drop, auto-layout button, pin toggle
@@ -161,9 +163,33 @@ Plans:
 - [ ] 08-02-PLAN.md — CalmCanvas readonly mode, Toolbar segmented control, C4Breadcrumb component
 - [ ] 08-03-PLAN.md — +page.svelte wiring, PropertiesPanel readonly, visual verification
 
-### Phase 9: calmscript DSL
+### Phase 9: Testing Suite
+**Goal**: Every feature has outside-in tests at the appropriate level so regressions are caught before they reach users — required for FINOS project acceptance
+**Depends on**: Phase 8
+**Requirements**: TEST-01, TEST-02, TEST-03, TEST-04, TEST-05
+**Moved from**: Original Phase 12 — FINOS project acceptance requires comprehensive test coverage. Testing before documentation ensures docs describe tested behavior.
+**Success Criteria** (what must be TRUE):
+  1. The sync engine, CALM model, CALM validation, and C4 filtering each have unit tests that run in under 30 seconds
+  2. Integration tests cover bidirectional sync, MCP server tool calls, and extension pack loading end-to-end
+  3. Playwright E2E tests cover the full create-diagram, edit-code, export, and import workflows
+  4. Every custom Svelte node and edge component has component-level tests via @testing-library/svelte
+**Plans:** 0/TBD
+
+### Phase 10: Documentation & calm-core Publish
+**Goal**: Contributors and users have comprehensive documentation, and `@calmstudio/calm-core` is published as a standalone package for CalmGuard and community consumers
+**Depends on**: Phase 9
+**Requirements**: DOCS-01, DOCS-02, DOCS-03, DOCS-04, DOCS-05, DOCS-06, CORE-01
+**Moved from**: Original Phase 11 (Pattern Library & Documentation) — documentation moved up for FINOS readiness. Pattern Library deferred to Phase 12 stretch goal.
+**Success Criteria** (what must be TRUE):
+  1. A Docusaurus site is live with getting started guide, extension pack development guide, MCP usage guide, and contributor guide
+  2. Architecture Decision Records exist in `docs/` for all key decisions logged in PROJECT.md
+  3. `@calmstudio/calm-core` is published to npm with its own README, API documentation, versioned independently, and consumable by external projects (CalmGuard, community tools)
+  4. The calm-core public API is documented with TypeDoc or equivalent, covering CALM types, validation, and parsing
+**Plans:** 0/TBD
+
+### Phase 11: calmscript DSL
 **Goal**: Architects and AI tools can describe an architecture in ~20 lines of text that compiles losslessly to and from CALM JSON
-**Depends on**: Phase 4 (benefits from Phases 5-8 being complete)
+**Depends on**: Phase 10 (benefits from Phases 5-8 being complete)
 **Requirements**: CSPT-01, CSPT-02, CSPT-03, CSPT-04, CSPT-05, CSPT-06
 **Deferred from**: Original Phase 5 — MCP Server (structured tool calls) solves AI generation more reliably. calmscript value to be evaluated after real-world MCP usage. Context captured in phases/08-calmscript-dsl/08-CONTEXT.md.
 **Success Criteria** (what must be TRUE):
@@ -174,36 +200,15 @@ Plans:
   5. The calmscript parser runs in a Web Worker and does not block keystrokes even on large architectures
 **Plans:** 0/TBD
 
-### Phase 10: Desktop App
+### Phase 12: Desktop App
 **Goal**: CalmStudio ships as a native desktop application on macOS, Windows, and Linux with native file system access
-**Depends on**: Phase 9
+**Depends on**: Phase 11
 **Requirements**: DESK-01, DESK-02, DESK-03
+**Moved from**: Original Phase 10 — web version is sufficient for FINOS acceptance and initial adoption. Desktop packaging is polish, not a prerequisite.
 **Success Criteria** (what must be TRUE):
   1. User can download and install CalmStudio on macOS, Windows, and Linux and launch it without installing Node.js or any runtime
   2. User can open and save `.calm` and `.calmscript` files using native file dialogs (not a browser file picker)
   3. CalmStudio works fully offline with no network requests required for core diagramming functionality
-**Plans:** 0/TBD
-
-### Phase 11: Pattern Library & Documentation
-**Goal**: Architects can start from proven architecture templates, and contributors and users have comprehensive documentation
-**Depends on**: Phase 10
-**Requirements**: PATN-01, PATN-02, PATN-03, DOCS-01, DOCS-02, DOCS-03, DOCS-04, DOCS-05, DOCS-06
-**Success Criteria** (what must be TRUE):
-  1. User can browse architecture patterns by category and instantiate any pattern as an editable diagram with auto-layout applied
-  2. The five bundled patterns (aws/microservices-eks, aws/serverless-api, kubernetes/standard-deployment, ai/rag-pipeline, ai/multi-agent) load and pass `calm validate`
-  3. A Docusaurus site is live with getting started guide, calmscript language reference, extension pack development guide, MCP usage guide, and contributor guide
-  4. Architecture Decision Records exist in `docs/` for all key decisions logged in PROJECT.md
-**Plans:** 0/TBD
-
-### Phase 12: Testing Suite
-**Goal**: Every feature has outside-in tests at the appropriate level so regressions are caught before they reach users
-**Depends on**: Phase 11
-**Requirements**: TEST-01, TEST-02, TEST-03, TEST-04, TEST-05
-**Success Criteria** (what must be TRUE):
-  1. The sync engine, CALM model, calmscript parser, and CALM validation each have unit tests that run in under 30 seconds
-  2. Integration tests cover bidirectional sync, MCP server tool calls, and extension pack loading end-to-end
-  3. Playwright E2E tests cover the full create-diagram, edit-code, export, and import workflows
-  4. Every custom Svelte node and edge component has component-level tests via @testing-library/svelte
 **Plans:** 0/TBD
 
 ### Phase 13: Ecosystem
@@ -212,9 +217,19 @@ Plans:
 **Requirements**: ECOS-01, ECOS-02, ECOS-03, ECOS-04
 **Success Criteria** (what must be TRUE):
   1. A VS Code extension is installable from the Marketplace and renders a live calmscript preview alongside the editor
-  2. A GitHub Action validates CALM JSON and renders calmscript diagrams as PR comments on every pull request
+  2. A GitHub Action renders CALM architecture diagrams as SVG images in PR comments (CALM validation in CI is CalmGuard's responsibility via `calmguard check`)
   3. A `<calm-diagram>` web component is installable via npm and renders any CALM JSON in any web page with a single HTML tag
   4. User can enable flow visualization and see data flows as stepped overlays on existing architecture edges
+**Plans:** 0/TBD
+
+### Pattern Library (Stretch Goal)
+**Goal**: Architects can start from proven architecture templates
+**Depends on**: Phase 10 (Documentation)
+**Requirements**: PATN-01, PATN-02, PATN-03
+**Note**: Separated from Documentation phase. Can be built at any point after Phase 10 or contributed by the FINOS community. Not blocking v1 release.
+**Success Criteria** (what must be TRUE):
+  1. User can browse architecture patterns by category and instantiate any pattern as an editable diagram with auto-layout applied
+  2. The five bundled patterns (aws/microservices-eks, aws/serverless-api, kubernetes/standard-deployment, ai/rag-pipeline, ai/multi-agent) load and pass `calm validate`
 **Plans:** 0/TBD
 
 ## Progress
@@ -227,13 +242,14 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 1. Foundation & Governance | 2/2 | Complete    | 2026-03-11 |
 | 2. CALM Canvas Core | 3/6 | In Progress|  |
 | 3. Properties & Bidirectional Sync | 5/5 | Complete   | 2026-03-12 |
-| 4. Import, Export & Layout | 3/5 | In Progress|  |
+| 4. Import, Export & Layout | 5/5 | Complete   | 2026-03-14 |
 | 5. MCP Server | 4/4 | Complete   | 2026-03-12 |
 | 6. CALM Validation | 3/3 | Complete   | 2026-03-12 |
 | 7. Extension Packs | 4/4 | Complete   | 2026-03-13 |
 | 8. C4 View Mode | 3/3 | Complete   | 2026-03-13 |
-| 9. calmscript DSL | 0/TBD | Not started (deferred) | - |
-| 10. Desktop App | 0/TBD | Not started | - |
-| 11. Pattern Library & Documentation | 0/TBD | Not started | - |
-| 12. Testing Suite | 0/TBD | Not started | - |
+| 9. Testing Suite | 0/TBD | Not started | - |
+| 10. Documentation & calm-core Publish | 0/TBD | Not started | - |
+| 11. calmscript DSL | 0/TBD | Not started (deferred) | - |
+| 12. Desktop App | 0/TBD | Not started | - |
 | 13. Ecosystem | 0/TBD | Not started | - |
+| Pattern Library (stretch) | 0/TBD | Not started | - |
