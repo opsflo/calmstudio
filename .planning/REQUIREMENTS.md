@@ -149,10 +149,40 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **DOCS-05**: MCP server usage guide for AI tool integration
 - [ ] **DOCS-06**: Contributor guide (setup, testing, PR workflow, DCO)
 
+### Shared Foundation
+
+- [ ] **CORE-01**: `@calmstudio/calm-core` published as standalone npm package with README, API docs, and independent versioning — ready for CalmGuard and community consumers
+
+### FluxNova Extension Pack
+
+- [ ] **FLXN-01**: FluxNova extension pack with 10 node types (engine, rest-api, cockpit, admin, tasklist, modeler, external-task-worker, dmn-engine, process-db, platform container) with orange/amber color family and hand-crafted SVG icons
+- [ ] **FLXN-02**: FluxNova pack appears in NodePalette organized alongside existing packs, all node types drag-droppable onto canvas
+- [ ] **FLXN-03**: FluxNova container node (fluxnova:platform) accepts child nodes with visual containment
+
+### Architecture Templates
+
+- [ ] **TMPL-01**: Template picker as full-screen modal with category tabs (FluxNova, AI Governance, General), accessible from toolbar "Templates" button and empty canvas "Start from template" link
+- [ ] **TMPL-02**: 6 FluxNova templates (platform, KYC onboarding, flash risk, settlement, AI agent, microservices) load correctly with proper nodes, relationships, controls, and data-classification
+- [ ] **TMPL-03**: Template `_template` metadata stripped on CALM JSON export; canvas dirty state prompts confirmation before template load
+
+### CALM 1.2 Controls, Decorators & Evidence
+
+- [ ] **CTRL-01**: CALM 1.2 controls (CalmControls type with pattern-keyed domains, description, requirements with requirement-url + config-url/config) on both CalmNode and CalmRelationship, with data-classification and metadata properties
+- [ ] **CTRL-02**: Controls visible and editable in both NodeProperties and EdgeProperties as collapsible sections; data-classification renders as colored tag (PII=red, Confidential=amber, Public=green) below node name on canvas
+- [ ] **CTRL-03**: CALM 1.2 decorator and evidence types in calm-core for roundtrip support; AIGF governance decorator auto-generated on export summarizing assessed risks, score, and regulatory mappings
+
+### AIGF Design-Time Governance
+
+- [ ] **AIGF-01**: AIGF data package in calm-core with 23 risks + 23 mitigations from AIGF v2.0 catalogue, cross-referenced to 7 external frameworks (ISO 42001, NIST, OWASP LLM, EU AI Act, FFIEC, MITRE ATLAS, NIST AI 600)
+- [ ] **AIGF-02**: Governance panel as right sidebar tab alongside properties showing applicable risks (OP=amber, SEC=red, RC=blue) and recommended mitigations with "Apply" buttons for selected AI nodes; manual tab switch with badge indicator
+- [ ] **AIGF-03**: Architecture-level governance score in panel header and toolbar colored percentage badge (green >80%, amber 50-80%, red <50%); badge hidden when no AI nodes; score updates live on control apply/remove
+- [ ] **AIGF-04**: Node-to-risk mappings for all AI pack node types (llm, agent, orchestrator, vector-store, tool, memory, guardrail, rag-pipeline, knowledge-base, embedding-model, api-gateway, human-in-the-loop, eval-monitor) with MCP special-case detection
+- [ ] **AIGF-05**: 10 AIGF validation rules (aigf-001 through aigf-010) integrated into existing ValidationPanel alongside structural validations, with framework ref display (top 3 inline, expandable full list)
+
 ### Ecosystem (v1 stretch)
 
 - [ ] **ECOS-01**: VS Code extension with calmscript syntax highlighting and live preview
-- [ ] **ECOS-02**: GitHub Action to validate CALM and render calmscript diagrams on PRs
+- [ ] **ECOS-02**: GitHub Action to render CALM architecture diagrams as SVG images in PR comments (CALM validation in CI is CalmGuard's responsibility via `calmguard check`)
 - [ ] **ECOS-03**: `<calm-diagram>` web component for embedding in any web page
 - [ ] **ECOS-04**: Flow visualization as stepped/animated overlays on architecture diagram
 
@@ -185,7 +215,7 @@ Deferred to future release. Tracked but not in current roadmap.
 |---------|--------|
 | Freehand drawing / whiteboard mode | Destroys typed-node guarantee; corrupts CALM model |
 | UML/ArchiMate/C4 import (v1) | Lossy translation; each notation has different metamodel |
-| Terraform/Pulumi generation (v1) | Diagrammatic intent != IaC specifics; dangerous if incorrect |
+| Terraform/Pulumi generation (v1) | CalmGuard's responsibility — IaC generation is a governance concern, not a design tool concern |
 | AI autocomplete for every action | Breaks flow; most suggestions wrong for specific context |
 | Infinite shape customization (CSS per node) | Non-portable diagrams; breaks extension pack icon sets |
 | Diagram versioning inside CalmStudio | Reinventing git; CALM JSON lives in VCS natively |
@@ -245,12 +275,12 @@ Deferred to future release. Tracked but not in current roadmap.
 | LAYT-01 | Phase 4 | Complete |
 | LAYT-02 | Phase 4 | Complete |
 | LAYT-03 | Phase 4 | Complete |
-| CSPT-01 | Phase 5 | Pending |
-| CSPT-02 | Phase 5 | Pending |
-| CSPT-03 | Phase 5 | Pending |
-| CSPT-04 | Phase 5 | Pending |
-| CSPT-05 | Phase 5 | Pending |
-| CSPT-06 | Phase 5 | Pending |
+| CSPT-01 | Phase 11 | Pending |
+| CSPT-02 | Phase 11 | Pending |
+| CSPT-03 | Phase 11 | Pending |
+| CSPT-04 | Phase 11 | Pending |
+| CSPT-05 | Phase 11 | Pending |
+| CSPT-06 | Phase 11 | Pending |
 | VALD-01 | Phase 6 | Complete |
 | VALD-02 | Phase 6 | Complete |
 | VALD-03 | Phase 6 | Complete |
@@ -269,33 +299,49 @@ Deferred to future release. Tracked but not in current roadmap.
 | MCPS-05 | Phase 8 | Complete |
 | MCPS-06 | Phase 8 | Complete |
 | MCPS-07 | Phase 8 | Complete |
-| DESK-01 | Phase 9 | Pending |
-| DESK-02 | Phase 9 | Pending |
-| DESK-03 | Phase 9 | Pending |
-| PATN-01 | Phase 10 | Pending |
-| PATN-02 | Phase 10 | Pending |
-| PATN-03 | Phase 10 | Pending |
+| FLXN-01 | Phase 08.1 | Pending |
+| FLXN-02 | Phase 08.1 | Pending |
+| FLXN-03 | Phase 08.1 | Pending |
+| TMPL-01 | Phase 08.1 | Pending |
+| TMPL-02 | Phase 08.1 | Pending |
+| TMPL-03 | Phase 08.1 | Pending |
+| CTRL-01 | Phase 08.1 | Pending |
+| CTRL-02 | Phase 08.1 | Pending |
+| CTRL-03 | Phase 08.1 | Pending |
+| AIGF-01 | Phase 08.1 | Pending |
+| AIGF-02 | Phase 08.1 | Pending |
+| AIGF-03 | Phase 08.1 | Pending |
+| AIGF-04 | Phase 08.1 | Pending |
+| AIGF-05 | Phase 08.1 | Pending |
+| TEST-01 | Phase 9 | Pending |
+| TEST-02 | Phase 9 | Pending |
+| TEST-03 | Phase 9 | Pending |
+| TEST-04 | Phase 9 | Pending |
+| TEST-05 | Phase 9 | Pending |
 | DOCS-01 | Phase 10 | Pending |
 | DOCS-02 | Phase 10 | Pending |
 | DOCS-03 | Phase 10 | Pending |
 | DOCS-04 | Phase 10 | Pending |
 | DOCS-05 | Phase 10 | Pending |
 | DOCS-06 | Phase 10 | Pending |
-| TEST-01 | Phase 11 | Pending |
-| TEST-02 | Phase 11 | Pending |
-| TEST-03 | Phase 11 | Pending |
-| TEST-04 | Phase 11 | Pending |
-| TEST-05 | Phase 11 | Pending |
-| ECOS-01 | Phase 12 | Pending |
-| ECOS-02 | Phase 12 | Pending |
-| ECOS-03 | Phase 12 | Pending |
-| ECOS-04 | Phase 12 | Pending |
+| CORE-01 | Phase 10 | Pending |
+| DESK-01 | Phase 12 | Pending |
+| DESK-02 | Phase 12 | Pending |
+| DESK-03 | Phase 12 | Pending |
+| ECOS-01 | Phase 13 | Pending |
+| ECOS-02 | Phase 13 | Pending |
+| ECOS-03 | Phase 13 | Pending |
+| ECOS-04 | Phase 13 | Pending |
+| PATN-01 | Stretch | Pending |
+| PATN-02 | Stretch | Pending |
+| PATN-03 | Stretch | Pending |
 
 **Coverage:**
-- v1 requirements: 79 total
-- Mapped to phases: 79
+- v1 requirements: 94 total (79 original + CORE-01 + 14 Phase 08.1)
+- Mapped to phases: 91 (Phases 1-13 + Phase 08.1)
+- Mapped to stretch: 3 (PATN-01, PATN-02, PATN-03)
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-11*
-*Last updated: 2026-03-11 after roadmap creation — 79/79 requirements mapped across 12 phases*
+*Last updated: 2026-03-13 — reordered phases for FINOS readiness (testing + docs before desktop), added CORE-01, narrowed ECOS-02, moved Pattern Library to stretch goal*

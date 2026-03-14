@@ -22,6 +22,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 6: CALM Validation** - Real-time schema validation with inline indicators and severity panel (completed 2026-03-12)
 - [x] **Phase 7: Extension Packs** - Dynamic pack system with AWS, GCP, Azure, Kubernetes, and AI/Agentic node types (completed 2026-03-13)
 - [x] **Phase 8: C4 View Mode** - Hierarchical C4 navigation (Context, Container, Component) as zoom levels over CALM architectures (completed 2026-03-13)
+- [ ] **Phase 8.1: FluxNova Templates & AIGF Governance** - FluxNova extension pack, architecture templates, CALM controls, AIGF governance panel and validation rules (INSERTED — OSFF Toronto demo April 13-14)
 - [ ] **Phase 9: Testing Suite** - Comprehensive London School TDD — unit, integration, E2E, and component tests (moved up from Phase 12 — required for FINOS project acceptance)
 - [ ] **Phase 10: Documentation & calm-core Publish** - Docusaurus documentation site, ADRs, and publish `@calmstudio/calm-core` as standalone package for CalmGuard and community consumers
 - [ ] **Phase 11: calmscript DSL** - Mermaid-competitive text format that compiles losslessly to CALM JSON and back (deferred from original Phase 5 — evaluate need after MCP usage)
@@ -162,6 +163,22 @@ Plans:
 - [ ] 08-01-PLAN.md — C4 filter pure functions, C4 state store, unit tests
 - [ ] 08-02-PLAN.md — CalmCanvas readonly mode, Toolbar segmented control, C4Breadcrumb component
 - [ ] 08-03-PLAN.md — +page.svelte wiring, PropertiesPanel readonly, visual verification
+
+### Phase 08.1: FluxNova Templates & AIGF Governance (INSERTED)
+
+**Goal:** FluxNova extension pack, architecture templates with picker UI, CALM 1.2 controls/decorators/evidence support, AIGF risk/mitigation governance panel with live scoring, and AIGF validation rules — targeting OSFF Toronto demo April 13-14
+**Requirements**: FLXN-01, FLXN-02, FLXN-03, TMPL-01, TMPL-02, TMPL-03, CTRL-01, CTRL-02, CTRL-03, AIGF-01, AIGF-02, AIGF-03, AIGF-04, AIGF-05
+**Depends on:** Phase 8
+**Success Criteria** (what must be TRUE):
+  1. FluxNova extension pack appears in the NodePalette with 10 node types (including container), all drag-droppable with correct icons and orange/amber colors
+  2. Template picker (full-screen modal with category tabs) loads all 6 FluxNova templates onto the canvas, accessible from toolbar button and empty canvas link
+  3. CALM 1.2 controls are visible and editable in both NodeProperties and EdgeProperties as collapsible sections; data-classification renders as colored tags on canvas nodes
+  4. AIGF governance panel (right sidebar tab) shows applicable risks and mitigations for selected AI nodes with "Apply mitigation" adding CALM controls; architecture-level governance score displays in panel header and toolbar badge
+  5. AIGF validation rules fire in ValidationPanel alongside structural rules; governance decorator auto-generated on CALM JSON export
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd:plan-phase 08.1 to break down)
 
 ### Phase 9: Testing Suite
 **Goal**: Every feature has outside-in tests at the appropriate level so regressions are caught before they reach users — required for FINOS project acceptance

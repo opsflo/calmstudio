@@ -3,11 +3,11 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 04-import-export-layout 04-04-PLAN.md
-last_updated: "2026-03-14T17:06:15.420Z"
+stopped_at: Phase 08.1 context gathered, roadmap and requirements updated
+last_updated: "2026-03-14T17:51:03.617Z"
 last_activity: 2026-03-13 — Phase 7 Plan 03 complete; extension pack system fully integrated and visually verified
 progress:
-  total_phases: 13
+  total_phases: 14
   completed_phases: 8
   total_plans: 32
   completed_plans: 32
@@ -178,6 +178,10 @@ Recent decisions affecting current work:
 - [Phase 04-import-export-layout]: All 12 Phase 4 UAT verification steps passed human approval — Phase 4 complete
 - [Phase 04-import-export-layout]: calmscript export confirmed as stub (downloads empty file) — Phase 5 will implement real DSL compiler
 
+### Roadmap Evolution
+
+- Phase 08.1 inserted after Phase 8: FluxNova Templates & AIGF Governance (URGENT) — targeting OSFF Toronto demo April 13-14, 2026. Source: docs/REQ_fluxnova_aigf_integration.md
+
 ### Pending Todos
 
 None yet.
@@ -190,6 +194,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-14T17:06:15.417Z
-Stopped at: Completed 04-import-export-layout 04-04-PLAN.md
-Resume file: None
+Last session: 2026-03-14T17:51:03.611Z
+Stopped at: Phase 08.1 context gathered, roadmap and requirements updated
+Resume file: .planning/phases/08.1-fluxnova-templates-aigf-governance/08.1-CONTEXT.md
