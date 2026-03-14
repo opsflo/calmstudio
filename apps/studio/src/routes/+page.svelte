@@ -11,6 +11,11 @@
 	// This must be module-level (not inside onMount) so packs are available before
 	// the first paint, per RESEARCH Pattern 7: register at module load, not lazy.
 	initAllPacks();
+	import { initAllTemplates, loadTemplate } from '$lib/templates/registry';
+	import TemplatePicker from '$lib/templates/TemplatePicker.svelte';
+
+	// Register all templates at module load time alongside packs.
+	initAllTemplates();
 	import DnDProvider from '$lib/palette/DnDProvider.svelte';
 	import NodePalette from '$lib/palette/NodePalette.svelte';
 	import CalmCanvas from '$lib/canvas/CalmCanvas.svelte';
@@ -324,6 +329,35 @@
 	 * the banner is informational only (v1).
 	 */
 	let extensionPackBanner = $state(false);
+
+	// ─── Template picker state ────────────────────────────────────────────────
+
+	/** When true, the full-screen TemplatePicker modal is shown. */
+	let showTemplatePicker = $state(false);
+
+	/**
+	 * Load a template onto the canvas.
+	 * If the canvas has content, prompts the user to confirm overwrite.
+	 * Strips _template metadata via registry.loadTemplate(), then applies like a file import.
+	 */
+	async function handleTemplateLoad(templateId: string) {
+		// Dirty-state guard — templates replace the whole canvas
+		if (getIsDirty() || nodes.length > 0) {
+			const confirmed = window.confirm('You have unsaved changes. Load template anyway?');
+			if (!confirmed) return;
+		}
+
+		showTemplatePicker = false;
+
+		// loadTemplate returns clean CalmArchitecture without _template
+		const arch = loadTemplate(templateId);
+
+		// Apply as if it were a file import — reuse importCalmFile logic
+		await importCalmFile(JSON.stringify(arch));
+
+		// Template load doesn't bind to a file — mark clean but without filename
+		markClean();
+	}
 
 	function handlePalettePlace(type: string) {
 		canvas?.placeNodeAtCenter(type);
@@ -794,6 +828,7 @@
 			onexportpng={handleExportPng}
 			onexportcalmscript={handleExportCalmscript}
 			onloaddemo={handleLoadDemo}
+			ontemplates={() => (showTemplatePicker = true)}
 			filename={getFileName()}
 			isDirty={getIsDirty()}
 			c4Level={getC4Level()}
@@ -953,6 +988,20 @@
 										oncanvaschange={markDirty}
 									/>
 								{/if}
+
+								<!-- Empty canvas start-from-template prompt -->
+								{#if !isC4Mode() && nodes.length === 0}
+									<div class="empty-canvas-hint">
+										<p class="empty-hint-text">Drop a node from the palette or</p>
+										<button
+											type="button"
+											class="start-template-link"
+											onclick={() => (showTemplatePicker = true)}
+										>
+											Start from a template
+										</button>
+									</div>
+								{/if}
 							</SvelteFlowProvider>
 						</div>
 					</Pane>
@@ -1003,6 +1052,14 @@
 				</Pane>
 			{/if}
 		</PaneGroup>
+
+		<!-- Template picker modal — rendered at app-shell level so it covers everything -->
+		{#if showTemplatePicker}
+			<TemplatePicker
+				onselect={handleTemplateLoad}
+				oncancel={() => (showTemplatePicker = false)}
+			/>
+		{/if}
 
 		<!-- Bottom: Status bar -->
 		<footer class="status-bar">
@@ -1420,5 +1477,57 @@
 
 	:global(.dark) .layout-group .canvas-toolbar-btn:hover {
 		background: #1e293b;
+	}
+
+	/* ─── Empty canvas "Start from template" prompt ──────────────── */
+
+	.empty-canvas-hint {
+		position: absolute;
+		bottom: 48px;
+		left: 50%;
+		transform: translateX(-50%);
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		z-index: 10;
+		pointer-events: none;
+	}
+
+	.empty-hint-text {
+		font-size: 12px;
+		font-family: var(--font-sans, system-ui, sans-serif);
+		color: var(--color-text-secondary, #64748b);
+		margin: 0;
+		white-space: nowrap;
+	}
+
+	:global(.dark) .empty-hint-text {
+		color: #475569;
+	}
+
+	.start-template-link {
+		font-size: 12px;
+		font-family: var(--font-sans, system-ui, sans-serif);
+		font-weight: 500;
+		color: var(--color-accent, #f97316);
+		background: none;
+		border: none;
+		padding: 0;
+		cursor: pointer;
+		text-decoration: underline;
+		text-underline-offset: 2px;
+		pointer-events: all;
+	}
+
+	.start-template-link:hover {
+		color: #ea580c;
+	}
+
+	:global(.dark) .start-template-link {
+		color: #fb923c;
+	}
+
+	:global(.dark) .start-template-link:hover {
+		color: #f97316;
 	}
 </style>

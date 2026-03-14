@@ -24,6 +24,8 @@
 		onexportsvg,
 		onexportpng,
 		onexportcalmscript,
+		onloaddemo,
+		ontemplates,
 		filename = null,
 		isDirty = false,
 		c4Level = null,
@@ -38,6 +40,8 @@
 		onexportsvg: () => void;
 		onexportpng: () => void;
 		onexportcalmscript: () => void;
+		onloaddemo?: (demo: { id: string; name: string; path: string }) => void;
+		ontemplates?: () => void;
 		filename?: string | null;
 		isDirty?: boolean;
 		/** Current C4 view level. null = "All" (show everything), or 'context' | 'container' | 'component'. */
@@ -53,7 +57,13 @@
 		{ key: 'component', label: 'Component' },
 	] as const;
 
+	const DEMOS = [
+		{ id: 'ecommerce', name: 'E-Commerce Storefront', path: '/demos/ecommerce.calm.json' },
+		{ id: 'aws-multi-tier', name: 'AWS Multi-Tier', path: '/demos/aws-multi-tier.calm.json' },
+	] as const;
+
 	let showExportMenu = $state(false);
+	let showDemoMenu = $state(false);
 
 	function toggleExportMenu() {
 		showExportMenu = !showExportMenu;
@@ -64,10 +74,22 @@
 		fn();
 	}
 
+	function toggleDemoMenu() {
+		showDemoMenu = !showDemoMenu;
+	}
+
+	function handleDemoOption(demo: typeof DEMOS[number]) {
+		showDemoMenu = false;
+		onloaddemo?.({ ...demo });
+	}
+
 	function handleClickOutside(e: MouseEvent) {
 		const target = e.target as HTMLElement;
 		if (!target.closest('.export-dropdown')) {
 			showExportMenu = false;
+		}
+		if (!target.closest('.demo-dropdown')) {
+			showDemoMenu = false;
 		}
 	}
 </script>
@@ -75,7 +97,7 @@
 <svelte:window onclick={handleClickOutside} />
 
 <header class="toolbar" role="banner">
-	<!-- Left: App name + C4 view selector -->
+	<!-- Left: App name + C4 view selector + Templates button -->
 	<div class="toolbar-left">
 		<span class="app-name">CalmStudio</span>
 		<div class="c4-selector" role="group" aria-label="C4 view level">
@@ -91,6 +113,25 @@
 				</button>
 			{/each}
 		</div>
+
+		<!-- Templates button -->
+		{#if ontemplates}
+			<button
+				type="button"
+				class="toolbar-btn templates-btn"
+				onclick={ontemplates}
+				aria-label="Open template picker"
+				title="Templates"
+			>
+				<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+					<rect x="3" y="3" width="7" height="7" rx="1" />
+					<rect x="14" y="3" width="7" height="7" rx="1" />
+					<rect x="3" y="14" width="7" height="7" rx="1" />
+					<rect x="14" y="14" width="7" height="7" rx="1" />
+				</svg>
+				<span class="btn-label">Templates</span>
+			</button>
+		{/if}
 	</div>
 
 	<!-- Center: Filename + dirty indicator -->
@@ -110,6 +151,44 @@
 
 	<!-- Right: File action buttons + Export dropdown -->
 	<div class="toolbar-right">
+		<!-- Demo dropdown -->
+		<div class="demo-dropdown">
+			<button
+				type="button"
+				class="toolbar-btn demo-toggle"
+				onclick={(e) => { e.stopPropagation(); toggleDemoMenu(); }}
+				aria-label="Load demo architecture"
+				aria-expanded={showDemoMenu}
+				aria-haspopup="menu"
+				title="Demo Architectures"
+			>
+				<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+					<polygon points="5 3 19 12 5 21 5 3" />
+				</svg>
+				<span class="btn-label">Demos</span>
+				<svg class="chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+					<polyline points="6 9 12 15 18 9" />
+				</svg>
+			</button>
+
+			{#if showDemoMenu}
+				<div class="demo-menu" role="menu" aria-label="Demo architectures">
+					{#each DEMOS as demo}
+						<button
+							type="button"
+							class="demo-menu-item"
+							role="menuitem"
+							onclick={() => handleDemoOption(demo)}
+						>
+							{demo.name}
+						</button>
+					{/each}
+				</div>
+			{/if}
+		</div>
+
+		<div class="toolbar-separator"></div>
+
 		<!-- New -->
 		<button
 			type="button"
@@ -369,6 +448,75 @@
 
 	.btn-label {
 		font-weight: 500;
+	}
+
+	/* ─── Toolbar separator ─────────────────────────────────── */
+
+	.toolbar-separator {
+		width: 1px;
+		height: 16px;
+		background: var(--color-border);
+		margin: 0 2px;
+	}
+
+	:global(.dark) .toolbar-separator {
+		background: #334155;
+	}
+
+	/* ─── Demo dropdown ──────────────────────────────────────── */
+
+	.demo-dropdown {
+		position: relative;
+	}
+
+	.demo-toggle {
+		gap: 3px;
+	}
+
+	.demo-menu {
+		position: absolute;
+		right: 0;
+		top: calc(100% + 4px);
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-radius: 8px;
+		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+		min-width: 200px;
+		padding: 4px;
+		z-index: 200;
+	}
+
+	:global(.dark) .demo-menu {
+		background: #111827;
+		border-color: #334155;
+		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+	}
+
+	.demo-menu-item {
+		display: block;
+		width: 100%;
+		padding: 7px 10px;
+		border: none;
+		background: none;
+		color: var(--color-text-primary);
+		font-size: 12px;
+		font-family: var(--font-sans);
+		cursor: pointer;
+		border-radius: 5px;
+		text-align: left;
+		transition: background 0.1s ease;
+	}
+
+	.demo-menu-item:hover {
+		background: var(--color-surface-tertiary);
+	}
+
+	:global(.dark) .demo-menu-item {
+		color: #e2e8f0;
+	}
+
+	:global(.dark) .demo-menu-item:hover {
+		background: #1e293b;
 	}
 
 	/* ─── Export dropdown ────────────────────────────────────── */

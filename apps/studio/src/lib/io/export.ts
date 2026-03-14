@@ -38,7 +38,20 @@ const IMAGE_HEIGHT = 1080;
  * @param filename  Output filename (default: architecture.calm.json)
  */
 export function exportAsCalm(json: string, filename = 'architecture.calm.json'): void {
-	const blob = new Blob([json], { type: 'application/json' });
+	// Strip _template metadata if present — template starter files must not leak
+	// template metadata into exported CALM JSON files.
+	let cleanJson = json;
+	try {
+		const parsed = JSON.parse(json);
+		if ('_template' in parsed) {
+			delete parsed._template;
+			cleanJson = JSON.stringify(parsed, null, 2);
+		}
+	} catch {
+		// Malformed JSON — fall through with original content; export will still work
+	}
+
+	const blob = new Blob([cleanJson], { type: 'application/json' });
 	const url = URL.createObjectURL(blob);
 	downloadDataUrl(url, filename);
 	// Note: URL.revokeObjectURL not needed for data: URLs, but is for blob: URLs.
@@ -47,7 +60,7 @@ export function exportAsCalm(json: string, filename = 'architecture.calm.json'):
 
 	// Check if the architecture uses extension pack types — if so, export sidecar too.
 	try {
-		const arch = JSON.parse(json) as CalmArchitecture;
+		const arch = JSON.parse(cleanJson) as CalmArchitecture;
 		const packIds = detectPacksFromArch(arch);
 		if (packIds.length > 0) {
 			const sidecarData = buildSidecarData(packIds);
