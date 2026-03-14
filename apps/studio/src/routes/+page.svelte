@@ -33,6 +33,7 @@
 	import {
 		filterNodesForLevel,
 		filterEdgesForVisibleNodes,
+		liftEdgesForLevel,
 		applyC4Styles,
 		hasDrillableChildren,
 		classifyNodeC4Level,
@@ -134,13 +135,16 @@
 	});
 
 	/**
-	 * Derived C4 display edges. When C4 mode is active, shows only edges whose
-	 * both endpoints are visible in the current C4 view.
+	 * Derived C4 display edges. When C4 mode is active, lifts edges to the
+	 * current abstraction level — hidden intermediary endpoints are mapped
+	 * to their nearest visible container ancestor via edge lifting.
 	 */
 	const c4DisplayEdges = $derived.by(() => {
 		if (!isC4Mode()) return edges;
-		const visibleIds = new Set(c4DisplayNodes.map((n) => n.id));
-		return filterEdgesForVisibleNodes(edges, visibleIds);
+		const nonPeerIds = new Set(
+			c4DisplayNodes.filter((n) => !n.data?.c4Peer).map((n) => n.id)
+		);
+		return liftEdgesForLevel(edges, nodes, nonPeerIds);
 	});
 
 	// ─── Validation ──────────────────────────────────────────────────────────
@@ -921,7 +925,13 @@
 							</div>
 
 							<SvelteFlowProvider>
-								{#if isC4Mode()}
+								{#if isC4Mode() && c4DisplayNodes.length === 0}
+									<!-- Empty C4 view -->
+									<div class="c4-empty-state">
+										<p>No {getC4Level()} level nodes found in this architecture.</p>
+										<p class="c4-empty-hint">Try a different C4 level, or add {getC4Level()} type nodes to your architecture.</p>
+									</div>
+								{:else if isC4Mode()}
 									<!-- C4 mode: pass derived display arrays (cannot bind: to derived) -->
 									<CalmCanvas
 										bind:this={canvas}
@@ -1110,6 +1120,32 @@
 
 	:global(.dark) .canvas-pane.c4-component {
 		background-color: #1a2a1a;
+	}
+
+	/* ─── C4 empty state ─────────────────────────────────────────── */
+
+	.c4-empty-state {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		height: 100%;
+		color: #6b7280;
+		font-size: 15px;
+		gap: 4px;
+	}
+
+	.c4-empty-hint {
+		font-size: 13px;
+		color: #9ca3af;
+	}
+
+	:global(.dark) .c4-empty-state {
+		color: #9ca3af;
+	}
+
+	:global(.dark) .c4-empty-hint {
+		color: #6b7280;
 	}
 
 	/* ─── C4 node visual states ──────────────────────────────────── */

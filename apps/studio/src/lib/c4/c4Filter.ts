@@ -143,6 +143,83 @@ export function filterEdgesForVisibleNodes(edges: Edge[], visibleIds: Set<string
 	return edges.filter((e) => visibleIds.has(e.source) && visibleIds.has(e.target));
 }
 
+/**
+ * Lifts edges to the current C4 abstraction level.
+ *
+ * When a C4 view hides intermediary nodes, edges between them disappear.
+ * This function maps hidden endpoints to their nearest visible ancestor
+ * (via parentId containment chain) and creates synthetic lifted edges
+ * between the visible representatives.
+ *
+ * Example: At Context level, "End User → Web App → API Gateway → Order Service"
+ * becomes "End User → Order Management System" because Order Service's
+ * visible ancestor is Order Management System.
+ *
+ * @param edges - All Svelte Flow edges.
+ * @param allNodes - All Svelte Flow nodes (for parentId lookups).
+ * @param visibleIds - Set of visible (non-peer) node IDs.
+ */
+export function liftEdgesForLevel(
+	edges: Edge[],
+	allNodes: Node[],
+	visibleIds: Set<string>
+): Edge[] {
+	const nodeMap = new Map(allNodes.map((n) => [n.id, n]));
+
+	// Build mapping: nodeId → visible representative (walk up parentId chain)
+	const repCache = new Map<string, string | null>();
+	function getVisibleRep(nodeId: string): string | null {
+		if (repCache.has(nodeId)) return repCache.get(nodeId)!;
+		if (visibleIds.has(nodeId)) {
+			repCache.set(nodeId, nodeId);
+			return nodeId;
+		}
+		const node = nodeMap.get(nodeId);
+		if (!node?.parentId) {
+			repCache.set(nodeId, null);
+			return null;
+		}
+		const rep = getVisibleRep(node.parentId);
+		repCache.set(nodeId, rep);
+		return rep;
+	}
+
+	// Direct edges (both endpoints visible)
+	const directEdges = edges.filter(
+		(e) => visibleIds.has(e.source) && visibleIds.has(e.target)
+	);
+
+	// Lifted edges (at least one endpoint hidden, mapped to visible ancestor)
+	const seenPairs = new Set<string>();
+	// Mark direct edge pairs as already seen
+	for (const e of directEdges) {
+		seenPairs.add(`${e.source}->${e.target}`);
+	}
+
+	const liftedEdges: Edge[] = [];
+	for (const e of edges) {
+		if (visibleIds.has(e.source) && visibleIds.has(e.target)) continue; // already direct
+		const srcRep = getVisibleRep(e.source);
+		const tgtRep = getVisibleRep(e.target);
+		if (!srcRep || !tgtRep || srcRep === tgtRep) continue;
+
+		const pairKey = `${srcRep}->${tgtRep}`;
+		if (seenPairs.has(pairKey)) continue;
+		seenPairs.add(pairKey);
+
+		liftedEdges.push({
+			id: `lifted-${pairKey}`,
+			source: srcRep,
+			target: tgtRep,
+			type: 'default',
+			style: 'stroke-dasharray: 6 3;',
+			data: { lifted: true },
+		});
+	}
+
+	return [...directEdges, ...liftedEdges];
+}
+
 // ─── Children Helpers ─────────────────────────────────────────────────────────
 
 /**
