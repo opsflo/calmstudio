@@ -78,8 +78,11 @@ export function isExternalNode(node: { data?: Record<string, unknown> }): boolea
  *
  * - If drillParentId is provided: returns only direct children of that parent node
  *   (used when drilling into a container to show its internals).
- * - If drillParentId is null: returns top-level nodes matching the level's CALM types
- *   (Pitfall 3: only nodes with no parentId are shown at any top-level C4 view).
+ * - If drillParentId is null:
+ *   - Context level: top-level systems/actors/ecosystems only (flat view).
+ *   - Container level: all container-type nodes + their ancestor containers
+ *     (so services/databases inside systems display correctly in their grouping).
+ *   - Component level: all component-type nodes + their ancestor containers.
  *
  * @param nodes - All Svelte Flow nodes.
  * @param level - The C4 level to filter for.
@@ -95,12 +98,37 @@ export function filterNodesForLevel(
 		return nodes.filter((n) => n.parentId === drillParentId);
 	}
 
-	// Top-level mode: show nodes matching the C4 level with no parent
-	return nodes.filter((n) => {
-		if (n.parentId) return false; // Pitfall 3: never show nested nodes at top level
+	// Context level: only top-level nodes (flat view of systems/actors)
+	if (level === 'context') {
+		return nodes.filter((n) => {
+			if (n.parentId) return false;
+			const calmType = (n.data?.calmType as string) ?? '';
+			return classifyNodeC4Level(calmType) === level;
+		});
+	}
+
+	// Container/Component levels: show matching nodes + their ancestor containers
+	// so nested nodes display correctly within their parent groupings.
+	const nodeMap = new Map(nodes.map((n) => [n.id, n]));
+
+	// Find all nodes matching the target C4 level
+	const matchingNodes = nodes.filter((n) => {
 		const calmType = (n.data?.calmType as string) ?? '';
 		return classifyNodeC4Level(calmType) === level;
 	});
+
+	const resultIds = new Set(matchingNodes.map((n) => n.id));
+
+	// Walk up parentId chains to include ancestor containers
+	for (const node of matchingNodes) {
+		let current: Node | undefined = node;
+		while (current?.parentId) {
+			resultIds.add(current.parentId);
+			current = nodeMap.get(current.parentId);
+		}
+	}
+
+	return nodes.filter((n) => resultIds.has(n.id));
 }
 
 /**
@@ -153,6 +181,9 @@ export function hasDrillableChildren(nodeId: string, nodes: Node[]): boolean {
  * @param level - The current C4 level being displayed.
  */
 export function applyC4Styles(nodes: Node[], level: C4Level): Node[] {
+	// At Context level, collect visible node IDs so we can detect "childless containers"
+	const visibleIds = new Set(nodes.map((n) => n.id));
+
 	return nodes.map((node) => {
 		const external = isExternalNode(node);
 		const peer = node.data?.c4Peer === true;
@@ -163,9 +194,40 @@ export function applyC4Styles(nodes: Node[], level: C4Level): Node[] {
 		if (peer) classes.push('c4-peer');
 		const classValue = classes.length > 0 ? classes.join(' ') : undefined;
 
+		// At Context level, container-typed nodes (systems/ecosystems with children)
+		// should render as compact nodes, not as giant empty containers.
+		// Resolve their type back to the original CALM type and remove container dimensions.
+		let typeOverride: Record<string, unknown> = {};
+		if (level === 'context' && node.type === 'container') {
+			const calmType = (node.data?.calmType as string) ?? '';
+			if (CONTEXT_TYPES.has(calmType)) {
+				typeOverride = {
+					type: calmType,
+					width: undefined,
+					height: undefined,
+				};
+			}
+		}
+
+		// At Container/Component levels, ancestor container nodes whose children
+		// are all filtered out should also render compactly.
+		if (level !== 'context' && node.type === 'container') {
+			const hasVisibleChildren = nodes.some((n) => n.parentId === node.id && visibleIds.has(n.id));
+			if (!hasVisibleChildren) {
+				const calmType = (node.data?.calmType as string) ?? '';
+				const resolvedType = CONTEXT_TYPES.has(calmType) ? calmType : CONTAINER_TYPES.has(calmType) ? calmType : 'generic';
+				typeOverride = {
+					type: resolvedType,
+					width: undefined,
+					height: undefined,
+				};
+			}
+		}
+
 		return {
 			...node,
 			...(classValue !== undefined ? { class: classValue } : {}),
+			...typeOverride,
 			data: {
 				...node.data,
 				c4Level: level,
