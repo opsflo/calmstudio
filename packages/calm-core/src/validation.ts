@@ -133,13 +133,13 @@ function schemaErrorToIssue(
 	let relationshipId: string | undefined;
 
 	if (nodeMatch) {
-		const idx = parseInt(nodeMatch[1], 10);
+		const idx = parseInt(nodeMatch[1]!, 10);
 		const node = arch.nodes[idx];
 		if (node && node['unique-id']) {
 			nodeId = node['unique-id'];
 		}
 	} else if (relMatch) {
-		const idx = parseInt(relMatch[1], 10);
+		const idx = parseInt(relMatch[1]!, 10);
 		const rel = arch.relationships[idx];
 		if (rel && rel['unique-id']) {
 			relationshipId = rel['unique-id'];

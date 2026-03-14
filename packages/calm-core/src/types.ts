@@ -38,6 +38,55 @@ export interface CalmInterface {
 }
 
 /**
+ * A single control requirement linking to an external requirement URL.
+ * Per CALM 1.2 control.json schema — requirement-url is required; config-url and config are optional.
+ */
+export interface CalmControlRequirement {
+  'requirement-url': string;
+  'config-url'?: string;
+  config?: Record<string, unknown>;
+}
+
+/**
+ * A control applied to a node or relationship.
+ * Keys in CalmControls use kebab-case identifiers (e.g. 'aigf-data-leakage-prevention').
+ */
+export interface CalmControl {
+  description: string;
+  requirements: CalmControlRequirement[];
+}
+
+/**
+ * A map of control key to control detail, applied to nodes or relationships.
+ * Keys follow kebab-case convention (e.g. 'aigf-firewalling-filtering').
+ */
+export type CalmControls = Record<string, CalmControl>;
+
+/**
+ * A CALM 1.2 decorator — architecture-wide overlay for cross-cutting concerns
+ * such as AIGF governance summaries, regulatory mappings, or security posture.
+ * Read by CalmGuard for reporting.
+ */
+export interface CalmDecorator {
+  'unique-id': string;
+  type: string;
+  target: string[];
+  'applies-to': string[];
+  data: Record<string, unknown>;
+}
+
+/**
+ * CALM 1.2 evidence — links a control to evidence of compliance.
+ * Evidence collection/linking is CalmGuard's responsibility at build/runtime.
+ * CalmStudio supports this type for roundtrip completeness only.
+ */
+export interface CalmEvidence {
+  'unique-id': string;
+  'evidence-paths': string[];
+  'control-config-url': string;
+}
+
+/**
  * A node in the CALM architecture graph.
  * Corresponds to services, databases, actors, and other system components.
  */
@@ -50,6 +99,12 @@ export interface CalmNode {
   interfaces?: CalmInterface[];
   /** Arbitrary key-value metadata for extension without schema changes */
   customMetadata?: Record<string, string>;
+  /** CALM 1.2 controls applied to this node */
+  controls?: CalmControls;
+  /** Data classification label (e.g. 'PII', 'Confidential', 'Public') */
+  'data-classification'?: string;
+  /** Arbitrary structured metadata for extension */
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -65,6 +120,10 @@ export interface CalmRelationship {
   /** e.g. 'HTTPS', 'JDBC', 'gRPC' */
   protocol?: string;
   description?: string;
+  /** CALM 1.2 controls applied to this relationship */
+  controls?: CalmControls;
+  /** Arbitrary structured metadata for extension */
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -73,4 +132,6 @@ export interface CalmRelationship {
 export interface CalmArchitecture {
   nodes: CalmNode[];
   relationships: CalmRelationship[];
+  /** CALM 1.2 decorators — architecture-wide overlays for governance and cross-cutting concerns */
+  decorators?: CalmDecorator[];
 }

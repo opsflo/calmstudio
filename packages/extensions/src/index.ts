@@ -16,6 +16,7 @@ export { gcpPack } from './packs/gcp.js';
 export { azurePack } from './packs/azure.js';
 export { kubernetesPack } from './packs/kubernetes.js';
 export { aiPack } from './packs/ai.js';
+export { fluxnovaPack } from './packs/fluxnova.js';
 
 import { registerPack } from './registry.js';
 import { corePack } from './packs/core.js';
@@ -24,9 +25,10 @@ import { gcpPack } from './packs/gcp.js';
 import { azurePack } from './packs/azure.js';
 import { kubernetesPack } from './packs/kubernetes.js';
 import { aiPack } from './packs/ai.js';
+import { fluxnovaPack } from './packs/fluxnova.js';
 
 /**
- * Register all built-in packs (core + 5 extension packs).
+ * Register all built-in packs (core + 6 extension packs).
  * Call once at application startup before resolving any pack nodes.
  */
 export function initAllPacks(): void {
@@ -36,4 +38,5 @@ export function initAllPacks(): void {
   registerPack(azurePack);
   registerPack(kubernetesPack);
   registerPack(aiPack);
+  registerPack(fluxnovaPack);
 }
