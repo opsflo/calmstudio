@@ -10,6 +10,7 @@
 	import type { Edge } from '@xyflow/svelte';
 	import type { CalmRelationshipType } from '@calmstudio/calm-core';
 	import { updateEdgeProperty } from '$lib/stores/calmModel.svelte';
+	import ControlsList from './ControlsList.svelte';
 
 	let {
 		edge,
@@ -33,12 +34,33 @@
 
 	const PROTOCOL_TYPES = ['connects', 'interacts'];
 
+	const COMMON_PROTOCOLS = [
+		'HTTPS',
+		'HTTP',
+		'gRPC',
+		'GraphQL',
+		'WebSocket',
+		'AMQP',
+		'MQTT',
+		'Kafka',
+		'TCP',
+		'UDP',
+		'JDBC',
+		'ODBC',
+		'SFTP',
+		'SSH',
+	];
+
+	let showCustomProtocol = $state(false);
 	let firstEditSignaled = $state(false);
 
 	// Reset flag when edge selection changes
 	$effect(() => {
 		const _id = edge.id;
 		firstEditSignaled = false;
+		// Show custom input if current protocol isn't in the common list
+		const currentProto = String(edge.data?.protocol ?? '');
+		showCustomProtocol = currentProto !== '' && !COMMON_PROTOCOLS.includes(currentProto);
 	});
 
 	// Local state for debounced fields
@@ -69,6 +91,20 @@
 		const value = (e.target as HTMLSelectElement).value;
 		signalFirstEdit();
 		updateEdgeProperty(edge.id, 'relationship-type', value);
+		onmutate?.();
+	}
+
+	function handleProtocolSelect(e: Event) {
+		const value = (e.target as HTMLSelectElement).value;
+		if (value === '__custom__') {
+			showCustomProtocol = true;
+			localProtocol = '';
+			return;
+		}
+		showCustomProtocol = false;
+		localProtocol = value;
+		signalFirstEdit();
+		updateEdgeProperty(edge.id, 'protocol', value);
 		onmutate?.();
 	}
 
@@ -137,16 +173,34 @@
 		{#if showProtocol}
 			<div class="field">
 				<label class="field-label" for="edge-protocol">Protocol</label>
-				<input
+				<select
 					id="edge-protocol"
-					class="field-input"
-					type="text"
-					value={localProtocol}
-					oninput={handleProtocolInput}
-					placeholder="e.g. HTTPS, gRPC, AMQP"
+					class="field-select"
+					value={showCustomProtocol ? '__custom__' : localProtocol}
+					onchange={handleProtocolSelect}
 					aria-label="Protocol"
-				/>
+				>
+					<option value="">— Select —</option>
+					{#each COMMON_PROTOCOLS as proto}
+						<option value={proto}>{proto}</option>
+					{/each}
+					<option value="__custom__">Custom...</option>
+				</select>
 			</div>
+			{#if showCustomProtocol}
+				<div class="field">
+					<label class="field-label" for="edge-protocol-custom">Custom Protocol</label>
+					<input
+						id="edge-protocol-custom"
+						class="field-input"
+						type="text"
+						value={localProtocol}
+						oninput={handleProtocolInput}
+						placeholder="e.g. NATS, Redis Pub/Sub"
+						aria-label="Custom protocol"
+					/>
+				</div>
+			{/if}
 		{/if}
 
 		<!-- description -->
@@ -175,6 +229,17 @@
 			<div class="read-only-field" id="edge-dest" title={edge.target}>{edge.target}</div>
 		</div>
 	</div>
+
+	<!-- Controls section (CALM 1.2) -->
+	<ControlsList
+		controls={edge.data?.controls}
+		onupdate={(newControls) => {
+			signalFirstEdit();
+			updateEdgeProperty(edge.id, 'controls', newControls);
+			onmutate?.();
+		}}
+		readonly={!onmutate}
+	/>
 </div>
 
 <style>

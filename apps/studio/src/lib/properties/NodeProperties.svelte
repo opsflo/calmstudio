@@ -15,18 +15,22 @@
 	import type { CalmNodeType } from '@calmstudio/calm-core';
 	import { updateNodeProperty } from '$lib/stores/calmModel.svelte';
 	import InterfaceList from './InterfaceList.svelte';
+	import ControlsList from './ControlsList.svelte';
 	import CustomMetadata from './CustomMetadata.svelte';
 
 	let {
 		node,
 		onBeforeFirstEdit,
 		onmutate,
+		ontogglepin,
 	}: {
 		node: Node;
 		/** Called once before the first mutation per selection — used to push undo snapshot. */
 		onBeforeFirstEdit?: () => void;
 		/** Called after each property mutation to re-project canvas and code panel. */
 		onmutate?: () => void;
+		/** Called to toggle pin state for this node. */
+		ontogglepin?: (nodeId: string) => void;
 	} = $props();
 
 	const CALM_NODE_TYPES: CalmNodeType[] = [
@@ -135,7 +139,25 @@
 	<!-- Header -->
 	<div class="props-header">
 		<span class="header-label">Node Properties</span>
-		<span class="type-badge">{getTypeLabel(calmType)}</span>
+		<div class="header-actions">
+			{#if ontogglepin}
+				<button
+					type="button"
+					class="pin-toggle-btn"
+					class:pinned={node.data?.pinned}
+					onclick={() => ontogglepin(node.id)}
+					title={node.data?.pinned ? 'Unpin node (will move in auto-layout)' : 'Pin node (stays fixed in auto-layout)'}
+					aria-label={node.data?.pinned ? 'Unpin node' : 'Pin node'}
+				>
+					<svg width="12" height="12" viewBox="0 0 24 24" fill={node.data?.pinned ? 'currentColor' : 'none'} stroke="currentColor" stroke-width="2" aria-hidden="true">
+						<path d="M12 2L8 8H4l4 6v4l4-2 4 2v-4l4-6h-4L12 2z" stroke-linecap="round" stroke-linejoin="round" />
+						<line x1="12" y1="18" x2="12" y2="22" stroke-linecap="round" />
+					</svg>
+					<span class="pin-label">{node.data?.pinned ? 'Pinned' : 'Pin'}</span>
+				</button>
+			{/if}
+			<span class="type-badge">{getTypeLabel(calmType)}</span>
+		</div>
 	</div>
 
 	<!-- Core fields -->
@@ -211,16 +233,16 @@
 	<!-- Interfaces section -->
 	<InterfaceList nodeId={node.data?.calmId} interfaces={node.data?.interfaces ?? []} {onmutate} />
 
-	<!-- Controls placeholder (Phase 6) -->
-	<div class="section controls-placeholder">
-		<div class="section-header">
-			<span class="section-label">Controls</span>
-			<span class="future-badge">Phase 6</span>
-		</div>
-		<fieldset class="controls-fieldset" disabled>
-			<p class="controls-hint">Coming in Phase 6 — controls configuration will be available here.</p>
-		</fieldset>
-	</div>
+	<!-- Controls section (CALM 1.2) -->
+	<ControlsList
+		controls={node.data?.controls}
+		onupdate={(newControls) => {
+			signalFirstEdit();
+			updateNodeProperty(node.data.calmId, 'controls', newControls);
+			onmutate?.();
+		}}
+		readonly={!onmutate}
+	/>
 
 	<!-- Custom metadata section -->
 	<CustomMetadata nodeId={node.data?.calmId} metadata={node.data?.customMetadata ?? {}} {onmutate} />
@@ -272,6 +294,59 @@
 	:global(.dark) .type-badge {
 		background: #1e293b;
 		color: #94a3b8;
+	}
+
+	.header-actions {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+	}
+
+	.pin-toggle-btn {
+		display: flex;
+		align-items: center;
+		gap: 3px;
+		padding: 2px 6px;
+		border: 1px solid var(--color-border, #e2e8f0);
+		border-radius: 6px;
+		background: var(--color-surface, #fff);
+		color: var(--color-text-tertiary, #94a3b8);
+		font-size: 10px;
+		font-weight: 600;
+		cursor: pointer;
+		transition: all 0.15s;
+	}
+
+	.pin-toggle-btn:hover {
+		background: var(--color-surface-secondary, #f1f5f9);
+		color: var(--color-text-primary, #1e293b);
+	}
+
+	.pin-toggle-btn.pinned {
+		color: var(--color-accent, #3b82f6);
+		border-color: var(--color-accent, #3b82f6);
+		background: rgba(59, 130, 246, 0.08);
+	}
+
+	:global(.dark) .pin-toggle-btn {
+		background: #111827;
+		border-color: #334155;
+		color: #64748b;
+	}
+
+	:global(.dark) .pin-toggle-btn:hover {
+		background: #1e293b;
+		color: #e2e8f0;
+	}
+
+	:global(.dark) .pin-toggle-btn.pinned {
+		color: #60a5fa;
+		border-color: #60a5fa;
+		background: rgba(96, 165, 250, 0.1);
+	}
+
+	.pin-label {
+		line-height: 1;
 	}
 
 	.fields {
@@ -411,74 +486,4 @@
 		border-color: #818cf8;
 	}
 
-	/* Controls placeholder */
-	.section {
-		padding: 10px 12px;
-		border-top: 1px solid var(--color-border, #e2e8f0);
-	}
-
-	:global(.dark) .section {
-		border-color: #1e293b;
-	}
-
-	.section-header {
-		display: flex;
-		align-items: center;
-		gap: 6px;
-		margin-bottom: 8px;
-	}
-
-	.section-label {
-		font-size: 11px;
-		font-weight: 700;
-		text-transform: uppercase;
-		letter-spacing: 0.08em;
-		color: var(--color-text-tertiary, #94a3b8);
-	}
-
-	:global(.dark) .section-label {
-		color: #64748b;
-	}
-
-	.future-badge {
-		font-size: 9px;
-		font-weight: 600;
-		padding: 1px 5px;
-		border-radius: 8px;
-		background: var(--color-surface-secondary, #f1f5f9);
-		color: var(--color-text-tertiary, #94a3b8);
-		text-transform: uppercase;
-		letter-spacing: 0.05em;
-	}
-
-	:global(.dark) .future-badge {
-		background: #1e293b;
-		color: #475569;
-	}
-
-	.controls-fieldset {
-		border: 1px dashed var(--color-border, #e2e8f0);
-		border-radius: 6px;
-		padding: 10px 12px;
-		margin: 0;
-		background: var(--color-surface-secondary, #f8fafc);
-		opacity: 0.6;
-	}
-
-	:global(.dark) .controls-fieldset {
-		background: #0f1320;
-		border-color: #1e293b;
-	}
-
-	.controls-hint {
-		margin: 0;
-		font-size: 11px;
-		color: var(--color-text-tertiary, #94a3b8);
-		font-style: italic;
-		line-height: 1.4;
-	}
-
-	:global(.dark) .controls-hint {
-		color: #475569;
-	}
 </style>
