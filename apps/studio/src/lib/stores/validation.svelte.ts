@@ -17,6 +17,7 @@
 
 import { getModel } from './calmModel.svelte';
 import { validateCalmArchitecture, type ValidationIssue } from '@calmstudio/calm-core';
+import { runAIGFRules } from '$lib/validation/aigf-rules';
 
 // Re-export ValidationIssue for consumers that cannot resolve @calmstudio/calm-core via tsconfig
 export type { ValidationIssue };
@@ -34,7 +35,13 @@ let scrollToId = $state<string | null>(null);
  * Called explicitly by the user (e.g., clicking a "Validate" button).
  */
 export function runValidation(): void {
-	issues = validateCalmArchitecture(getModel());
+	const model = getModel();
+	const structural = validateCalmArchitecture(model);
+	const aigf = runAIGFRules(model);
+	issues = [...structural, ...aigf];
+	// Sort by severity: errors first, then warnings, then info
+	const severityOrder: Record<string, number> = { error: 0, warning: 1, info: 2 };
+	issues.sort((a, b) => (severityOrder[a.severity] ?? 2) - (severityOrder[b.severity] ?? 2));
 	panelOpen = true;
 }
 

@@ -14,9 +14,20 @@
 
 	const strokeColor = $derived(meta?.color.stroke ?? 'currentColor');
 	const label = $derived((data as Record<string, unknown>).label as string ?? (data as Record<string, unknown>).calmId as string ?? calmType);
+	const dataClassification = $derived((data as Record<string, unknown>)['data-classification'] as string | undefined);
 
 	/** Scale 16x16 SVG icons up to 40x40 for canvas rendering */
 	const scaledIcon = $derived(meta?.icon ? meta.icon.replace(/width="16" height="16"/, 'width="40" height="40"') : '');
+
+	/** Returns badge style for a data-classification value */
+	function getClassificationStyle(dc: string): string {
+		switch (dc.toLowerCase()) {
+			case 'pii': return 'background:#fef2f2;color:#dc2626;border-color:#fca5a5;';
+			case 'confidential': return 'background:#fffbeb;color:#d97706;border-color:#fcd34d;';
+			case 'public': return 'background:#f0fdf4;color:#16a34a;border-color:#86efac;';
+			default: return 'background:#f1f5f9;color:#64748b;border-color:#cbd5e1;';
+		}
+	}
 </script>
 
 <Handle type="target" position={Position.Top} />
@@ -42,6 +53,13 @@
 		</svg>
 	{/if}
 	<span class="label">{label}</span>
+	{#if dataClassification}
+		<span
+			class="data-classification-badge"
+			style={getClassificationStyle(dataClassification)}
+			title="Data classification: {dataClassification}"
+		>{dataClassification}</span>
+	{/if}
 </div>
 
 <style>
@@ -80,5 +98,17 @@
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
+	}
+
+	.data-classification-badge {
+		font-size: 8px;
+		font-weight: 700;
+		padding: 1px 5px;
+		border-radius: 6px;
+		border: 1px solid;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+		white-space: nowrap;
+		line-height: 1.4;
 	}
 </style>
