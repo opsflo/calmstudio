@@ -62,29 +62,29 @@ Requirements for v1.1 Distribution & Developer Experience milestone.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DOCS-01 | TBD | Pending |
-| DOCS-02 | TBD | Pending |
-| DOCS-03 | TBD | Pending |
-| DOCS-04 | TBD | Pending |
-| DOCS-05 | TBD | Pending |
-| CORE-01 | TBD | Pending |
-| DESK-01 | TBD | Pending |
-| DESK-02 | TBD | Pending |
-| DESK-03 | TBD | Pending |
-| VSCE-01 | TBD | Pending |
-| VSCE-02 | TBD | Pending |
-| VSCE-03 | TBD | Pending |
-| VSCE-04 | TBD | Pending |
-| VSCE-05 | TBD | Pending |
-| GHAC-01 | TBD | Pending |
-| WEBC-01 | TBD | Pending |
-| WEBC-02 | TBD | Pending |
-| FLOW-01 | TBD | Pending |
+| DOCS-01 | Phase 10 | Pending |
+| DOCS-02 | Phase 10 | Pending |
+| DOCS-03 | Phase 10 | Pending |
+| DOCS-04 | Phase 10 | Pending |
+| DOCS-05 | Phase 10 | Pending |
+| CORE-01 | Phase 10 | Pending |
+| DESK-01 | Phase 11 | Pending |
+| DESK-02 | Phase 11 | Pending |
+| DESK-03 | Phase 11 | Pending |
+| VSCE-01 | Phase 12 | Pending |
+| VSCE-02 | Phase 12 | Pending |
+| VSCE-03 | Phase 12 | Pending |
+| VSCE-04 | Phase 12 | Pending |
+| VSCE-05 | Phase 12 | Pending |
+| GHAC-01 | Phase 12 | Pending |
+| WEBC-01 | Phase 13 | Pending |
+| WEBC-02 | Phase 13 | Pending |
+| FLOW-01 | Phase 13 | Pending |
 
 **Coverage:**
 - v1.1 requirements: 18 total
-- Mapped to phases: 0 (pending roadmap)
-- Unmapped: 18
+- Mapped to phases: 18
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-15*
