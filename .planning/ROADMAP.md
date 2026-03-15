@@ -66,7 +66,11 @@ Plans:
   1. A user on macOS, Windows, or Linux can download and launch the CalmStudio desktop app without installing a browser or Node.js
   2. A user can open a .calm.json file from their local filesystem using the native OS file picker
   3. A user can save changes to a .calm.json file using the native OS save dialog, with no network request required
-**Plans**: TBD
+**Plans:** 3 plans
+Plans:
+- [ ] 11-01-PLAN.md — Scaffold Tauri 2 shell and implement native file I/O with isTauri() routing
+- [ ] 11-02-PLAN.md — Wire native menu bar, recent files, drag-drop, MCP sidecar, and auto-updater
+- [ ] 11-03-PLAN.md — Configure MCP sidecar binary build and cross-platform CI release workflow
 
 ### Phase 12: Developer Tooling
 **Goal**: Developers can preview CALM architecture diagrams in VS Code and have diagrams automatically rendered in GitHub PR comments
@@ -98,6 +102,6 @@ Phases execute in numeric order: 10 → 11 → 12 → 13
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 10. Docs & Package Publish | 3/3 | Complete    | 2026-03-15 | - |
-| 11. Desktop App | v1.1 | 0/TBD | Not started | - |
+| 11. Desktop App | v1.1 | 0/3 | Not started | - |
 | 12. Developer Tooling | v1.1 | 0/TBD | Not started | - |
 | 13. Embedding & Visualization | v1.1 | 0/TBD | Not started | - |
