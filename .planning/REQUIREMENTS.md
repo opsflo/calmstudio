@@ -14,7 +14,7 @@ Requirements for v1.1 Distribution & Developer Experience milestone.
 - [ ] **DOCS-03**: Extension pack development guide (create custom packs)
 - [ ] **DOCS-04**: MCP server usage guide for AI tool integration
 - [ ] **DOCS-05**: Contributor guide (setup, testing, PR workflow, DCO)
-- [ ] **CORE-01**: `@calmstudio/calm-core` published to npm with README, API docs, and independent versioning
+- [x] **CORE-01**: `@calmstudio/calm-core` published to npm with README, API docs, and independent versioning
 
 ### Desktop App
 
@@ -67,7 +67,7 @@ Requirements for v1.1 Distribution & Developer Experience milestone.
 | DOCS-03 | Phase 10 | Pending |
 | DOCS-04 | Phase 10 | Pending |
 | DOCS-05 | Phase 10 | Pending |
-| CORE-01 | Phase 10 | Pending |
+| CORE-01 | Phase 10 | Complete |
 | DESK-01 | Phase 11 | Pending |
 | DESK-02 | Phase 11 | Pending |
 | DESK-03 | Phase 11 | Pending |

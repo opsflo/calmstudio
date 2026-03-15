@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Distribution & Developer Experience
-status: ready_to_plan
-stopped_at: Roadmap created for v1.1 (phases 10-13)
+status: in_progress
+stopped_at: Completed 10-01-PLAN.md (calm-core npm package configuration)
 last_updated: "2026-03-15"
-last_activity: 2026-03-15 — v1.1 roadmap created, 4 phases (10-13), 18 requirements mapped
+last_activity: 2026-03-15 — completed 10-01 (calm-core tsup dual build + npm publish config)
 progress:
   total_phases: 4
   completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
-  percent: 0
+  total_plans: 1
+  completed_plans: 1
+  percent: 5
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-03-15)
 ## Current Position
 
 Phase: 10 of 13 (Docs & Package Publish)
-Plan: Not started
-Status: Ready to plan
-Last activity: 2026-03-15 — Roadmap created, 4 phases, 18/18 requirements mapped
+Plan: 01 completed (calm-core npm package configuration)
+Status: In progress — plan 10-01 complete
+Last activity: 2026-03-15 — completed 10-01: calm-core tsup dual ESM+CJS build, package.json updated for npm publish
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [█░░░░░░░░░] 5%
 
 ## Accumulated Context
 
@@ -39,6 +39,9 @@ Progress: [░░░░░░░░░░] 0%
 Decisions are logged in PROJECT.md Key Decisions table.
 
 - [v1.1 roadmap]: Phase 12 splits user's "Ecosystem" group into Developer Tooling (VS Code + GitHub Action) and Embedding & Visualization (Web Component + Flow Viz) for cleaner delivery boundaries at fine granularity
+- [10-01]: AJV is external (not bundled in dist) — consumers install it via package.json dependencies; tsup marks it external
+- [10-01]: test-fixtures export removed from calm-core public API — internal-only, not for npm consumers
+- [10-01]: release.yml unchanged — pnpm -r run build already covers calm-core now that build script runs tsup
 
 ### Blockers/Concerns
 
@@ -52,5 +55,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-15
-Stopped at: Roadmap created, ready to plan Phase 10
+Stopped at: Completed 10-01-PLAN.md — calm-core configured for npm publishing
 Resume file: None
