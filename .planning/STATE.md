@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Distribution & Developer Experience
 status: executing
-stopped_at: Completed 11-02-PLAN.md — native menu, recent files, drag-drop, sidecar, updater, file-open
-last_updated: "2026-03-15T10:57:28.061Z"
-last_activity: "2026-03-15 — completed 10-03: 5 guide pages + 10 MADR ADRs, Docusaurus build verified"
+stopped_at: Completed Phase 11 — Tauri 2 desktop app with native file I/O, menu, sidecar, CI
+last_updated: "2026-03-15T12:00:00.000Z"
+last_activity: "2026-03-15 — completed Phase 11: Tauri desktop app, all 3 plans done, checkpoint approved"
 progress:
   total_phases: 4
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 6
-  completed_plans: 5
-  percent: 8
+  completed_plans: 6
+  percent: 50
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-15)
 
 **Core value:** Make architecture diagrams the source of truth — draw visually, get validated CALM code automatically, let AI generate architectures via MCP.
-**Current focus:** Phase 10 — Docs & Package Publish
+**Current focus:** Phase 12 — Developer Tooling (next)
 
 ## Current Position
 
-Phase: 10 of 13 (Docs & Package Publish)
-Plan: 03 completed (authored documentation content and 10 ADRs)
-Status: In progress — plans 10-01, 10-02, 10-03 complete
-Last activity: 2026-03-15 — completed 10-03: 5 guide pages + 10 MADR ADRs, Docusaurus build verified
+Phase: 11 of 13 (Desktop App) — COMPLETE
+Plan: 03 completed (CI workflow + checkpoint approved)
+Status: Phase 11 complete — all 3 plans done, Tauri dev build verified
+Last activity: 2026-03-15 — completed Phase 11: Tauri desktop app with native file I/O, menu, sidecar, CI
 
-Progress: [█░░░░░░░░░] 8%
+Progress: [█████░░░░░] 50%
 
 ## Accumulated Context
 
@@ -50,6 +50,9 @@ Decisions are logged in PROJECT.md Key Decisions table.
 - [Phase 11-01]: readTextFile mockIPC must return byte array (Array.from Uint8Array), not raw strings — Tauri returns binary bytes
 - [Phase 11-02]: MenuHandlers.openFromPath separate from open: dialog-based open and path-based recent file open are different flows
 - [Phase 11-02]: plugin-store load() requires defaults field in StoreOptions alongside autoSave — missing defaults causes TypeScript error
+- [Phase 11-03]: tauri-plugin-store and tauri-plugin-updater use Builder pattern, not init() — API mismatch from other Tauri plugins
+- [Phase 11-03]: Tauri 2.10 requires explicit use tauri::{Emitter, Manager} trait imports for emit() and get_webview_window()
+- [Phase 11-03]: externalBin validated at compile time — placeholder sidecar binary needed for local dev builds
 
 ### Blockers/Concerns
 
@@ -62,6 +65,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-15T10:57:28.059Z
-Stopped at: Completed 11-02-PLAN.md — native menu, recent files, drag-drop, sidecar, updater, file-open
+Last session: 2026-03-15T12:00:00.000Z
+Stopped at: Completed Phase 11 — Tauri 2 desktop app with native file I/O, menu, sidecar, CI
 Resume file: None
