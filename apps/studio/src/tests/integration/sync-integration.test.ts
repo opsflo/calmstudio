@@ -150,7 +150,7 @@ describe('applyFromJson -> calmToFlow -> applyFromCanvas round-trip', () => {
 		const result = getModel();
 		const llm = result.nodes.find((n) => n['unique-id'] === 'ai-llm')!;
 		expect(llm.controls).toBeDefined();
-		expect(llm.controls!['aigf-security-domain']).toBeDefined();
+		expect(llm.controls!['security-domain']).toBeDefined();
 	});
 });
 

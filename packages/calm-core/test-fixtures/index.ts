@@ -166,7 +166,7 @@ export function createAIGovernanceArch(overrides?: Partial<CalmArchitecture>): C
         name: 'Language Model',
         description: 'Large language model inference endpoint',
         controls: {
-          'aigf-security-domain': {
+          'security-domain': {
             description: 'LLM security domain control',
             requirements: [
               {

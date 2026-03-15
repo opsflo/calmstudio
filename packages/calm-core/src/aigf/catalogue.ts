@@ -475,7 +475,8 @@ export const aigfMitigations: AIGFMitigation[] = [
     },
     mitigates: ['AIR-RC-001'],
     relatedMitigations: ['mi-2', 'mi-4', 'mi-14'],
-    calmControlKey: 'aigf-data-leakage-prevention',
+    calmControlKey: 'data-leakage-prevention',
+    airId: 'AIR-DET-001',
   },
   {
     id: 'mi-2',
@@ -496,7 +497,8 @@ export const aigfMitigations: AIGFMitigation[] = [
     },
     mitigates: ['AIR-RC-001', 'AIR-SEC-009'],
     relatedMitigations: ['mi-1', 'mi-6', 'mi-16'],
-    calmControlKey: 'aigf-data-filtering-knowledge-bases',
+    calmControlKey: 'data-filtering',
+    airId: 'AIR-PREV-002',
   },
   {
     id: 'mi-3',
@@ -517,7 +519,8 @@ export const aigfMitigations: AIGFMitigation[] = [
     },
     mitigates: ['AIR-OP-007', 'AIR-SEC-010', 'AIR-OP-018', 'AIR-OP-020'],
     relatedMitigations: ['mi-17', 'mi-8', 'mi-15'],
-    calmControlKey: 'aigf-firewalling-filtering',
+    calmControlKey: 'edge-protection',
+    airId: 'AIR-PREV-003',
   },
   {
     id: 'mi-4',
@@ -544,7 +547,8 @@ export const aigfMitigations: AIGFMitigation[] = [
       'AIR-OP-014', 'AIR-OP-018', 'AIR-OP-019',
     ],
     relatedMitigations: ['mi-9', 'mi-11', 'mi-1'],
-    calmControlKey: 'aigf-system-observability',
+    calmControlKey: 'ai-observability',
+    airId: 'AIR-DET-004',
   },
   {
     id: 'mi-5',
@@ -565,7 +569,8 @@ export const aigfMitigations: AIGFMitigation[] = [
     },
     mitigates: ['AIR-OP-004', 'AIR-OP-005', 'AIR-OP-006', 'AIR-OP-014', 'AIR-OP-016', 'AIR-RC-022'],
     relatedMitigations: ['mi-15', 'mi-11', 'mi-10'],
-    calmControlKey: 'aigf-system-acceptance-testing',
+    calmControlKey: 'acceptance-testing',
+    airId: 'AIR-PREV-005',
   },
   {
     id: 'mi-6',
@@ -592,7 +597,8 @@ export const aigfMitigations: AIGFMitigation[] = [
       'AIR-OP-016', 'AIR-OP-019', 'AIR-RC-022', 'AIR-RC-023',
     ],
     relatedMitigations: ['mi-2', 'mi-12', 'mi-14'],
-    calmControlKey: 'aigf-data-quality-classification',
+    calmControlKey: 'data-governance',
+    airId: 'AIR-PREV-006',
   },
   {
     id: 'mi-7',
@@ -613,7 +619,8 @@ export const aigfMitigations: AIGFMitigation[] = [
     },
     mitigates: ['AIR-RC-001', 'AIR-SEC-008', 'AIR-OP-020', 'AIR-RC-022', 'AIR-RC-023'],
     relatedMitigations: ['mi-1', 'mi-10', 'mi-6'],
-    calmControlKey: 'aigf-legal-contractual-frameworks',
+    calmControlKey: 'legal-contractual-frameworks',
+    airId: 'AIR-PREV-007',
   },
   {
     id: 'mi-8',
@@ -634,7 +641,8 @@ export const aigfMitigations: AIGFMitigation[] = [
     },
     mitigates: ['AIR-OP-007'],
     relatedMitigations: ['mi-9', 'mi-17', 'mi-4'],
-    calmControlKey: 'aigf-qos-ddos-prevention',
+    calmControlKey: 'qos-ddos-prevention',
+    airId: 'AIR-PREV-008',
   },
   {
     id: 'mi-9',
@@ -655,7 +663,8 @@ export const aigfMitigations: AIGFMitigation[] = [
     },
     mitigates: ['AIR-OP-007'],
     relatedMitigations: ['mi-8', 'mi-4', 'mi-3'],
-    calmControlKey: 'aigf-alerting-spend-monitoring',
+    calmControlKey: 'cost-alerting',
+    airId: 'AIR-DET-009',
   },
   {
     id: 'mi-10',
@@ -679,7 +688,8 @@ export const aigfMitigations: AIGFMitigation[] = [
     },
     mitigates: ['AIR-OP-005', 'AIR-OP-006'],
     relatedMitigations: ['mi-5', 'mi-4'],
-    calmControlKey: 'aigf-model-version-pinning',
+    calmControlKey: 'model-version-pinning',
+    airId: 'AIR-PREV-010',
   },
   {
     id: 'mi-11',
@@ -700,7 +710,8 @@ export const aigfMitigations: AIGFMitigation[] = [
     },
     mitigates: ['AIR-OP-005', 'AIR-OP-006', 'AIR-OP-014', 'AIR-OP-016', 'AIR-OP-020'],
     relatedMitigations: ['mi-15', 'mi-4', 'mi-5'],
-    calmControlKey: 'aigf-human-feedback-loop',
+    calmControlKey: 'human-feedback-loop',
+    airId: 'AIR-DET-011',
   },
   {
     id: 'mi-12',
@@ -724,7 +735,8 @@ export const aigfMitigations: AIGFMitigation[] = [
     },
     mitigates: ['AIR-RC-001', 'AIR-SEC-008', 'AIR-SEC-009'],
     relatedMitigations: ['mi-16', 'mi-6', 'mi-14'],
-    calmControlKey: 'aigf-rbac-ai-data',
+    calmControlKey: 'ai-data-access-control',
+    airId: 'AIR-PREV-012',
   },
   {
     id: 'mi-13',
@@ -745,7 +757,8 @@ export const aigfMitigations: AIGFMitigation[] = [
     },
     mitigates: ['AIR-OP-004', 'AIR-OP-017', 'AIR-OP-020', 'AIR-RC-022'],
     relatedMitigations: ['mi-4', 'mi-6', 'mi-16'],
-    calmControlKey: 'aigf-citations-source-traceability',
+    calmControlKey: 'citations-traceability',
+    airId: 'AIR-DET-013',
   },
   {
     id: 'mi-14',
@@ -766,7 +779,8 @@ export const aigfMitigations: AIGFMitigation[] = [
     },
     mitigates: ['AIR-SEC-002', 'AIR-RC-022'],
     relatedMitigations: ['mi-6', 'mi-12', 'mi-1'],
-    calmControlKey: 'aigf-encryption-data-at-rest',
+    calmControlKey: 'data-encryption',
+    airId: 'AIR-PREV-014',
   },
   {
     id: 'mi-15',
@@ -790,7 +804,8 @@ export const aigfMitigations: AIGFMitigation[] = [
       'AIR-OP-014', 'AIR-OP-016', 'AIR-OP-019',
     ],
     relatedMitigations: ['mi-11', 'mi-5', 'mi-3'],
-    calmControlKey: 'aigf-llm-as-judge',
+    calmControlKey: 'llm-as-judge-evaluation',
+    airId: 'AIR-DET-015',
   },
   {
     id: 'mi-16',
@@ -814,7 +829,8 @@ export const aigfMitigations: AIGFMitigation[] = [
     },
     mitigates: ['AIR-SEC-002', 'AIR-RC-022'],
     relatedMitigations: ['mi-12', 'mi-2', 'mi-4'],
-    calmControlKey: 'aigf-preserve-source-access-controls',
+    calmControlKey: 'source-data-access-controls',
+    airId: 'AIR-DET-016',
   },
   {
     id: 'mi-17',
@@ -835,7 +851,8 @@ export const aigfMitigations: AIGFMitigation[] = [
     },
     mitigates: ['AIR-OP-007', 'AIR-SEC-010', 'AIR-OP-018', 'AIR-OP-020'],
     relatedMitigations: ['mi-3', 'mi-8', 'mi-15'],
-    calmControlKey: 'aigf-ai-firewall',
+    calmControlKey: 'ai-firewall',
+    airId: 'AIR-PREV-017',
   },
   {
     id: 'mi-18',
@@ -856,7 +873,8 @@ export const aigfMitigations: AIGFMitigation[] = [
     },
     mitigates: ['AIR-SEC-024', 'AIR-OP-018'],
     relatedMitigations: ['mi-12', 'mi-3'],
-    calmControlKey: 'aigf-agent-least-privilege',
+    calmControlKey: 'agent-least-privilege',
+    airId: 'AIR-PREV-018',
   },
   {
     id: 'mi-19',
@@ -877,7 +895,8 @@ export const aigfMitigations: AIGFMitigation[] = [
     },
     mitigates: ['AIR-SEC-025', 'AIR-SEC-010', 'AIR-SEC-024'],
     relatedMitigations: ['mi-3', 'mi-18'],
-    calmControlKey: 'aigf-tool-chain-validation',
+    calmControlKey: 'tool-chain-validation',
+    airId: 'AIR-PREV-019',
   },
   {
     id: 'mi-20',
@@ -898,7 +917,8 @@ export const aigfMitigations: AIGFMitigation[] = [
     },
     mitigates: ['AIR-SEC-026', 'AIR-SEC-008', 'AIR-RC-001'],
     relatedMitigations: ['mi-7', 'mi-4'],
-    calmControlKey: 'aigf-mcp-security-governance',
+    calmControlKey: 'mcp-security',
+    airId: 'AIR-PREV-020',
   },
   {
     id: 'mi-21',
@@ -919,7 +939,8 @@ export const aigfMitigations: AIGFMitigation[] = [
     },
     mitigates: ['AIR-SEC-024', 'AIR-SEC-025', 'AIR-RC-022'],
     relatedMitigations: ['mi-4', 'mi-11'],
-    calmControlKey: 'aigf-agent-decision-audit',
+    calmControlKey: 'decision-audit',
+    airId: 'AIR-DET-021',
   },
   {
     id: 'mi-22',
@@ -940,7 +961,8 @@ export const aigfMitigations: AIGFMitigation[] = [
     },
     mitigates: ['AIR-OP-028', 'AIR-SEC-024', 'AIR-SEC-027'],
     relatedMitigations: ['mi-18', 'mi-12'],
-    calmControlKey: 'aigf-multi-agent-isolation',
+    calmControlKey: 'agent-isolation',
+    airId: 'AIR-PREV-022',
   },
   {
     id: 'mi-23',
@@ -961,6 +983,16 @@ export const aigfMitigations: AIGFMitigation[] = [
     },
     mitigates: ['AIR-SEC-029', 'AIR-SEC-024', 'AIR-SEC-026'],
     relatedMitigations: ['mi-18', 'mi-14', 'mi-12'],
-    calmControlKey: 'aigf-credential-protection',
+    calmControlKey: 'credential-protection',
+    airId: 'AIR-PREV-023',
   },
 ];
+
+/**
+ * Set of all known AIGF governance control keys.
+ * Use this to check if a control key belongs to the AIGF catalogue
+ * instead of prefix-matching on 'aigf-'.
+ */
+export const AIGF_CONTROL_KEYS: ReadonlySet<string> = new Set(
+  aigfMitigations.map((m) => m.calmControlKey)
+);

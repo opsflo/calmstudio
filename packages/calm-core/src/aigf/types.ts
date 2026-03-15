@@ -55,6 +55,7 @@ export interface AIGFMitigation {
   mitigates: string[];
   relatedMitigations: string[];
   calmControlKey: string;
+  airId: string;
 }
 
 /**

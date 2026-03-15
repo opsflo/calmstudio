@@ -17,7 +17,7 @@ import type {
 describe('CALM 1.2 type definitions', () => {
   it('CalmNode accepts controls property without TypeScript error', () => {
     const controls: CalmControls = {
-      'aigf-firewalling-filtering': {
+      'edge-protection': {
         description: 'Firewall for LLM inputs/outputs',
         requirements: [
           {
@@ -35,7 +35,7 @@ describe('CALM 1.2 type definitions', () => {
     };
 
     expect(node.controls).toBeDefined();
-    expect(node.controls?.['aigf-firewalling-filtering']).toBeDefined();
+    expect(node.controls?.['edge-protection']).toBeDefined();
   });
 
   it('CalmNode accepts data-classification property without TypeScript error', () => {
@@ -67,7 +67,7 @@ describe('CALM 1.2 type definitions', () => {
       source: 'n1',
       destination: 'n2',
       controls: {
-        'aigf-encryption-data-at-rest': {
+        'data-encryption': {
           description: 'Encrypt data in transit',
           requirements: [
             {

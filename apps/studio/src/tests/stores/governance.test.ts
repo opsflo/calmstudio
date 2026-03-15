@@ -69,7 +69,7 @@ describe('refreshGovernance — with AI nodes', () => {
 
 	it('score starts at 0 when no mitigations are applied for ai:orchestrator and ai:agent', () => {
 		// createAIGovernanceArch has ai:orchestrator, ai:agent, ai:llm, ai:vector-store
-		// ai:llm has one control applied: 'aigf-security-domain' — which is NOT in the
+		// ai:llm has one control applied: 'security-domain' — which is NOT in the
 		// AIGF mitigation calmControlKey list for ai:llm (those are data-leakage-prevention etc.)
 		// So score reflects how many actual AIGF mitigation keys are applied
 		const score = getArchitectureScore()!;
@@ -105,9 +105,9 @@ describe('getSelectedNodeGovernance', () => {
 		applyFromJson(createAIGovernanceArch());
 		updateSelectedNodeGovernance('ai:llm', 'ai-llm');
 		const gov = getSelectedNodeGovernance();
-		// The ai-llm node in the fixture has 'aigf-security-domain' control applied
+		// The ai-llm node in the fixture has 'security-domain' control applied
 		expect(gov.nodeControls).toBeDefined();
-		expect(gov.nodeControls!['aigf-security-domain']).toBeDefined();
+		expect(gov.nodeControls!['security-domain']).toBeDefined();
 	});
 });
 

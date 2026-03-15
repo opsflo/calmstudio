@@ -206,7 +206,7 @@ describe('exportAsCalm — CALM field preservation', () => {
 		const result = JSON.parse(getFirstBlobContent()!);
 		const llmNode = result.nodes.find((n: { 'unique-id': string }) => n['unique-id'] === 'ai-llm');
 		expect(llmNode).toBeDefined();
-		expect(llmNode.controls['aigf-security-domain']).toBeDefined();
+		expect(llmNode.controls['security-domain']).toBeDefined();
 	});
 
 	it('outputs original content for malformed input (graceful fallback)', () => {

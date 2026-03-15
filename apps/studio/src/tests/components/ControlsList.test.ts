@@ -9,7 +9,7 @@ import ControlsList from '$lib/properties/ControlsList.svelte';
 // ─── Fixtures ─────────────────────────────────────────────────────────────────
 
 const securityControl: CalmControls = {
-	'aigf-security-domain': {
+	'security-domain': {
 		description: 'LLM security domain control',
 		requirements: [
 			{ 'requirement-url': 'https://finos.org/aigf/controls/security-domain' },
@@ -18,7 +18,7 @@ const securityControl: CalmControls = {
 };
 
 const multipleControls: CalmControls = {
-	'aigf-security-domain': {
+	'security-domain': {
 		description: 'Security control',
 		requirements: [],
 	},
@@ -77,7 +77,7 @@ describe('ControlsList', () => {
 		const toggle = getByRole('button', { name: /controls/i });
 		await fireEvent.click(toggle);
 		// After expansion, control key text is visible
-		expect(getByText('aigf-security-domain')).toBeTruthy();
+		expect(getByText('security-domain')).toBeTruthy();
 	});
 
 	it('shows "No controls defined" empty hint when expanded with empty controls', async () => {

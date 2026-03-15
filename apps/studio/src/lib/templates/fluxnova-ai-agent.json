@@ -103,11 +103,11 @@
       "name": "AI Agent",
       "description": "Autonomous AI agent executing tasks assigned by the FluxNova process engine — uses LLM for reasoning, tools for action, and guardrails for safety",
       "controls": {
-        "aigf-least-privilege": {
+        "agent-least-privilege": {
           "description": "AI agent operates with least-privilege tool access — only tools explicitly granted per process definition are callable",
           "requirements": [
             {
-              "requirement-url": "https://finos.org/aigf/controls/least-privilege"
+              "requirement-url": "https://air-governance-framework.finos.org/mitigations/mi-18"
             }
           ]
         }
@@ -119,11 +119,11 @@
       "name": "Large Language Model",
       "description": "Large language model providing inference and reasoning capabilities for AI agent decisions — version-pinned for reproducible behaviour",
       "controls": {
-        "aigf-version-pinning": {
+        "model-version-pinning": {
           "description": "LLM model version is pinned to a specific checkpoint — no automatic model upgrades without governance review and regression testing",
           "requirements": [
             {
-              "requirement-url": "https://finos.org/aigf/controls/version-pinning"
+              "requirement-url": "https://air-governance-framework.finos.org/mitigations/mi-10"
             }
           ]
         }

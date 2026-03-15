@@ -14,16 +14,17 @@
  */
 
 import type { CalmArchitecture, CalmNode, ValidationIssue } from '@calmstudio/calm-core';
-import { isAINode } from '@calmstudio/calm-core';
+import { isAINode, AIGF_CONTROL_KEYS } from '@calmstudio/calm-core';
 
 // ─── Internal helpers ─────────────────────────────────────────────────────────
 
 /**
- * Returns true if the node has at least one control with an 'aigf-' prefix.
+ * Returns true if the node has at least one AIGF governance control.
+ * Checks against the known AIGF control key set (domain-oriented keys per CALM spec).
  */
 function hasAIGFControl(node: CalmNode): boolean {
   if (!node.controls) return false;
-  return Object.keys(node.controls).some((key) => key.startsWith('aigf-'));
+  return Object.keys(node.controls).some((key) => AIGF_CONTROL_KEYS.has(key));
 }
 
 /**
@@ -38,14 +39,14 @@ function hasControl(node: CalmNode, controlKey: string): boolean {
 
 /**
  * aigf-001 (warning): AI node has no AIGF controls.
- * Every AI node should have at least one control with an aigf- prefix.
+ * Every AI node should have at least one AIGF governance control.
  */
 function checkAIGF001(arch: CalmArchitecture): ValidationIssue[] {
   return arch.nodes
     .filter((n) => isAINode(n) && !hasAIGFControl(n))
     .map((n): ValidationIssue => ({
       severity: 'warning',
-      message: `[aigf-001] AI node "${n.name}" (${n['node-type']}) has no AIGF governance controls. Add at least one aigf-* control.`,
+      message: `[aigf-001] AI node "${n.name}" (${n['node-type']}) has no AIGF governance controls. Add at least one governance control.`,
       nodeId: n['unique-id'],
     }));
 }
@@ -56,24 +57,24 @@ function checkAIGF001(arch: CalmArchitecture): ValidationIssue[] {
  */
 function checkAIGF002(arch: CalmArchitecture): ValidationIssue[] {
   return arch.nodes
-    .filter((n) => n['node-type'] === 'ai:llm' && !hasControl(n, 'aigf-version-pinning'))
+    .filter((n) => n['node-type'] === 'ai:llm' && !hasControl(n, 'model-version-pinning'))
     .map((n): ValidationIssue => ({
       severity: 'warning',
-      message: `[aigf-002] LLM node "${n.name}" is missing aigf-version-pinning control. Pin model version to prevent capability drift (AIGF mi-10).`,
+      message: `[aigf-002] LLM node "${n.name}" is missing model-version-pinning control. Pin model version to prevent capability drift (AIGF mi-10).`,
       nodeId: n['unique-id'],
     }));
 }
 
 /**
- * aigf-003 (warning): ai:vector-store missing data classification (mi-6).
- * Vector stores containing embeddings need a data-classification governance control.
+ * aigf-003 (warning): ai:vector-store missing data governance (mi-6).
+ * Vector stores containing embeddings need a data-governance control.
  */
 function checkAIGF003(arch: CalmArchitecture): ValidationIssue[] {
   return arch.nodes
-    .filter((n) => n['node-type'] === 'ai:vector-store' && !hasControl(n, 'aigf-data-classification'))
+    .filter((n) => n['node-type'] === 'ai:vector-store' && !hasControl(n, 'data-governance'))
     .map((n): ValidationIssue => ({
       severity: 'warning',
-      message: `[aigf-003] Vector store "${n.name}" is missing aigf-data-classification control. Classify embedded data sensitivity (AIGF mi-6).`,
+      message: `[aigf-003] Vector store "${n.name}" is missing data-governance control. Classify embedded data sensitivity (AIGF mi-6).`,
       nodeId: n['unique-id'],
     }));
 }
@@ -84,17 +85,17 @@ function checkAIGF003(arch: CalmArchitecture): ValidationIssue[] {
  */
 function checkAIGF004(arch: CalmArchitecture): ValidationIssue[] {
   return arch.nodes
-    .filter((n) => n['node-type'] === 'ai:agent' && !hasControl(n, 'aigf-least-privilege'))
+    .filter((n) => n['node-type'] === 'ai:agent' && !hasControl(n, 'agent-least-privilege'))
     .map((n): ValidationIssue => ({
       severity: 'error',
-      message: `[aigf-004] Agent node "${n.name}" is missing aigf-least-privilege control. Agents MUST operate with minimum required permissions (AIGF mi-18).`,
+      message: `[aigf-004] Agent node "${n.name}" is missing agent-least-privilege control. Agents MUST operate with minimum required permissions (AIGF mi-18).`,
       nodeId: n['unique-id'],
     }));
 }
 
 /**
  * aigf-005 (error): MCP connection detected but no MCP security control (mi-20).
- * Any relationship with "MCP" in the description requires the source node to have aigf-mcp-security.
+ * Any relationship with "MCP" in the description requires the source node to have mcp-security.
  */
 function checkAIGF005(arch: CalmArchitecture): ValidationIssue[] {
   const issues: ValidationIssue[] = [];
@@ -109,10 +110,10 @@ function checkAIGF005(arch: CalmArchitecture): ValidationIssue[] {
     const sourceNode = nodeMap.get(rel.source);
     if (!sourceNode) continue;
 
-    if (!hasControl(sourceNode, 'aigf-mcp-security')) {
+    if (!hasControl(sourceNode, 'mcp-security')) {
       issues.push({
         severity: 'error',
-        message: `[aigf-005] Relationship "${rel['unique-id']}" uses MCP protocol but source node "${sourceNode.name}" is missing aigf-mcp-security control (AIGF mi-20).`,
+        message: `[aigf-005] Relationship "${rel['unique-id']}" uses MCP protocol but source node "${sourceNode.name}" is missing mcp-security control (AIGF mi-20).`,
         nodeId: sourceNode['unique-id'],
         relationshipId: rel['unique-id'],
       });
@@ -130,13 +131,13 @@ function checkAIGF006(arch: CalmArchitecture): ValidationIssue[] {
   const agents = arch.nodes.filter((n) => n['node-type'] === 'ai:agent');
   if (agents.length <= 1) return [];
 
-  const agentsWithoutIsolation = agents.filter((n) => !hasControl(n, 'aigf-isolation'));
+  const agentsWithoutIsolation = agents.filter((n) => !hasControl(n, 'agent-isolation'));
   if (agentsWithoutIsolation.length === 0) return [];
 
   // Report one issue per agent lacking isolation
   return agentsWithoutIsolation.map((n): ValidationIssue => ({
     severity: 'warning',
-    message: `[aigf-006] Multi-agent architecture detected: agent "${n.name}" is missing aigf-isolation control. Isolate agents to prevent cascading failures (AIGF mi-22).`,
+    message: `[aigf-006] Multi-agent architecture detected: agent "${n.name}" is missing agent-isolation control. Isolate agents to prevent cascading failures (AIGF mi-22).`,
     nodeId: n['unique-id'],
   }));
 }
@@ -147,10 +148,10 @@ function checkAIGF006(arch: CalmArchitecture): ValidationIssue[] {
  */
 function checkAIGF007(arch: CalmArchitecture): ValidationIssue[] {
   return arch.nodes
-    .filter((n) => n['node-type'] === 'ai:rag-pipeline' && !hasControl(n, 'aigf-citation-traceability'))
+    .filter((n) => n['node-type'] === 'ai:rag-pipeline' && !hasControl(n, 'citations-traceability'))
     .map((n): ValidationIssue => ({
       severity: 'info',
-      message: `[aigf-007] RAG pipeline "${n.name}" could benefit from aigf-citation-traceability control for source attribution (AIGF mi-13).`,
+      message: `[aigf-007] RAG pipeline "${n.name}" could benefit from citations-traceability control for source attribution (AIGF mi-13).`,
       nodeId: n['unique-id'],
     }));
 }
@@ -162,10 +163,10 @@ function checkAIGF007(arch: CalmArchitecture): ValidationIssue[] {
 function checkAIGF008(arch: CalmArchitecture): ValidationIssue[] {
   const AI_DATA_STORE_TYPES = new Set(['ai:vector-store', 'ai:memory']);
   return arch.nodes
-    .filter((n) => AI_DATA_STORE_TYPES.has(n['node-type']) && !hasControl(n, 'aigf-encryption-at-rest'))
+    .filter((n) => AI_DATA_STORE_TYPES.has(n['node-type']) && !hasControl(n, 'data-encryption'))
     .map((n): ValidationIssue => ({
       severity: 'warning',
-      message: `[aigf-008] AI data store "${n.name}" (${n['node-type']}) is missing aigf-encryption-at-rest control. Encrypt AI data at rest (AIGF mi-14).`,
+      message: `[aigf-008] AI data store "${n.name}" (${n['node-type']}) is missing data-encryption control. Encrypt AI data at rest (AIGF mi-14).`,
       nodeId: n['unique-id'],
     }));
 }
@@ -187,10 +188,10 @@ function checkAIGF009(arch: CalmArchitecture): ValidationIssue[] {
     if (!sourceNode || sourceNode['node-type'] !== 'ai:agent') continue;
     if (!toolIds.has(rel.destination)) continue;
 
-    if (!hasControl(sourceNode, 'aigf-tool-chain-validation')) {
+    if (!hasControl(sourceNode, 'tool-chain-validation')) {
       issues.push({
         severity: 'warning',
-        message: `[aigf-009] Agent "${sourceNode.name}" connects to ai:tool but is missing aigf-tool-chain-validation control (AIGF mi-19).`,
+        message: `[aigf-009] Agent "${sourceNode.name}" connects to ai:tool but is missing tool-chain-validation control (AIGF mi-19).`,
         nodeId: sourceNode['unique-id'],
         relationshipId: rel['unique-id'],
       });
