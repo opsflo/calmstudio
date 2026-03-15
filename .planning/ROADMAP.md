@@ -52,7 +52,7 @@ Phases: 01-foundation-governance, 02-calm-canvas-core, 03-properties-bidirection
   3. A contributor can read the contribution guide, run the test suite, and open a compliant PR without asking for help
   4. An external developer can install `@calmstudio/calm-core` from npm and import its types and validators in their own project
   5. All key v1.0 architectural decisions are recorded as searchable ADRs in the documentation site
-**Plans:** 1/3 plans executed
+**Plans:** 2/3 plans executed
 Plans:
 - [ ] 10-01-PLAN.md — Configure calm-core for npm publishing with tsup dual ESM+CJS build
 - [ ] 10-02-PLAN.md — Scaffold Docusaurus site with FINOS branding, TypeDoc, and deploy workflow
@@ -97,7 +97,7 @@ Phases execute in numeric order: 10 → 11 → 12 → 13
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
-| 10. Docs & Package Publish | 1/3 | In Progress|  | - |
+| 10. Docs & Package Publish | 2/3 | In Progress|  | - |
 | 11. Desktop App | v1.1 | 0/TBD | Not started | - |
 | 12. Developer Tooling | v1.1 | 0/TBD | Not started | - |
 | 13. Embedding & Visualization | v1.1 | 0/TBD | Not started | - |

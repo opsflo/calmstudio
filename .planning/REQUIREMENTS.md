@@ -9,7 +9,7 @@ Requirements for v1.1 Distribution & Developer Experience milestone.
 
 ### Documentation & Publish
 
-- [ ] **DOCS-01**: Docusaurus site with getting started guide, architecture overview, and API reference
+- [x] **DOCS-01**: Docusaurus site with getting started guide, architecture overview, and API reference
 - [ ] **DOCS-02**: Architecture Decision Records (ADRs) for key v1.0 decisions
 - [ ] **DOCS-03**: Extension pack development guide (create custom packs)
 - [ ] **DOCS-04**: MCP server usage guide for AI tool integration
@@ -62,7 +62,7 @@ Requirements for v1.1 Distribution & Developer Experience milestone.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DOCS-01 | Phase 10 | Pending |
+| DOCS-01 | Phase 10 | Complete |
 | DOCS-02 | Phase 10 | Pending |
 | DOCS-03 | Phase 10 | Pending |
 | DOCS-04 | Phase 10 | Pending |

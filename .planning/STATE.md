@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Distribution & Developer Experience
-status: in_progress
-stopped_at: Completed 10-01-PLAN.md (calm-core npm package configuration)
-last_updated: "2026-03-15"
-last_activity: 2026-03-15 — completed 10-01 (calm-core tsup dual build + npm publish config)
+status: executing
+stopped_at: Completed 10-02-PLAN.md — Docusaurus site scaffold + GitHub Pages workflow
+last_updated: "2026-03-15T06:47:18.802Z"
+last_activity: "2026-03-15 — completed 10-01: calm-core tsup dual ESM+CJS build, package.json updated for npm publish"
 progress:
   total_phases: 4
   completed_phases: 0
-  total_plans: 1
-  completed_plans: 1
+  total_plans: 3
+  completed_plans: 2
   percent: 5
 ---
 
@@ -42,6 +42,7 @@ Decisions are logged in PROJECT.md Key Decisions table.
 - [10-01]: AJV is external (not bundled in dist) — consumers install it via package.json dependencies; tsup marks it external
 - [10-01]: test-fixtures export removed from calm-core public API — internal-only, not for npm consumers
 - [10-01]: release.yml unchanged — pnpm -r run build already covers calm-core now that build script runs tsup
+- [Phase 10-docs-package-publish]: Docusaurus docs site scaffolded: typedoc 0.28.x for TS5.9 compat; out: docs/api for correct sidebar IDs; sidebars.ts loads typedoc-sidebar.cjs dynamically
 
 ### Blockers/Concerns
 
@@ -54,6 +55,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-15
-Stopped at: Completed 10-01-PLAN.md — calm-core configured for npm publishing
+Last session: 2026-03-15T06:47:18.800Z
+Stopped at: Completed 10-02-PLAN.md — Docusaurus site scaffold + GitHub Pages workflow
 Resume file: None
