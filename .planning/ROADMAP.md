@@ -194,7 +194,14 @@ Plans:
   2. Integration tests cover bidirectional sync, MCP server tool calls, and extension pack loading end-to-end
   3. Playwright E2E tests cover the full create-diagram, edit-code, export, and import workflows
   4. Every custom Svelte node and edge component has component-level tests via @testing-library/svelte
-**Plans:** 0/TBD
+**Plans:** 5 plans
+
+Plans:
+- [ ] 09-01-PLAN.md — Coverage infrastructure: install @vitest/coverage-v8, configure tiered thresholds, shared test fixtures
+- [ ] 09-02-PLAN.md — Unit tests for untested stores (validation, governance, c4State, export, templates) + sync integration
+- [ ] 09-03-PLAN.md — Component tests for 7 interactive panels (NodeProperties, EdgeProperties, ControlsList, GovernancePanel, TemplatePicker, ValidationPanel, Toolbar)
+- [ ] 09-04-PLAN.md — E2E tests: 4 Playwright workflows (core diagram, template+governance, C4 navigation, validation)
+- [ ] 09-05-PLAN.md — CI coverage wiring, E2E CI job, coverage badge on README
 
 ### Phase 10: Documentation & calm-core Publish
 **Goal**: Contributors and users have comprehensive documentation, and `@calmstudio/calm-core` is published as a standalone package for CalmGuard and community consumers
@@ -269,7 +276,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 7. Extension Packs | 4/4 | Complete   | 2026-03-13 |
 | 8. C4 View Mode | 3/3 | Complete   | 2026-03-15 |
 | 8.1 FluxNova & AIGF | 0/5 | Not started | - |
-| 9. Testing Suite | 0/TBD | Not started | - |
+| 9. Testing Suite | 0/5 | Not started | - |
 | 10. Documentation & calm-core Publish | 0/TBD | Not started | - |
 | 11. calmscript DSL | 0/TBD | Not started (deferred) | - |
 | 12. Desktop App | 0/TBD | Not started | - |
