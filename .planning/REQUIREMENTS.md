@@ -18,9 +18,9 @@ Requirements for v1.1 Distribution & Developer Experience milestone.
 
 ### Desktop App
 
-- [ ] **DESK-01**: Tauri 2 app builds and runs on macOS, Windows, and Linux
-- [ ] **DESK-02**: Native file open/save dialogs for .calm.json files
-- [ ] **DESK-03**: App works fully offline with no network requests for core functionality
+- [x] **DESK-01**: Tauri 2 app builds and runs on macOS, Windows, and Linux
+- [x] **DESK-02**: Native file open/save dialogs for .calm.json files
+- [x] **DESK-03**: App works fully offline with no network requests for core functionality
 
 ### VS Code Extension
 
@@ -68,9 +68,9 @@ Requirements for v1.1 Distribution & Developer Experience milestone.
 | DOCS-04 | Phase 10 | Complete |
 | DOCS-05 | Phase 10 | Complete |
 | CORE-01 | Phase 10 | Complete |
-| DESK-01 | Phase 11 | Pending |
-| DESK-02 | Phase 11 | Pending |
-| DESK-03 | Phase 11 | Pending |
+| DESK-01 | Phase 11 | Complete |
+| DESK-02 | Phase 11 | Complete |
+| DESK-03 | Phase 11 | Complete |
 | VSCE-01 | Phase 12 | Pending |
 | VSCE-02 | Phase 12 | Pending |
 | VSCE-03 | Phase 12 | Pending |

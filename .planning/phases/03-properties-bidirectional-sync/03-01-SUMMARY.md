@@ -127,6 +127,13 @@ Each task was committed atomically:
 
 Commit scope validation: Used `studio` scope (not `03-01`) per commitlint config.
 
+## Self-Check: PASSED
+
+All created files verified on disk. All commits verified in git log:
+- `6eb21f3`: feat(studio): install CodeMirror+paneforge deps, create CodePanel and useJsonSync
+- `bf3fdea`: feat(studio): restructure page layout with paneforge resizable three-column panels
+- `92d05e6`: docs(studio): complete 03-01 plan — CodePanel and paneforge layout
+
 ## Next Phase Readiness
 
 - `CodePanel.svelte` and `useJsonSync.ts` are complete and ready for Plan 03 to wire `value` from `getModelJson()` and `onchange` to the debounced `applyFromJson`
