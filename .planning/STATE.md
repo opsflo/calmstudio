@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Distribution & Developer Experience
 status: executing
-stopped_at: Completed 11-01-PLAN.md — Tauri 2 shell scaffold + file I/O + tests
-last_updated: "2026-03-15T10:44:52.801Z"
+stopped_at: Completed 11-02-PLAN.md — native menu, recent files, drag-drop, sidecar, updater, file-open
+last_updated: "2026-03-15T10:57:28.061Z"
 last_activity: "2026-03-15 — completed 10-03: 5 guide pages + 10 MADR ADRs, Docusaurus build verified"
 progress:
   total_phases: 4
   completed_phases: 1
   total_plans: 6
-  completed_plans: 4
+  completed_plans: 5
   percent: 8
 ---
 
@@ -48,6 +48,8 @@ Decisions are logged in PROJECT.md Key Decisions table.
 - [Phase 11-desktop-app]: Tauri shell co-located in apps/studio/src-tauri/ (not separate apps/desktop/)
 - [Phase 11-01]: fileHandle type widened to FileSystemFileHandle | string | null for backward compat with Tauri path-as-handle pattern
 - [Phase 11-01]: readTextFile mockIPC must return byte array (Array.from Uint8Array), not raw strings — Tauri returns binary bytes
+- [Phase 11-02]: MenuHandlers.openFromPath separate from open: dialog-based open and path-based recent file open are different flows
+- [Phase 11-02]: plugin-store load() requires defaults field in StoreOptions alongside autoSave — missing defaults causes TypeScript error
 
 ### Blockers/Concerns
 
@@ -60,6 +62,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-15T10:44:52.799Z
-Stopped at: Completed 11-01-PLAN.md — Tauri 2 shell scaffold + file I/O + tests
+Last session: 2026-03-15T10:57:28.059Z
+Stopped at: Completed 11-02-PLAN.md — native menu, recent files, drag-drop, sidecar, updater, file-open
 Resume file: None
