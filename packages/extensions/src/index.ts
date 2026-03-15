@@ -33,10 +33,10 @@ import { fluxnovaPack } from './packs/fluxnova.js';
  */
 export function initAllPacks(): void {
   registerPack(corePack);
+  registerPack(fluxnovaPack);
+  registerPack(aiPack);
   registerPack(awsPack);
   registerPack(gcpPack);
   registerPack(azurePack);
   registerPack(kubernetesPack);
-  registerPack(aiPack);
-  registerPack(fluxnovaPack);
 }
