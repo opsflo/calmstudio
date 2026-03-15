@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 08.1-03-PLAN.md — template system with picker modal and 6 FluxNova templates
-last_updated: "2026-03-15T03:22:05.409Z"
+stopped_at: Paused at 08.1-05 Task 3 checkpoint — human visual verification needed
+last_updated: "2026-03-15T03:32:57.786Z"
 last_activity: 2026-03-13 — Phase 7 Plan 03 complete; extension pack system fully integrated and visually verified
 progress:
   total_phases: 14
-  completed_phases: 8
+  completed_phases: 9
   total_plans: 37
-  completed_plans: 36
+  completed_plans: 37
   percent: 30
 ---
 
@@ -86,6 +86,7 @@ Progress: [███░░░░░░░] 30%
 | Phase 08.1-fluxnova-templates-aigf-governance P01 | 15min | 2 tasks | 8 files |
 | Phase 08.1-fluxnova-templates-aigf-governance P04 | 6min | 2 tasks | 9 files |
 | Phase 08.1-fluxnova-templates-aigf-governance P03 | 45min | 3 tasks | 9 files |
+| Phase 08.1-fluxnova-templates-aigf-governance P05 | 7min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -193,6 +194,9 @@ Recent decisions affecting current work:
 - [Phase 08.1-fluxnova-templates-aigf-governance]: Full-screen modal overlay for template picker — maximum visual impact at OSFF Toronto demo
 - [Phase 08.1-fluxnova-templates-aigf-governance]: initAllTemplates() uses synchronous static imports — consistent with initAllPacks() pattern
 - [Phase 08.1-fluxnova-templates-aigf-governance]: Export stripping: delete _template from parsed object before Blob creation — clean CALM JSON output
+- [Phase 08.1]: GovernancePanel uses inline function calls in {#if}/{#each} — Svelte 5 {/@const} not valid as non-immediate child
+- [Phase 08.1]: generateAIGFDecorator() in export.ts has no store dependency — pure function for testability, consistent with aigf-rules.ts
+- [Phase 08.1]: Governance score live (not tied to Validate button) — updates via onmutate callback chain
 
 ### Roadmap Evolution
 
@@ -210,6 +214,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-15T03:22:05.404Z
-Stopped at: Completed 08.1-03-PLAN.md — template system with picker modal and 6 FluxNova templates
+Last session: 2026-03-15T03:32:57.782Z
+Stopped at: Paused at 08.1-05 Task 3 checkpoint — human visual verification needed
 Resume file: None

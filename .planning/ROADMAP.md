@@ -267,7 +267,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 5. MCP Server | 4/4 | Complete   | 2026-03-12 |
 | 6. CALM Validation | 3/3 | Complete   | 2026-03-12 |
 | 7. Extension Packs | 4/4 | Complete   | 2026-03-13 |
-| 8. C4 View Mode | 3/3 | Complete   | 2026-03-13 |
+| 8. C4 View Mode | 3/3 | Complete   | 2026-03-15 |
 | 8.1 FluxNova & AIGF | 0/5 | Not started | - |
 | 9. Testing Suite | 0/TBD | Not started | - |
 | 10. Documentation & calm-core Publish | 0/TBD | Not started | - |

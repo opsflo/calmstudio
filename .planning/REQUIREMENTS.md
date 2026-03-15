@@ -174,8 +174,8 @@ Requirements for initial release. Each maps to roadmap phases.
 ### AIGF Design-Time Governance
 
 - [x] **AIGF-01**: AIGF data package in calm-core with 23 risks + 23 mitigations from AIGF v2.0 catalogue, cross-referenced to 7 external frameworks (ISO 42001, NIST, OWASP LLM, EU AI Act, FFIEC, MITRE ATLAS, NIST AI 600)
-- [ ] **AIGF-02**: Governance panel as right sidebar tab alongside properties showing applicable risks (OP=amber, SEC=red, RC=blue) and recommended mitigations with "Apply" buttons for selected AI nodes; manual tab switch with badge indicator
-- [ ] **AIGF-03**: Architecture-level governance score in panel header and toolbar colored percentage badge (green >80%, amber 50-80%, red <50%); badge hidden when no AI nodes; score updates live on control apply/remove
+- [x] **AIGF-02**: Governance panel as right sidebar tab alongside properties showing applicable risks (OP=amber, SEC=red, RC=blue) and recommended mitigations with "Apply" buttons for selected AI nodes; manual tab switch with badge indicator
+- [x] **AIGF-03**: Architecture-level governance score in panel header and toolbar colored percentage badge (green >80%, amber 50-80%, red <50%); badge hidden when no AI nodes; score updates live on control apply/remove
 - [x] **AIGF-04**: Node-to-risk mappings for all AI pack node types (llm, agent, orchestrator, vector-store, tool, memory, guardrail, rag-pipeline, knowledge-base, embedding-model, api-gateway, human-in-the-loop, eval-monitor) with MCP special-case detection
 - [x] **AIGF-05**: 10 AIGF validation rules (aigf-001 through aigf-010) integrated into existing ValidationPanel alongside structural validations, with framework ref display (top 3 inline, expandable full list)
 
@@ -309,8 +309,8 @@ Deferred to future release. Tracked but not in current roadmap.
 | CTRL-02 | Phase 08.1 | Complete |
 | CTRL-03 | Phase 08.1 | Complete |
 | AIGF-01 | Phase 08.1 | Complete |
-| AIGF-02 | Phase 08.1 | Pending |
-| AIGF-03 | Phase 08.1 | Pending |
+| AIGF-02 | Phase 08.1 | Complete |
+| AIGF-03 | Phase 08.1 | Complete |
 | AIGF-04 | Phase 08.1 | Complete |
 | AIGF-05 | Phase 08.1 | Complete |
 | TEST-01 | Phase 9 | Pending |
