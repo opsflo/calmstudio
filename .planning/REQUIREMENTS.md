@@ -125,7 +125,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Testing
 
-- [ ] **TEST-01**: London School TDD — outside-in test development for all features
+- [x] **TEST-01**: London School TDD — outside-in test development for all features
 - [ ] **TEST-02**: Unit tests for sync engine, CALM model, calmscript parser, validation (vitest)
 - [ ] **TEST-03**: Integration tests for bidirectional sync, MCP server tools, extension pack loading
 - [ ] **TEST-04**: E2E tests for full user workflows (Playwright) — create diagram, edit code, export, import
@@ -313,7 +313,7 @@ Deferred to future release. Tracked but not in current roadmap.
 | AIGF-03 | Phase 08.1 | Complete |
 | AIGF-04 | Phase 08.1 | Complete |
 | AIGF-05 | Phase 08.1 | Complete |
-| TEST-01 | Phase 9 | Pending |
+| TEST-01 | Phase 9 | Complete |
 | TEST-02 | Phase 9 | Pending |
 | TEST-03 | Phase 9 | Pending |
 | TEST-04 | Phase 9 | Pending |

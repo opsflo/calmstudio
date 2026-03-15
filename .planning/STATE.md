@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Phase 9 context gathered
-last_updated: "2026-03-15T04:10:52.844Z"
+stopped_at: Completed 09-testing-suite-01-PLAN.md
+last_updated: "2026-03-15T04:40:52.110Z"
 last_activity: 2026-03-13 — Phase 7 Plan 03 complete; extension pack system fully integrated and visually verified
 progress:
   total_phases: 14
   completed_phases: 9
-  total_plans: 37
-  completed_plans: 37
+  total_plans: 42
+  completed_plans: 38
   percent: 30
 ---
 
@@ -87,6 +87,7 @@ Progress: [███░░░░░░░] 30%
 | Phase 08.1-fluxnova-templates-aigf-governance P04 | 6min | 2 tasks | 9 files |
 | Phase 08.1-fluxnova-templates-aigf-governance P03 | 45min | 3 tasks | 9 files |
 | Phase 08.1-fluxnova-templates-aigf-governance P05 | 7min | 2 tasks | 6 files |
+| Phase 09-testing-suite P01 | 4min | 2 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -197,6 +198,8 @@ Recent decisions affecting current work:
 - [Phase 08.1]: GovernancePanel uses inline function calls in {#if}/{#each} — Svelte 5 {/@const} not valid as non-immediate child
 - [Phase 08.1]: generateAIGFDecorator() in export.ts has no store dependency — pure function for testability, consistent with aigf-rules.ts
 - [Phase 08.1]: Governance score live (not tied to Validate button) — updates via onmutate callback chain
+- [Phase 09-testing-suite]: @vitest/coverage-v8 pinned to match resolved vitest version per package
+- [Phase 09-testing-suite]: Tiered coverage thresholds: calm-core=90%, extensions/mcp-server=80%, studio=60%
 
 ### Roadmap Evolution
 
@@ -214,6 +217,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-15T04:10:52.839Z
-Stopped at: Phase 9 context gathered
-Resume file: .planning/phases/09-testing-suite/09-CONTEXT.md
+Last session: 2026-03-15T04:40:52.107Z
+Stopped at: Completed 09-testing-suite-01-PLAN.md
+Resume file: None
