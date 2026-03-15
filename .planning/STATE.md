@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 09-testing-suite-02-PLAN.md
-last_updated: "2026-03-15T04:53:37.163Z"
+stopped_at: Completed 09-testing-suite-04-PLAN.md
+last_updated: "2026-03-15T05:00:33.115Z"
 last_activity: 2026-03-13 — Phase 7 Plan 03 complete; extension pack system fully integrated and visually verified
 progress:
   total_phases: 14
   completed_phases: 9
   total_plans: 42
-  completed_plans: 40
+  completed_plans: 41
   percent: 30
 ---
 
@@ -90,6 +90,7 @@ Progress: [███░░░░░░░] 30%
 | Phase 09-testing-suite P01 | 4min | 2 tasks | 9 files |
 | Phase 09-testing-suite P03 | 8min | 2 tasks | 8 files |
 | Phase 09-testing-suite P02 | 10min | 2 tasks | 6 files |
+| Phase 09-testing-suite P04 | 16min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -205,6 +206,9 @@ Recent decisions affecting current work:
 - [Phase 09-testing-suite]: svelteTesting() vite plugin required for Svelte 5 component tests — adds browser resolve condition so Svelte uses index-client.js not index-server.js in jsdom
 - [Phase 09-testing-suite]: ValidationPanel takes issues as prop (not reading from store) — component tests pass issues array directly
 - [Phase 09-testing-suite]: vi.mock fileSystem + MockBlob registry + vi.useFakeTimers captures exportAsCalm JSON content without DOM side effects
+- [Phase 09-testing-suite]: E2E download interception: createElement patch + Blob URL map — exportAsCalm uses Blob+anchor not FSA API
+- [Phase 09-testing-suite]: Governance tab requires explicit click — no auto-switch per PropertiesPanel design; test must click AI node then Governance tab
+- [Phase 09-testing-suite]: C4 breadcrumb root renders as aria-current span (not button) when no drill-down — locator uses aria-current attribute selector
 
 ### Roadmap Evolution
 
@@ -222,6 +226,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-15T04:53:37.159Z
-Stopped at: Completed 09-testing-suite-02-PLAN.md
+Last session: 2026-03-15T05:00:33.111Z
+Stopped at: Completed 09-testing-suite-04-PLAN.md
 Resume file: None
