@@ -27,12 +27,25 @@ Make architecture diagrams the source of truth: draw visually, get validated arc
 - ✓ CI pipeline (build, lint, test, DCO, license scan, commitlint) — v1.0
 - ✓ CALM spec-aligned domain-oriented control keys with AIR-ID mapping — v1.0
 
+## Current Milestone: v1.1 Distribution & Developer Experience
+
+**Goal:** Reach developers where they are — documentation, desktop app, IDE, CI, and web embedding.
+
+**Target features:**
+- Documentation site (Docusaurus) with ADRs, guides, and API reference
+- `@calmstudio/calm-core` published as standalone npm package
+- Desktop app (Tauri 2) for macOS, Windows, Linux with native file dialogs
+- VS Code extension with CALM architecture preview
+- GitHub Action for rendering CALM diagrams in PRs
+- `<calm-diagram>` web component for universal embedding
+- Flow visualization as stepped overlays on architecture edges
+
 ### Active
 
 - [ ] Docusaurus documentation site (architecture docs, ADRs, API reference, contributor guides)
 - [ ] `@calmstudio/calm-core` published as standalone npm package for CalmGuard and community
 - [ ] Desktop app via Tauri 2 with native file system access (macOS, Windows, Linux)
-- [ ] VS Code extension with CALM/calmscript preview
+- [ ] VS Code extension with CALM architecture preview
 - [ ] GitHub Action for rendering CALM architecture diagrams in PRs
 - [ ] `<calm-diagram>` web component for universal embedding
 - [ ] Flow visualization as stepped overlays on architecture edges
@@ -86,4 +99,4 @@ Make architecture diagrams the source of truth: draw visually, get validated arc
 | Docusaurus for docs | FINOS ecosystem standard | — Pending (v1.1) |
 
 ---
-*Last updated: 2026-03-15 after v1.0 milestone*
+*Last updated: 2026-03-15 after v1.1 milestone start*
