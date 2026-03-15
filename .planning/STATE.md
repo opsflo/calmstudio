@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 09-testing-suite-03-PLAN.md
-last_updated: "2026-03-15T04:50:58.450Z"
+stopped_at: Completed 09-testing-suite-02-PLAN.md
+last_updated: "2026-03-15T04:53:37.163Z"
 last_activity: 2026-03-13 — Phase 7 Plan 03 complete; extension pack system fully integrated and visually verified
 progress:
   total_phases: 14
   completed_phases: 9
   total_plans: 42
-  completed_plans: 39
+  completed_plans: 40
   percent: 30
 ---
 
@@ -89,6 +89,7 @@ Progress: [███░░░░░░░] 30%
 | Phase 08.1-fluxnova-templates-aigf-governance P05 | 7min | 2 tasks | 6 files |
 | Phase 09-testing-suite P01 | 4min | 2 tasks | 9 files |
 | Phase 09-testing-suite P03 | 8min | 2 tasks | 8 files |
+| Phase 09-testing-suite P02 | 10min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -203,6 +204,7 @@ Recent decisions affecting current work:
 - [Phase 09-testing-suite]: Tiered coverage thresholds: calm-core=90%, extensions/mcp-server=80%, studio=60%
 - [Phase 09-testing-suite]: svelteTesting() vite plugin required for Svelte 5 component tests — adds browser resolve condition so Svelte uses index-client.js not index-server.js in jsdom
 - [Phase 09-testing-suite]: ValidationPanel takes issues as prop (not reading from store) — component tests pass issues array directly
+- [Phase 09-testing-suite]: vi.mock fileSystem + MockBlob registry + vi.useFakeTimers captures exportAsCalm JSON content without DOM side effects
 
 ### Roadmap Evolution
 
@@ -220,6 +222,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-15T04:50:58.446Z
-Stopped at: Completed 09-testing-suite-03-PLAN.md
+Last session: 2026-03-15T04:53:37.159Z
+Stopped at: Completed 09-testing-suite-02-PLAN.md
 Resume file: None

@@ -126,8 +126,8 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Testing
 
 - [x] **TEST-01**: London School TDD — outside-in test development for all features
-- [ ] **TEST-02**: Unit tests for sync engine, CALM model, calmscript parser, validation (vitest)
-- [ ] **TEST-03**: Integration tests for bidirectional sync, MCP server tools, extension pack loading
+- [x] **TEST-02**: Unit tests for sync engine, CALM model, calmscript parser, validation (vitest)
+- [x] **TEST-03**: Integration tests for bidirectional sync, MCP server tools, extension pack loading
 - [ ] **TEST-04**: E2E tests for full user workflows (Playwright) — create diagram, edit code, export, import
 - [x] **TEST-05**: Component tests for all custom Svelte node/edge components (@testing-library/svelte)
 
@@ -314,8 +314,8 @@ Deferred to future release. Tracked but not in current roadmap.
 | AIGF-04 | Phase 08.1 | Complete |
 | AIGF-05 | Phase 08.1 | Complete |
 | TEST-01 | Phase 9 | Complete |
-| TEST-02 | Phase 9 | Pending |
-| TEST-03 | Phase 9 | Pending |
+| TEST-02 | Phase 9 | Complete |
+| TEST-03 | Phase 9 | Complete |
 | TEST-04 | Phase 9 | Pending |
 | TEST-05 | Phase 9 | Complete |
 | DOCS-01 | Phase 10 | Pending |
