@@ -161,9 +161,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Architecture Templates
 
-- [ ] **TMPL-01**: Template picker as full-screen modal with category tabs (FluxNova, AI Governance, General), accessible from toolbar "Templates" button and empty canvas "Start from template" link
-- [ ] **TMPL-02**: 6 FluxNova templates (platform, KYC onboarding, flash risk, settlement, AI agent, microservices) load correctly with proper nodes, relationships, controls, and data-classification
-- [ ] **TMPL-03**: Template `_template` metadata stripped on CALM JSON export; canvas dirty state prompts confirmation before template load
+- [x] **TMPL-01**: Template picker as full-screen modal with category tabs (FluxNova, AI Governance, General), accessible from toolbar "Templates" button and empty canvas "Start from template" link
+- [x] **TMPL-02**: 6 FluxNova templates (platform, KYC onboarding, flash risk, settlement, AI agent, microservices) load correctly with proper nodes, relationships, controls, and data-classification
+- [x] **TMPL-03**: Template `_template` metadata stripped on CALM JSON export; canvas dirty state prompts confirmation before template load
 
 ### CALM 1.2 Controls, Decorators & Evidence
 
@@ -302,9 +302,9 @@ Deferred to future release. Tracked but not in current roadmap.
 | FLXN-01 | Phase 08.1 | Complete |
 | FLXN-02 | Phase 08.1 | Complete |
 | FLXN-03 | Phase 08.1 | Complete |
-| TMPL-01 | Phase 08.1 | Pending |
-| TMPL-02 | Phase 08.1 | Pending |
-| TMPL-03 | Phase 08.1 | Pending |
+| TMPL-01 | Phase 08.1 | Complete |
+| TMPL-02 | Phase 08.1 | Complete |
+| TMPL-03 | Phase 08.1 | Complete |
 | CTRL-01 | Phase 08.1 | Complete |
 | CTRL-02 | Phase 08.1 | Complete |
 | CTRL-03 | Phase 08.1 | Complete |

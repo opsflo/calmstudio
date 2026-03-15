@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 08.1-04-PLAN.md — controls UI + AIGF validation rules
-last_updated: "2026-03-14T19:33:22.247Z"
+stopped_at: Completed 08.1-03-PLAN.md — template system with picker modal and 6 FluxNova templates
+last_updated: "2026-03-15T03:22:05.409Z"
 last_activity: 2026-03-13 — Phase 7 Plan 03 complete; extension pack system fully integrated and visually verified
 progress:
   total_phases: 14
   completed_phases: 8
   total_plans: 37
-  completed_plans: 35
+  completed_plans: 36
   percent: 30
 ---
 
@@ -85,6 +85,7 @@ Progress: [███░░░░░░░] 30%
 | Phase 08.1-fluxnova-templates-aigf-governance P02 | 18min | 2 tasks | 5 files |
 | Phase 08.1-fluxnova-templates-aigf-governance P01 | 15min | 2 tasks | 8 files |
 | Phase 08.1-fluxnova-templates-aigf-governance P04 | 6min | 2 tasks | 9 files |
+| Phase 08.1-fluxnova-templates-aigf-governance P03 | 45min | 3 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -189,6 +190,9 @@ Recent decisions affecting current work:
 - [Phase 08.1-fluxnova-templates-aigf-governance]: aigf-rules.ts imports only from @calmstudio/calm-core — pure TypeScript for vitest testability, no .svelte.ts dependencies
 - [Phase 08.1-fluxnova-templates-aigf-governance]: Data-classification badge uses inline style string on canvas nodes — avoids Svelte scoped CSS limitations with dynamic color values
 - [Phase 08.1-fluxnova-templates-aigf-governance]: ControlsList section collapsed by default — minimizes vertical space when controls not relevant to current node
+- [Phase 08.1-fluxnova-templates-aigf-governance]: Full-screen modal overlay for template picker — maximum visual impact at OSFF Toronto demo
+- [Phase 08.1-fluxnova-templates-aigf-governance]: initAllTemplates() uses synchronous static imports — consistent with initAllPacks() pattern
+- [Phase 08.1-fluxnova-templates-aigf-governance]: Export stripping: delete _template from parsed object before Blob creation — clean CALM JSON output
 
 ### Roadmap Evolution
 
@@ -206,6 +210,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-14T19:33:22.243Z
-Stopped at: Completed 08.1-04-PLAN.md — controls UI + AIGF validation rules
+Last session: 2026-03-15T03:22:05.404Z
+Stopped at: Completed 08.1-03-PLAN.md — template system with picker modal and 6 FluxNova templates
 Resume file: None

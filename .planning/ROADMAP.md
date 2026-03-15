@@ -175,7 +175,7 @@ Plans:
   3. CALM 1.2 controls are visible and editable in both NodeProperties and EdgeProperties as collapsible sections; data-classification renders as colored tags on canvas nodes
   4. AIGF governance panel (right sidebar tab) shows applicable risks and mitigations for selected AI nodes with "Apply mitigation" adding CALM controls; architecture-level governance score displays in panel header and toolbar badge
   5. AIGF validation rules fire in ValidationPanel alongside structural rules; governance decorator auto-generated on CALM JSON export
-**Plans:** 3/5 plans executed
+**Plans:** 4/5 plans executed
 
 Plans:
 - [ ] 08.1-01-PLAN.md — CALM 1.2 types (controls, decorators, evidence) + AIGF data package with node-to-risk mappings
