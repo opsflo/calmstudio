@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 09-testing-suite-04-PLAN.md
-last_updated: "2026-03-15T05:00:33.115Z"
+stopped_at: Completed 09-testing-suite-05-PLAN.md
+last_updated: "2026-03-15T05:04:28.427Z"
 last_activity: 2026-03-13 — Phase 7 Plan 03 complete; extension pack system fully integrated and visually verified
 progress:
   total_phases: 14
-  completed_phases: 9
+  completed_phases: 10
   total_plans: 42
-  completed_plans: 41
+  completed_plans: 42
   percent: 30
 ---
 
@@ -91,6 +91,7 @@ Progress: [███░░░░░░░] 30%
 | Phase 09-testing-suite P03 | 8min | 2 tasks | 8 files |
 | Phase 09-testing-suite P02 | 10min | 2 tasks | 6 files |
 | Phase 09-testing-suite P04 | 16min | 2 tasks | 4 files |
+| Phase 09-testing-suite P05 | 2min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -209,6 +210,8 @@ Recent decisions affecting current work:
 - [Phase 09-testing-suite]: E2E download interception: createElement patch + Blob URL map — exportAsCalm uses Blob+anchor not FSA API
 - [Phase 09-testing-suite]: Governance tab requires explicit click — no auto-switch per PropertiesPanel design; test must click AI node then Governance tab
 - [Phase 09-testing-suite]: C4 breadcrumb root renders as aria-current span (not button) when no drill-down — locator uses aria-current attribute selector
+- [Phase 09-testing-suite]: Per-package coverage commands instead of pnpm -r run test:coverage — isolates threshold failures per package
+- [Phase 09-testing-suite]: shields.io static coverage badge instead of Codecov dynamic — no token setup required, immediately deployable
 
 ### Roadmap Evolution
 
@@ -226,6 +229,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-15T05:00:33.111Z
-Stopped at: Completed 09-testing-suite-04-PLAN.md
+Last session: 2026-03-15T05:04:28.423Z
+Stopped at: Completed 09-testing-suite-05-PLAN.md
 Resume file: None
