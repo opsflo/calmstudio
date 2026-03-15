@@ -2,89 +2,88 @@
 
 ## What This Is
 
-CalmStudio is a visual-first architecture diagramming tool that generates CALM (Common Architecture Language Model) code. Built with Svelte 5 and Svelte Flow, it combines an intuitive drag-and-drop canvas with a Mermaid-like DSL called calmscript, an MCP server for AI integration, and extension packs for cloud providers (AWS, GCP, Azure), Kubernetes, AI/Agentic systems, and more. It targets everyone who designs software architecture — from startup engineers to enterprise architects at Netflix, Walmart, or Visa scale.
+CalmStudio is a visual-first CALM architecture editor. Built with Svelte 5 and Svelte Flow, it provides a drag-and-drop canvas with typed nodes and edges, bidirectional CALM JSON sync, 7 extension packs (AWS, GCP, Azure, K8s, AI/Agentic, FluxNova, Core), an MCP server for AI-assisted architecture generation, AIGF governance scoring, and C4 view mode. It targets architects designing software systems at any scale — from startups to enterprise.
 
 ## Core Value
 
-Make architecture diagrams the source of truth: draw visually, get validated architecture-as-code automatically, and let AI tools generate architectures as easily as they generate Mermaid today.
+Make architecture diagrams the source of truth: draw visually, get validated architecture-as-code automatically, and let AI tools generate architectures via MCP.
 
 ## Requirements
 
 ### Validated
 
-(None yet — ship to validate)
+- ✓ Visual architecture editor with CALM-typed nodes and edges — v1.0
+- ✓ Extension pack system (AWS, GCP, Azure, K8s, AI/Agentic, FluxNova) — v1.0
+- ✓ Bidirectional sync between visual diagram and CALM JSON code — v1.0
+- ✓ MCP server (21 tools) for AI-assisted architecture generation — v1.0
+- ✓ Real-time CALM schema validation with severity panel — v1.0
+- ✓ CALM JSON import with ELK.js auto-layout and export (JSON, SVG, PNG) — v1.0
+- ✓ Properties panel for editing CALM metadata, interfaces, controls per node/edge — v1.0
+- ✓ C4 view mode (Context, Container, Component zoom levels) — v1.0
+- ✓ FluxNova templates (6) with controls and data classification — v1.0
+- ✓ AIGF governance: 23 risks, 23 mitigations, live scoring, 10 validation rules — v1.0
+- ✓ London School TDD with 387 tests (unit, integration, component, E2E) — v1.0
+- ✓ FINOS governance (Apache 2.0, DCO, CONTRIBUTING, CODE_OF_CONDUCT, SECURITY) — v1.0
+- ✓ CI pipeline (build, lint, test, DCO, license scan, commitlint) — v1.0
+- ✓ CALM spec-aligned domain-oriented control keys with AIR-ID mapping — v1.0
 
 ### Active
 
-- [ ] Visual architecture editor built on Svelte Flow with CALM-typed nodes and edges
-- [ ] Extension pack system for cloud providers (AWS, GCP, Azure), Kubernetes, AI/Agentic, and custom domains
-- [ ] Bidirectional sync between visual diagram and CALM JSON code
-- [ ] calmscript DSL — a Mermaid-like text format that compiles losslessly to CALM JSON
-- [ ] MCP server enabling Claude Code and other AI tools to create/modify/validate/render architectures
-- [ ] Real-time CALM schema validation
-- [ ] Desktop app via Tauri 2 with native file system access
-- [ ] CALM JSON import with auto-layout (ELK.js) and export
-- [ ] Pattern library with templates for common architectures (microservices on K8s, serverless API, RAG pipeline, etc.)
-- [ ] Properties panel for editing CALM metadata (interfaces, controls, flows) per node/edge
-- [ ] Web component `<calm-diagram>` for universal embedding
-- [ ] VS Code extension with live calmscript preview
-- [ ] GitHub Action for rendering calmscript in PRs and validating CALM in CI
 - [ ] Docusaurus documentation site (architecture docs, ADRs, API reference, contributor guides)
-- [ ] Architecture Decision Records (ADRs) tracked in docs and .planning/
-- [ ] London School TDD — outside-in test development with comprehensive coverage (unit, integration, E2E, component)
-- [ ] FINOS/Linux Foundation governance: Apache 2.0 license, DCO sign-off, CONTRIBUTING.md, CODE_OF_CONDUCT.md, SECURITY.md, NOTICE, MAINTAINERS.md
-- [ ] CI pipeline with DCO verification, license header scanning, test suite, and CALM validation
+- [ ] `@calmstudio/calm-core` published as standalone npm package for CalmGuard and community
+- [ ] Desktop app via Tauri 2 with native file system access (macOS, Windows, Linux)
+- [ ] VS Code extension with CALM/calmscript preview
+- [ ] GitHub Action for rendering CALM architecture diagrams in PRs
+- [ ] `<calm-diagram>` web component for universal embedding
+- [ ] Flow visualization as stepped overlays on architecture edges
+
+### Deferred
+
+- calmscript DSL — MCP server solves AI generation more reliably; evaluate need after real-world MCP usage
+- Pattern library — templates partially address this (6 FluxNova templates shipped in v1.0)
 
 ### Out of Scope
 
-- Excalidraw-based implementation — wrong abstraction for structured architecture diagrams (freehand whiteboard, no typed nodes/edges/containment)
-- Real-time multi-user collaboration — deferred to v2+ (Phase 5)
-- C4 / ArchiMate import/export — deferred to v2+ (Phase 5)
-- Terraform/Pulumi IaC generation — deferred to v2+ (Phase 5)
-- Community extension pack marketplace — deferred to v2+ (Phase 5)
+- Excalidraw-based implementation — wrong abstraction for structured architecture diagrams
+- Real-time multi-user collaboration — v2+
+- C4 / ArchiMate import/export — v2+
+- Terraform/Pulumi IaC generation — CalmGuard's responsibility
+- Community extension pack marketplace — v2+
 
 ## Context
 
-- FINOS maintains CALM (Common Architecture Language Model) — a JSON Schema-based spec for architecture-as-code
-- The `architecture-as-code` repo has CLI tools (`calm validate`, `calm generate`, `calm template`, `calm docify`), CALM Hub (Java Quarkus backend), CALM AI (Copilot/Kiro prompts), and a VS Code extension
-- CALM supports 9 built-in node types (actor, system, service, database, network, webclient, ecosystem, ldap, data-asset) plus custom types (any string)
-- CALM supports 5 relationship types: connects, interacts, deployed-in, composed-of, options
-- CALM supports interfaces (URL, host-port, container-image, etc.), controls (security, compliance, performance), flows, and metadata
-- CALM JSON is verbose (462 lines for 5 nodes) — too heavy for AI inline generation; calmscript solves this
-- Existing `calm-widgets` already generate Mermaid from CALM models, proving the rendering bridge works
-- `calm-models/src/types/core-types.ts` and `calm-widgets/src/widgets/block-architecture/core/vm-builder.ts` provide reference implementations for CALM-to-graph conversion
-- Mermaid dominates AI-generated diagrams because of simplicity — calmscript must match that simplicity while adding architecture semantics
-- Svelte Flow (@xyflow/svelte) provides native Svelte 5 node-graph editing with custom nodes, typed handles, sub-flows (containment), and ELK layout — exactly what CALM needs
+- **Shipped v1.0** on 2026-03-15: 30K LOC TypeScript/Svelte, 220 commits, 10 phases
+- **Tech stack**: SvelteKit, Svelte Flow, CodeMirror, ELK.js, vitest, Playwright
+- **Monorepo**: packages/calm-core, packages/extensions, packages/mcp-server, packages/calmscript (stub), apps/studio
+- **FINOS CALM**: https://calm.finos.org/release/1.2/ — JSON Schema-based architecture-as-code
+- **FINOS AIGF**: https://air-governance-framework.finos.org/ — AI governance framework
+- **Reference impl**: https://github.com/karlmoll/codegen_sandbox/pull/7 — CALM spec maintainer's control alignment
+- Control keys follow domain-oriented naming per CALM spec (not framework-prefixed)
 
 ## Constraints
 
-- **Framework**: Svelte 5 + SvelteKit — chosen for performance, DX, and Svelte Flow compatibility
-- **Canvas**: @xyflow/svelte (Svelte Flow) — node-graph editor, NOT freehand drawing
-- **Desktop**: Tauri 2 — lighter than Electron, Rust backend, cross-platform
-- **Data format**: CALM JSON as canonical source of truth (FINOS standard)
-- **CALM compatibility**: All output must validate against `calm validate` — extension packs use custom node types, not schema modifications
-- **AI integration**: MCP server for Claude Code; calmscript format must be AI-generatable in ~20 lines for typical architectures
-- **License**: Apache 2.0 — FINOS/Linux Foundation compatible, SPDX headers on all source files
-- **DCO**: Developer Certificate of Origin sign-off required on every commit (`Signed-off-by:`)
-- **FINOS readiness**: Designed from day one for FINOS adoption — open governance, CONTRIBUTING.md, CODE_OF_CONDUCT.md, SECURITY.md, NOTICE, MAINTAINERS.md, CII Best Practices badge readiness
-- **Dependencies**: All must be OSS-compatible with Apache 2.0 (no proprietary deps)
-- **Testing**: London School TDD (outside-in), comprehensive test suite — unit, integration, E2E (Playwright), component tests
-- **Documentation**: Docusaurus site with architecture docs, ADRs, API reference, contributor guides
+- **Framework**: Svelte 5 + SvelteKit
+- **Canvas**: @xyflow/svelte (Svelte Flow)
+- **Desktop**: Tauri 2
+- **Data format**: CALM JSON as canonical source of truth
+- **License**: Apache 2.0 with SPDX headers, DCO sign-off
+- **Dependencies**: All OSS-compatible with Apache 2.0
+- **Testing**: London School TDD, vitest + Playwright
+- **Controls**: Domain-oriented keys, no `aigf-*` prefix. Framework IDs in `config-url` only.
 
 ## Key Decisions
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Drop Excalidraw, use Svelte Flow | Excalidraw is a freehand whiteboard; CALM needs typed nodes, containment, handles, typed edges — all native in Svelte Flow | — Pending |
-| Svelte 5 over React | Not locked to Excalidraw's React; Svelte 5 is lighter, faster, better DX for this use case | — Pending |
-| Create calmscript DSL | CALM JSON too verbose for AI; need Mermaid-competitive text format (~20 lines vs 462) | — Pending |
-| Extension packs for cloud/K8s/AI | CALM's 9 built-in types insufficient for universal adoption; packs add AWS/GCP/Azure/K8s/AI vocabulary without changing CALM spec | — Pending |
-| MCP server as primary AI integration | Makes CalmStudio the native architecture tool for Claude Code and other AI assistants | — Pending |
-| Tauri 2 for desktop | Smaller bundle than Electron, Rust backend, native file system, cross-platform | — Pending |
-| ELK.js for auto-layout | Hierarchical layout with orthogonal routing — standard for architecture diagrams | — Pending |
-| Apache 2.0 + DCO | Required for FINOS/Linux Foundation adoption; DCO over CLA for lower contributor friction | — Pending |
-| London School TDD | Outside-in testing catches integration issues early; fits well with sync engine and MCP server design | — Pending |
-| Docusaurus for docs | Standard in FINOS ecosystem (CALM itself uses Docusaurus); ADRs, architecture docs, API reference | — Pending |
+| Drop Excalidraw, use Svelte Flow | Freehand whiteboard vs typed graph editor | ✓ Good — native containment, handles, typed edges |
+| Svelte 5 over React | Lighter, faster, better DX | ✓ Good — runes + Svelte Flow work well |
+| Extension packs for cloud/K8s/AI | 9 built-in types insufficient | ✓ Good — 7 packs, 60+ node types |
+| MCP server as primary AI integration | Native Claude Code integration | ✓ Good — 21 tools, validated working |
+| ELK.js for auto-layout | Hierarchical layout standard | ✓ Good — LR/TB/hierarchical presets |
+| Domain-oriented control keys | CALM spec maintainer guidance | ✓ Good — aligned with upstream |
+| Defer calmscript DSL | MCP solves AI generation | ⚠️ Revisit — evaluate after MCP usage |
+| Tauri 2 for desktop | Lighter than Electron | — Pending (v1.1) |
+| Docusaurus for docs | FINOS ecosystem standard | — Pending (v1.1) |
 
 ---
-*Last updated: 2026-03-11 after initialization*
+*Last updated: 2026-03-15 after v1.0 milestone*
