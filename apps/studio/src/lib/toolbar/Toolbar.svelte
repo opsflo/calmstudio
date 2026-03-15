@@ -30,6 +30,8 @@
 		isDirty = false,
 		c4Level = null,
 		onc4levelchange,
+		governanceScore = null,
+		showGovernanceBadge = false,
 	}: {
 		onopen: () => void;
 		onsave: () => void;
@@ -48,6 +50,10 @@
 		c4Level?: string | null;
 		/** Called when user clicks a C4 level segment button. level is null for "All". */
 		onc4levelchange?: (level: string | null) => void;
+		/** Architecture governance score (0-100), or null if no AI nodes. */
+		governanceScore?: number | null;
+		/** When true, shows the governance score badge (hidden for non-AI architectures). */
+		showGovernanceBadge?: boolean;
 	} = $props();
 
 	const C4_SEGMENTS = [
@@ -64,6 +70,14 @@
 
 	let showExportMenu = $state(false);
 	let showDemoMenu = $state(false);
+
+	/** Returns the color for a governance score percentage. */
+	function scoreColor(score: number | null): string {
+		if (score === null) return '#6b7280';
+		if (score > 80) return '#16a34a';
+		if (score >= 50) return '#d97706';
+		return '#dc2626';
+	}
 
 	function toggleExportMenu() {
 		showExportMenu = !showExportMenu;
@@ -131,6 +145,21 @@
 				</svg>
 				<span class="btn-label">Templates</span>
 			</button>
+		{/if}
+
+		<!-- Governance score badge — hidden when no AI nodes in architecture -->
+		{#if showGovernanceBadge && governanceScore !== null}
+			<div
+				class="gov-badge"
+				style="color: {scoreColor(governanceScore)}; background: {scoreColor(governanceScore)}1a; border-color: {scoreColor(governanceScore)}40;"
+				aria-label="AIGF governance score: {governanceScore}%"
+				title="AIGF Governance Score"
+			>
+				<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+					<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+				</svg>
+				<span class="gov-score">{governanceScore}%</span>
+			</div>
 		{/if}
 	</div>
 
@@ -579,6 +608,28 @@
 
 	:global(.dark) .export-menu-item:hover {
 		background: #1e293b;
+	}
+
+	/* ─── Governance score badge ─────────────────────────────── */
+
+	.gov-badge {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+		padding: 2px 8px;
+		height: 22px;
+		border-radius: 11px;
+		border: 1px solid;
+		font-size: 11px;
+		font-weight: 700;
+		font-family: var(--font-sans);
+		cursor: default;
+		white-space: nowrap;
+		user-select: none;
+	}
+
+	.gov-score {
+		font-variant-numeric: tabular-nums;
 	}
 
 	/* ─── C4 view level segmented control ────────────────────── */

@@ -20,10 +20,59 @@ import { getNodesBounds, getViewportForBounds } from '@xyflow/svelte';
 import type { Node } from '@xyflow/svelte';
 import { downloadDataUrl } from '$lib/io/fileSystem';
 import { detectPacksFromArch, buildSidecarData, sidecarNameFor } from '$lib/io/sidecar';
-import type { CalmArchitecture } from '@calmstudio/calm-core';
+import type { CalmArchitecture, CalmDecorator, CalmControls } from '@calmstudio/calm-core';
+import { isAINode, getAIGFForNodeType } from '@calmstudio/calm-core';
 
 const IMAGE_WIDTH = 1920;
 const IMAGE_HEIGHT = 1080;
+
+// ─── AIGF decorator generation ────────────────────────────────────────────────
+
+/**
+ * Generate an AIGF governance decorator for the architecture.
+ * Returns null if the architecture has no AI nodes.
+ *
+ * The decorator captures the governance score, assessed AI node IDs, and
+ * regulatory metadata for downstream CalmGuard processing.
+ *
+ * @param arch      The CALM architecture to inspect
+ * @param filename  Output filename (used as the decorator target)
+ */
+function generateAIGFDecorator(arch: CalmArchitecture, filename: string): CalmDecorator | null {
+	const aiNodes = arch.nodes.filter((n) => isAINode(n['node-type']));
+	if (aiNodes.length === 0) return null;
+
+	const aiNodeIds = aiNodes.map((n) => n['unique-id']);
+
+	// Compute governance score standalone (same logic as governance store, no store dep)
+	let totalRecommended = 0;
+	let totalApplied = 0;
+	for (const node of aiNodes) {
+		const { mitigations } = getAIGFForNodeType(node['node-type']);
+		const controls = (node as { controls?: CalmControls }).controls ?? {};
+		totalRecommended += mitigations.length;
+		for (const mit of mitigations) {
+			if (controls[mit.calmControlKey] !== undefined) {
+				totalApplied++;
+			}
+		}
+	}
+
+	const score = totalRecommended === 0 ? 100 : Math.round((totalApplied / totalRecommended) * 100);
+
+	return {
+		'unique-id': 'aigf-governance-overlay',
+		type: 'aigf-governance',
+		target: [filename || 'architecture.json'],
+		'applies-to': aiNodeIds,
+		data: {
+			framework: 'FINOS AI Governance Framework',
+			version: '2.0',
+			'governance-score': score,
+			'assessment-date': new Date().toISOString().split('T')[0],
+		},
+	};
+}
 
 // ─── CALM JSON export ─────────────────────────────────────────────────────────
 
@@ -38,15 +87,20 @@ const IMAGE_HEIGHT = 1080;
  * @param filename  Output filename (default: architecture.calm.json)
  */
 export function exportAsCalm(json: string, filename = 'architecture.calm.json'): void {
-	// Strip _template metadata if present — template starter files must not leak
-	// template metadata into exported CALM JSON files.
+	// Strip _template metadata and inject AIGF decorator if AI nodes present.
 	let cleanJson = json;
 	try {
-		const parsed = JSON.parse(json);
+		const parsed = JSON.parse(json) as CalmArchitecture & { _template?: unknown };
+		// Strip template metadata
 		if ('_template' in parsed) {
 			delete parsed._template;
-			cleanJson = JSON.stringify(parsed, null, 2);
 		}
+		// Inject AIGF governance decorator if AI nodes exist
+		const decorator = generateAIGFDecorator(parsed, filename);
+		if (decorator !== null) {
+			parsed.decorators = [decorator];
+		}
+		cleanJson = JSON.stringify(parsed, null, 2);
 	} catch {
 		// Malformed JSON — fall through with original content; export will still work
 	}

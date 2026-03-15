@@ -73,6 +73,12 @@
 		clearValidation,
 		runValidation,
 	} from '$lib/stores/validation.svelte';
+	import {
+		refreshGovernance,
+		updateSelectedNodeGovernance,
+		getArchitectureScore,
+		hasAINodes,
+	} from '$lib/stores/governance.svelte';
 
 	let nodes = $state.raw<Node[]>([]);
 	let edges = $state.raw<Edge[]>([]);
@@ -357,6 +363,9 @@
 
 		// Template load doesn't bind to a file — mark clean but without filename
 		markClean();
+
+		// Initialize governance score for the loaded template
+		refreshGovernance();
 	}
 
 	function handlePalettePlace(type: string) {
@@ -384,6 +393,18 @@
 		selectedNodeId = nodeId;
 		selectedEdgeId = edgeId;
 	}
+
+	// ─── Governance store wiring ──────────────────────────────────────────────
+
+	/**
+	 * Keep governance store updated when selection changes.
+	 * Uses $effect to track selectedNode reactively.
+	 */
+	$effect(() => {
+		const nodeType = selectedNode?.data?.calmType ? String(selectedNode.data.calmType) : null;
+		const nodeId = selectedNode?.data?.calmId ? String(selectedNode.data.calmId) : null;
+		updateSelectedNodeGovernance(nodeType, nodeId);
+	});
 
 	// ─── Validation panel navigation ──────────────────────────────────────────
 
@@ -470,9 +491,10 @@
 	/**
 	 * Called by PropertiesPanel after a property mutation updates the model store.
 	 * Re-projects the canonical model back to Svelte Flow nodes/edges to keep
-	 * canvas and code panel in sync.
+	 * canvas and code panel in sync. Also refreshes governance score.
 	 */
 	function handlePropertyMutation() {
+		refreshGovernance();
 		const model = getModel();
 		const positionMap = new Map<string, { x: number; y: number; width?: number; height?: number }>();
 		const selectionMap = new Map<string, boolean>();
@@ -595,6 +617,9 @@
 		// Fit view after DOM update
 		await tick();
 		canvas?.fitViewport();
+
+		// Initialize governance score for the loaded architecture
+		refreshGovernance();
 	}
 
 	// ─── File operations ──────────────────────────────────────────────────────
@@ -833,6 +858,8 @@
 			isDirty={getIsDirty()}
 			c4Level={getC4Level()}
 			onc4levelchange={handleC4LevelChange}
+			governanceScore={getArchitectureScore()}
+			showGovernanceBadge={hasAINodes()}
 		/>
 
 		<!-- Error banner: below toolbar, above canvas panes -->
