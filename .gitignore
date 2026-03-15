@@ -27,3 +27,13 @@ test-results/
 
 # pnpm
 .pnpm-debug.log
+.vercel
+
+# Internal strategy/research docs (not for public repos)
+docs/REVISIONS_*.md
+
+# Docusaurus docs site
+docs-site/build/
+docs-site/.docusaurus/
+docs-site/api/
+docs-site/docs/api/
