@@ -10,6 +10,8 @@ Draw on a canvas. Get [CALM](https://calm.finos.org) JSON automatically. Let AI 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![FINOS](https://img.shields.io/badge/FINOS-active-green.svg)](https://finos.org)
 [![REUSE](https://img.shields.io/badge/REUSE-compliant-green.svg)](https://reuse.software/)
+[![CI](https://github.com/finos/calmstudio/actions/workflows/ci.yml/badge.svg)](https://github.com/finos/calmstudio/actions/workflows/ci.yml)
+![Coverage](https://img.shields.io/badge/coverage-tiered%20thresholds-blue)
 
 <p align="center">
   <img src="docs/images/calmstudio01.png" alt="CalmStudio — e-commerce architecture with CALM JSON code panel and properties editor" width="100%">
@@ -138,6 +140,37 @@ CalmStudio ships in phases. Each delivers a standalone, verifiable capability.
 | 10. Patterns & Docs | Planned | Architecture templates, Docusaurus site |
 | 11. Testing Suite | Planned | London School TDD, E2E, component tests |
 | 12. Ecosystem | Planned | VS Code extension, GitHub Action, web component |
+
+## Testing
+
+CalmStudio uses a comprehensive test suite across all packages:
+
+| Package | Threshold | Command |
+|---------|-----------|---------|
+| calm-core | 90% | `pnpm --filter @calmstudio/calm-core run test:coverage` |
+| extensions | 80% | `pnpm --filter @calmstudio/extensions run test:coverage` |
+| mcp-server | 80% | `pnpm --filter @calmstudio/mcp-server run test:coverage` |
+| studio | 60% | `pnpm --filter @calmstudio/studio run test:coverage` |
+
+**Run all tests:**
+
+```bash
+pnpm -r run test
+```
+
+**Run with coverage (enforces thresholds):**
+
+```bash
+pnpm -r run test:coverage
+```
+
+**Run E2E tests** (requires dev server running on port 5173):
+
+```bash
+pnpm --filter @calmstudio/studio run test:e2e
+```
+
+Coverage reports are uploaded as CI artifacts on every build. E2E tests run automatically on merge to `main`.
 
 ## Contributing
 
