@@ -22,9 +22,14 @@ afterEach(() => clearMocks());
 
 describe('openFileTauri', () => {
 	it('calls dialog open, reads file content via IPC, returns { content, name, handle: path }', async () => {
-		mockIPC((cmd, args) => {
+		// readTextFile invokes 'plugin:fs|read_text_file' and expects an ArrayBuffer/Uint8Array
+		// back (the Tauri Rust side returns raw bytes; the JS side decodes with TextDecoder).
+		const fileContent = '{"nodes":[],"relationships":[]}';
+		const fileBytes = new TextEncoder().encode(fileContent);
+
+		mockIPC((cmd) => {
 			if (cmd === 'plugin:dialog|open') return '/home/user/arch.calm.json';
-			if (cmd === 'plugin:fs|read_text_file') return '{"nodes":[],"relationships":[]}';
+			if (cmd === 'plugin:fs|read_text_file') return Array.from(fileBytes);
 		});
 
 		const result = await openFileTauri();

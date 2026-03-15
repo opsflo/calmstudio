@@ -3,30 +3,38 @@
 // SPDX-License-Identifier: Apache-2.0
 
 /**
- * fileSystem.ts — File I/O with File System Access API and browser fallbacks.
+ * fileSystem.ts — Unified file I/O with Tauri and browser File System Access API.
  *
- * Strategy:
- * - openFile: showOpenFilePicker (Chrome/Edge) → <input type="file"> fallback
- * - saveFile: existing handle → showSaveFilePicker → Blob download fallback
- * - saveFileAs: always prompts (showSaveFilePicker → Blob download fallback)
- * - downloadDataUrl: anchor click (for data: URLs — SVG, PNG exports)
+ * Routing strategy:
+ * - Desktop (Tauri): routes to fileSystemTauri.ts using native OS dialogs
+ * - Browser (Chrome/Edge): uses File System Access API (showOpenFilePicker, etc.)
+ * - Browser fallback (Firefox/Safari): uses hidden <input type="file"> or Blob download
  *
  * All picker calls must be inside user-gesture handlers (RESEARCH Pitfall 5).
  */
 
+import { isTauri } from '$lib/desktop/isTauri';
+import { openFileTauri, saveFileTauri, saveFileAsTauri } from './fileSystemTauri';
+
 export interface OpenFileResult {
 	content: string;
 	name: string;
-	handle: FileSystemFileHandle | null;
+	handle: FileSystemFileHandle | string | null;
 }
 
 /**
- * Open a file using showOpenFilePicker if available, otherwise via
- * a hidden <input type="file"> element (Firefox/Safari fallback).
+ * Open a file.
+ * - Desktop: native OS file picker via Tauri dialog plugin
+ * - Browser (Chrome/Edge): showOpenFilePicker
+ * - Fallback: hidden <input type="file"> element
  *
  * Must be called directly from a user gesture handler.
  */
 export async function openFile(): Promise<OpenFileResult> {
+	if (isTauri()) {
+		return openFileTauri();
+	}
+
 	if (typeof (window as unknown as Record<string, unknown>)['showOpenFilePicker'] === 'function') {
 		const [handle] = await (window as unknown as { showOpenFilePicker: (opts?: unknown) => Promise<FileSystemFileHandle[]> }).showOpenFilePicker({
 			types: [
@@ -63,19 +71,30 @@ export async function openFile(): Promise<OpenFileResult> {
 
 /**
  * Save content to a file.
- * - If handle provided: write in-place via createWritable().
- * - Else if showSaveFilePicker available: prompt for location.
- * - Else: trigger Blob download (Firefox/Safari fallback).
+ * - Desktop: write in-place to known path via Tauri fs plugin, or prompt for new path
+ * - Browser (handle provided): write in-place via createWritable()
+ * - Browser (no handle, Chrome/Edge): prompt via showSaveFilePicker
+ * - Fallback: trigger Blob download (Firefox/Safari)
  *
- * Returns the file handle (new or existing) or null if Blob download used.
+ * Returns the file handle (FSA) or path string (Tauri), or null if Blob download used.
  * Must be called directly from a user gesture handler.
  */
 export async function saveFile(
 	content: string,
-	handle: FileSystemFileHandle | null,
+	handle: FileSystemFileHandle | string | null,
 	filename: string,
-): Promise<FileSystemFileHandle | null> {
-	if (handle) {
+): Promise<FileSystemFileHandle | string | null> {
+	if (isTauri()) {
+		if (typeof handle === 'string') {
+			// In-place save: write to known path
+			return saveFileTauri(content, handle);
+		}
+		// No path known yet — prompt for save location
+		return saveFileAsTauri(content, filename);
+	}
+
+	// Browser: in-place save via FSA handle
+	if (handle && typeof handle !== 'string') {
 		const writable = await handle.createWritable();
 		await writable.write(content);
 		await writable.close();
@@ -105,16 +124,21 @@ export async function saveFile(
 
 /**
  * Save As — always prompts the user to choose a new location.
- * - Uses showSaveFilePicker if available.
- * - Falls back to Blob download otherwise.
+ * - Desktop: native save dialog via Tauri dialog plugin
+ * - Browser (Chrome/Edge): showSaveFilePicker
+ * - Fallback: Blob download
  *
- * Returns the new file handle or null.
+ * Returns the new file handle (FSA) or path string (Tauri), or null.
  * Must be called directly from a user gesture handler.
  */
 export async function saveFileAs(
 	content: string,
 	filename: string,
-): Promise<FileSystemFileHandle | null> {
+): Promise<FileSystemFileHandle | string | null> {
+	if (isTauri()) {
+		return saveFileAsTauri(content, filename);
+	}
+
 	if (typeof (window as unknown as Record<string, unknown>)['showSaveFilePicker'] === 'function') {
 		const handle = await (window as unknown as { showSaveFilePicker: (opts?: unknown) => Promise<FileSystemFileHandle> }).showSaveFilePicker({
 			suggestedName: filename,

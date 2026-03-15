@@ -58,6 +58,8 @@
 		markClean,
 		resetFileState
 	} from '$lib/io/fileState.svelte';
+	import { isTauri } from '$lib/desktop/isTauri';
+	import { updateWindowTitle } from '$lib/desktop/titleBar';
 	import { exportAsCalm, exportAsSvg, exportAsPng, exportAsCalmscript } from '$lib/io/export';
 	import type { CalmArchitecture, CalmRelationship } from '@calmstudio/calm-core';
 	import { detectPacksFromArch } from '$lib/io/sidecar';
@@ -84,6 +86,16 @@
 	let edges = $state.raw<Edge[]>([]);
 
 	let canvas: CalmCanvas;
+
+	// ─── Desktop: native title bar sync ───────────────────────────────────────
+
+	// Reactively update the native OS window title when filename or dirty state changes.
+	// Only active in Tauri desktop mode — no-ops in browser builds.
+	$effect(() => {
+		if (isTauri()) {
+			updateWindowTitle(getFileName(), getIsDirty());
+		}
+	});
 
 	// ─── C4 View Mode ─────────────────────────────────────────────────────────
 
@@ -656,8 +668,16 @@
 		try {
 			const json = getModelJson();
 			const handle = await saveFileAs(json, getFileName() ?? 'architecture.calm.json');
-			// saveFileAs returns handle (FSA API) or null (Blob download fallback)
-			if (handle) {
+			// saveFileAs returns:
+			// - string path (Tauri desktop)
+			// - FileSystemFileHandle (browser FSA)
+			// - null (Blob download fallback or user cancel)
+			if (typeof handle === 'string') {
+				// Tauri desktop: extract filename from path
+				const name = handle.split(/[\\/]/).pop() ?? getFileName() ?? undefined;
+				markClean(name, handle);
+			} else if (handle) {
+				// Browser FSA: use handle.name
 				markClean(handle.name ?? getFileName() ?? undefined, handle);
 			} else {
 				// Blob download — we can mark clean since content was "saved" (downloaded)
