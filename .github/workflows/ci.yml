@@ -40,8 +40,56 @@ jobs:
       - name: Lint
         run: pnpm -r run lint
 
-      - name: Test
-        run: pnpm -r run test
+      - name: Test with coverage
+        run: |
+          pnpm --filter @calmstudio/calm-core run test:coverage
+          pnpm --filter @calmstudio/extensions run test:coverage
+          pnpm --filter @calmstudio/mcp-server run test:coverage
+          pnpm --filter @calmstudio/studio run test:coverage
+
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-reports
+          path: |
+            packages/calm-core/coverage/
+            packages/extensions/coverage/
+            packages/mcp-server/coverage/
+            apps/studio/coverage/
+          retention-days: 14
+
+  e2e-tests:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: build-lint-test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Build
+        run: pnpm -r run build
+
+      - name: Run E2E tests
+        run: pnpm --filter @calmstudio/studio run test:e2e
 
   reuse-compliance:
     name: REUSE License Compliance
