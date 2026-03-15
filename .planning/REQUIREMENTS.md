@@ -10,10 +10,10 @@ Requirements for v1.1 Distribution & Developer Experience milestone.
 ### Documentation & Publish
 
 - [x] **DOCS-01**: Docusaurus site with getting started guide, architecture overview, and API reference
-- [ ] **DOCS-02**: Architecture Decision Records (ADRs) for key v1.0 decisions
-- [ ] **DOCS-03**: Extension pack development guide (create custom packs)
-- [ ] **DOCS-04**: MCP server usage guide for AI tool integration
-- [ ] **DOCS-05**: Contributor guide (setup, testing, PR workflow, DCO)
+- [x] **DOCS-02**: Architecture Decision Records (ADRs) for key v1.0 decisions
+- [x] **DOCS-03**: Extension pack development guide (create custom packs)
+- [x] **DOCS-04**: MCP server usage guide for AI tool integration
+- [x] **DOCS-05**: Contributor guide (setup, testing, PR workflow, DCO)
 - [x] **CORE-01**: `@calmstudio/calm-core` published to npm with README, API docs, and independent versioning
 
 ### Desktop App
@@ -63,10 +63,10 @@ Requirements for v1.1 Distribution & Developer Experience milestone.
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | DOCS-01 | Phase 10 | Complete |
-| DOCS-02 | Phase 10 | Pending |
-| DOCS-03 | Phase 10 | Pending |
-| DOCS-04 | Phase 10 | Pending |
-| DOCS-05 | Phase 10 | Pending |
+| DOCS-02 | Phase 10 | Complete |
+| DOCS-03 | Phase 10 | Complete |
+| DOCS-04 | Phase 10 | Complete |
+| DOCS-05 | Phase 10 | Complete |
 | CORE-01 | Phase 10 | Complete |
 | DESK-01 | Phase 11 | Pending |
 | DESK-02 | Phase 11 | Pending |
