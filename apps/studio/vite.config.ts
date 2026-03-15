@@ -3,10 +3,11 @@
 // SPDX-License-Identifier: Apache-2.0
 import { sveltekit } from '@sveltejs/kit/vite';
 import tailwindcss from '@tailwindcss/vite';
+import { svelteTesting } from '@testing-library/svelte/vite';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-	plugins: [tailwindcss(), sveltekit()],
+	plugins: [tailwindcss(), sveltekit(), svelteTesting()],
 	ssr: {
 		noExternal: ['@xyflow/svelte']
 	},
