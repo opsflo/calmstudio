@@ -6,7 +6,7 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { writeFileSync, unlinkSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
-import { renderDiagram, validateArchitectureTool } from '../tools/render.js';
+import { renderDiagram, validateArchitectureTool, renderArchitectureToSvg } from '../tools/render.js';
 
 const tmpFile = join(tmpdir(), `render-test-${Date.now()}.calm`);
 
@@ -59,6 +59,33 @@ describe('render_diagram tool', () => {
     const svg = result.content[0]!.text;
     // SVG should contain node IDs used in ELK layout
     expect(svg.length).toBeGreaterThan(100);
+  });
+});
+
+describe('renderArchitectureToSvg pure function', () => {
+  it('returns string containing <svg and </svg>', async () => {
+    const svg = await renderArchitectureToSvg(sampleArch);
+    expect(svg).toContain('<svg');
+    expect(svg).toContain('</svg>');
+  });
+
+  it('SVG contains node names Frontend, API, DB', async () => {
+    const svg = await renderArchitectureToSvg(sampleArch);
+    expect(svg).toContain('Frontend');
+    expect(svg).toContain('API');
+    expect(svg).toContain('DB');
+  });
+
+  it('direction RIGHT produces SVG without error', async () => {
+    const svg = await renderArchitectureToSvg(sampleArch, 'RIGHT');
+    expect(svg).toContain('<svg');
+    expect(svg).toContain('</svg>');
+  });
+
+  it('empty architecture returns placeholder SVG with "No nodes" text', async () => {
+    const svg = await renderArchitectureToSvg(emptyArch);
+    expect(svg).toContain('<svg');
+    expect(svg).toContain('No nodes');
   });
 });
 

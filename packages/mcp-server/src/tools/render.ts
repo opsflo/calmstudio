@@ -76,26 +76,20 @@ export function validateArchitectureTool(args: ValidateArchitectureArgs): ToolRe
 }
 
 /**
- * Render a CALM architecture as an SVG string using ELK layout.
+ * Pure function: render a CalmArchitecture object to an SVG string using ELK layout.
+ * No file I/O — accepts the architecture in-memory. Used by the VS Code extension and GitHub Action.
  */
-export async function renderDiagram(args: RenderDiagramArgs): Promise<ToolResponse> {
-  const filePath = resolveFile(args.file);
-  const direction = args.direction ?? 'DOWN';
-
-  let arch: CalmArchitecture;
-  try {
-    arch = readCalmFile(filePath);
-  } catch (err) {
-    return toolError(`Failed to read architecture: ${String(err)}`);
-  }
-
+export async function renderArchitectureToSvg(
+  arch: CalmArchitecture,
+  direction: 'DOWN' | 'RIGHT' | 'UP' = 'DOWN'
+): Promise<string> {
   // Empty architecture — return minimal SVG placeholder
   if (arch.nodes.length === 0) {
-    const placeholder =
+    return (
       '<svg xmlns="http://www.w3.org/2000/svg" width="200" height="100">' +
       '<text x="10" y="50" font-family="sans-serif" font-size="14" fill="#999">No nodes</text>' +
-      '</svg>';
-    return toolSuccess(placeholder);
+      '</svg>'
+    );
   }
 
   // Build ELK graph — flat structure matching established pattern (RESEARCH Pitfall 7)
@@ -124,13 +118,8 @@ export async function renderDiagram(args: RenderDiagramArgs): Promise<ToolRespon
   type ElkEdgeSection = { startPoint?: { x: number; y: number }; endPoint?: { x: number; y: number }; bendPoints?: Array<{ x: number; y: number }> };
   type ElkLayouted = { children?: ElkChild[]; edges?: Array<{ id: string; sections?: ElkEdgeSection[] }> };
 
-  let layouted: ElkLayouted;
-  try {
-    const elk = new ELK();
-    layouted = await elk.layout(graph) as ElkLayouted;
-  } catch (err) {
-    return toolError(`ELK layout failed: ${String(err)}`);
-  }
+  const elk = new ELK();
+  const layouted = await elk.layout(graph) as ElkLayouted;
 
   // Build node type map for coloring
   const nodeTypeMap = new Map<string, string>();
@@ -138,8 +127,7 @@ export async function renderDiagram(args: RenderDiagramArgs): Promise<ToolRespon
     nodeTypeMap.set(n['unique-id'], n['node-type']);
   }
 
-  // Generate custom SVG with CALM node type coloring
-  // First get base SVG from elkjs-svg, then we wrap with our own styles
+  // Compute canvas size from laid-out positions
   const svgWidth = Math.max(
     400,
     ...(layouted.children ?? []).map((c) => (c.x ?? 0) + (c.width ?? 160) + 40)
@@ -204,8 +192,30 @@ export async function renderDiagram(args: RenderDiagramArgs): Promise<ToolRespon
 
   parts.push('</svg>');
 
-  const svg = parts.join('\n');
-  return toolSuccess(svg);
+  return parts.join('\n');
+}
+
+/**
+ * Render a CALM architecture as an SVG string using ELK layout.
+ * Reads from file — thin wrapper around renderArchitectureToSvg.
+ */
+export async function renderDiagram(args: RenderDiagramArgs): Promise<ToolResponse> {
+  const filePath = resolveFile(args.file);
+  const direction = args.direction ?? 'DOWN';
+
+  let arch: CalmArchitecture;
+  try {
+    arch = readCalmFile(filePath);
+  } catch (err) {
+    return toolError(`Failed to read architecture: ${String(err)}`);
+  }
+
+  try {
+    const svg = await renderArchitectureToSvg(arch, direction);
+    return toolSuccess(svg);
+  } catch (err) {
+    return toolError(`ELK layout failed: ${String(err)}`);
+  }
 }
 
 function escapeXml(str: string): string {
