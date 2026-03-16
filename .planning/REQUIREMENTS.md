@@ -32,7 +32,7 @@ Requirements for v1.1 Distribution & Developer Experience milestone.
 
 ### GitHub Action
 
-- [ ] **GHAC-01**: GitHub Action renders CALM architecture diagrams as SVG images in PR comments
+- [x] **GHAC-01**: GitHub Action renders CALM architecture diagrams as SVG images in PR comments
 
 ### Web Component
 
@@ -76,7 +76,7 @@ Requirements for v1.1 Distribution & Developer Experience milestone.
 | VSCE-03 | Phase 12 | Pending |
 | VSCE-04 | Phase 12 | Pending |
 | VSCE-05 | Phase 12 | Pending |
-| GHAC-01 | Phase 12 | Pending |
+| GHAC-01 | Phase 12 | Complete |
 | WEBC-01 | Phase 13 | Pending |
 | WEBC-02 | Phase 13 | Pending |
 | FLOW-01 | Phase 13 | Pending |

@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Distribution & Developer Experience
 status: verifying
-stopped_at: Completed 12-developer-tooling/12-01-PLAN.md
-last_updated: "2026-03-16T09:22:11.187Z"
+stopped_at: Completed 12-developer-tooling/12-02-PLAN.md
+last_updated: "2026-03-16T09:31:01.671Z"
 last_activity: "2026-03-15 — completed Phase 11: Tauri desktop app with native file I/O, menu, sidecar, CI"
 progress:
   total_phases: 4
   completed_phases: 2
   total_plans: 9
-  completed_plans: 7
+  completed_plans: 8
   percent: 50
 ---
 
@@ -55,6 +55,8 @@ Decisions are logged in PROJECT.md Key Decisions table.
 - [Phase 11-03]: externalBin validated at compile time — placeholder sidecar binary needed for local dev builds
 - [Phase 12-developer-tooling]: renderArchitectureToSvg extracted as pure function in mcp-server — renderDiagram becomes thin file-reading wrapper
 - [Phase 12-developer-tooling]: VS Code extension unit tests use vitest alias mock for vscode module — no @vscode/test-electron needed for pure function tests
+- [Phase 12-developer-tooling]: Import renderArchitectureToSvg from @calmstudio/mcp/dist/tools/render.js — ncc cannot bundle TypeScript source outside rootDir
+- [Phase 12-developer-tooling]: SVG committed to gh-diagrams branch — GitHub does not render inline SVG or base64 data URIs in PR comments
 
 ### Blockers/Concerns
 
@@ -67,6 +69,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-16T09:22:11.177Z
-Stopped at: Completed 12-developer-tooling/12-01-PLAN.md
+Last session: 2026-03-16T09:31:01.669Z
+Stopped at: Completed 12-developer-tooling/12-02-PLAN.md
 Resume file: None
