@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Distribution & Developer Experience
-status: executing
-stopped_at: Completed Phase 11 — Tauri 2 desktop app with native file I/O, menu, sidecar, CI
-last_updated: "2026-03-15T12:00:00.000Z"
-last_activity: "2026-03-15 — completed Phase 11: Tauri desktop app, all 3 plans done, checkpoint approved"
+status: verifying
+stopped_at: Completed 12-developer-tooling/12-01-PLAN.md
+last_updated: "2026-03-16T09:22:11.187Z"
+last_activity: "2026-03-15 — completed Phase 11: Tauri desktop app with native file I/O, menu, sidecar, CI"
 progress:
   total_phases: 4
   completed_phases: 2
-  total_plans: 6
-  completed_plans: 6
+  total_plans: 9
+  completed_plans: 7
   percent: 50
 ---
 
@@ -53,6 +53,8 @@ Decisions are logged in PROJECT.md Key Decisions table.
 - [Phase 11-03]: tauri-plugin-store and tauri-plugin-updater use Builder pattern, not init() — API mismatch from other Tauri plugins
 - [Phase 11-03]: Tauri 2.10 requires explicit use tauri::{Emitter, Manager} trait imports for emit() and get_webview_window()
 - [Phase 11-03]: externalBin validated at compile time — placeholder sidecar binary needed for local dev builds
+- [Phase 12-developer-tooling]: renderArchitectureToSvg extracted as pure function in mcp-server — renderDiagram becomes thin file-reading wrapper
+- [Phase 12-developer-tooling]: VS Code extension unit tests use vitest alias mock for vscode module — no @vscode/test-electron needed for pure function tests
 
 ### Blockers/Concerns
 
@@ -65,6 +67,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-15T12:00:00.000Z
-Stopped at: Completed Phase 11 — Tauri 2 desktop app with native file I/O, menu, sidecar, CI
+Last session: 2026-03-16T09:22:11.177Z
+Stopped at: Completed 12-developer-tooling/12-01-PLAN.md
 Resume file: None
