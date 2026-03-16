@@ -1,5 +1,5 @@
 {
-  "name": "@calmstudio/vscode-extension",
+  "name": "calmstudio",
   "publisher": "opsflow",
   "displayName": "CalmStudio",
   "description": "CALM architecture diagram preview and MCP integration",
@@ -33,9 +33,20 @@
           "command": "calmstudio.openPreview",
           "when": "resourceExtname == .json",
           "group": "navigation"
+        },
+        {
+          "command": "calmstudio.openInApp",
+          "when": "resourceExtname == .json",
+          "group": "navigation"
         }
       ]
-    }
+    },
+    "mcpServerDefinitionProviders": [
+      {
+        "id": "calmstudio.mcpServer",
+        "label": "CalmStudio MCP"
+      }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "node esbuild.mjs --production",

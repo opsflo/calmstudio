@@ -4,6 +4,8 @@
 
 import * as vscode from 'vscode';
 import { CalmPreviewPanel, isCalmFile } from './preview.js';
+import { registerMcpServer } from './mcp.js';
+import { openInCalmStudio } from './openInStudio.js';
 
 /**
  * Called when the extension is activated (when a .calm.json file is opened).
@@ -24,15 +26,22 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand('calmstudio.openInApp', () => {
       const editor = vscode.window.activeTextEditor;
       if (editor) {
-        const fileUri = vscode.Uri.parse(
-          `calmstudio://open?file=${encodeURIComponent(editor.document.uri.fsPath)}`
-        );
-        void vscode.env.openExternal(fileUri);
+        void openInCalmStudio(editor.document.uri);
       }
     })
   );
 
-  // 3. Register save listener — re-render preview when a .calm.json file is saved
+  // 3. Register MCP server definition provider (VS Code ^1.99.0).
+  // Wrapped in try/catch for graceful degradation on older VS Code versions
+  // where vscode.lm.registerMcpServerDefinitionProvider may not exist.
+  try {
+    registerMcpServer(context);
+  } catch {
+    // eslint-disable-next-line no-console
+    console.warn('[CalmStudio] MCP server registration skipped — requires VS Code 1.99+');
+  }
+
+  // 4. Register save listener — re-render preview when a .calm.json file is saved
   context.subscriptions.push(
     vscode.workspace.onDidSaveTextDocument((doc) => {
       if (isCalmFile(doc.fileName)) {
@@ -41,7 +50,7 @@ export function activate(context: vscode.ExtensionContext): void {
     })
   );
 
-  // 4. Register active editor change listener — auto-open preview for CALM files
+  // 5. Register active editor change listener — auto-open preview for CALM files
   context.subscriptions.push(
     vscode.window.onDidChangeActiveTextEditor((editor) => {
       if (editor && isCalmFile(editor.document.uri.fsPath)) {
