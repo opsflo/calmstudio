@@ -7,10 +7,11 @@ import { writeFileSync, unlinkSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { renderDiagram, validateArchitectureTool, renderArchitectureToSvg } from '../tools/render.js';
+import type { CalmArchitecture } from '@calmstudio/calm-core';
 
 const tmpFile = join(tmpdir(), `render-test-${Date.now()}.calm`);
 
-const sampleArch = {
+const sampleArch: CalmArchitecture = {
   nodes: [
     { 'unique-id': 'node-1', 'node-type': 'system', name: 'Frontend', description: 'User-facing frontend' },
     { 'unique-id': 'node-2', 'node-type': 'service', name: 'API', description: 'REST API service' },
@@ -22,7 +23,7 @@ const sampleArch = {
   ]
 };
 
-const emptyArch = { nodes: [], relationships: [] };
+const emptyArch: CalmArchitecture = { nodes: [], relationships: [] };
 
 beforeEach(() => {
   writeFileSync(tmpFile, JSON.stringify(sampleArch, null, 2), 'utf-8');
