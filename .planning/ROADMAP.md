@@ -82,7 +82,11 @@ Plans:
   3. A developer can click "Open in CalmStudio" in VS Code and the diagram opens in the desktop app or web URL
   4. A repository maintainer can add the CalmStudio GitHub Action to a workflow and see CALM architecture diagrams rendered as SVG images in PR comments
   5. VS Code registers the MCP server automatically, making CALM architecture tools available to Copilot and Claude Code
-**Plans**: TBD
+**Plans:** 3 plans
+Plans:
+- [ ] 12-01-PLAN.md — Extract renderArchitectureToSvg, scaffold packages, implement VS Code preview panel
+- [ ] 12-02-PLAN.md — Implement GitHub Action with PR comment rendering and validation
+- [ ] 12-03-PLAN.md — Add MCP registration, Open in CalmStudio, and VSIX packaging
 
 ### Phase 13: Embedding & Visualization
 **Goal**: Any developer can embed a CALM diagram in a webpage with a single HTML tag, and architects can visualize data flows as animated overlays on canvas edges
@@ -103,5 +107,5 @@ Phases execute in numeric order: 10 → 11 → 12 → 13
 |-------|-----------|----------------|--------|-----------|
 | 10. Docs & Package Publish | 3/3 | Complete    | 2026-03-15 | - |
 | 11. Desktop App | 3/3 | Complete   | 2026-03-15 | - |
-| 12. Developer Tooling | v1.1 | 0/TBD | Not started | - |
+| 12. Developer Tooling | v1.1 | 0/3 | Planning complete | - |
 | 13. Embedding & Visualization | v1.1 | 0/TBD | Not started | - |
