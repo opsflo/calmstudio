@@ -106,6 +106,8 @@ export async function buildAppMenu(handlers: MenuHandlers): Promise<void> {
 				text: 'Export PNG...',
 				action: () => { void handlers.exportPng(); },
 			}),
+			await PredefinedMenuItem.new({ item: 'Separator' }),
+			await PredefinedMenuItem.new({ item: 'Quit' }),
 		],
 	});
 
