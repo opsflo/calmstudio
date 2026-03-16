@@ -18,6 +18,8 @@ module.exports = {
         'ci',
         'docs',
         'deps',
+        'github-action',
+        'vscode-extension',
       ],
     ],
   },
