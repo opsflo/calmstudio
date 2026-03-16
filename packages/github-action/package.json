@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "build": "ncc build src/index.ts --out dist --no-source-map",
+    "build": "ncc build src/index.ts --out dist",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },

@@ -4,7 +4,7 @@
 
 import { readFileSync } from 'node:fs';
 import { basename } from 'node:path';
-import { renderArchitectureToSvg } from '@calmstudio/mcp/src/tools/render.js';
+import { renderArchitectureToSvg } from '@calmstudio/mcp/dist/tools/render.js';
 import type { CalmArchitecture, ValidationIssue } from '@calmstudio/calm-core';
 import { validateCalmArchitecture } from '@calmstudio/calm-core';
 
