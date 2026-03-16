@@ -26,9 +26,9 @@ Requirements for v1.1 Distribution & Developer Experience milestone.
 
 - [x] **VSCE-01**: Live read-only CALM architecture diagram preview in VS Code webview panel
 - [x] **VSCE-02**: Preview auto-updates when .calm.json file is saved
-- [ ] **VSCE-03**: Auto-registers @calmstudio/mcp server for Copilot/Claude Code in VS Code
-- [ ] **VSCE-04**: "Open in CalmStudio" button launches desktop app or web URL with current file
-- [ ] **VSCE-05**: Extension installable from VS Code Marketplace
+- [x] **VSCE-03**: Auto-registers @calmstudio/mcp server for Copilot/Claude Code in VS Code
+- [x] **VSCE-04**: "Open in CalmStudio" button launches desktop app or web URL with current file
+- [x] **VSCE-05**: Extension installable from VS Code Marketplace
 
 ### GitHub Action
 
@@ -73,9 +73,9 @@ Requirements for v1.1 Distribution & Developer Experience milestone.
 | DESK-03 | Phase 11 | Complete |
 | VSCE-01 | Phase 12 | Complete |
 | VSCE-02 | Phase 12 | Complete |
-| VSCE-03 | Phase 12 | Pending |
-| VSCE-04 | Phase 12 | Pending |
-| VSCE-05 | Phase 12 | Pending |
+| VSCE-03 | Phase 12 | Complete |
+| VSCE-04 | Phase 12 | Complete |
+| VSCE-05 | Phase 12 | Complete |
 | GHAC-01 | Phase 12 | Complete |
 | WEBC-01 | Phase 13 | Pending |
 | WEBC-02 | Phase 13 | Pending |

@@ -37,7 +37,7 @@ Phases: 01-foundation-governance, 02-calm-canvas-core, 03-properties-bidirection
 
 - [x] **Phase 10: Docs & Package Publish** - Docusaurus documentation site live and calm-core published to npm (completed 2026-03-15)
 - [x] **Phase 11: Desktop App** - Tauri 2 native app builds and runs on macOS, Windows, and Linux (completed 2026-03-15)
-- [ ] **Phase 12: Developer Tooling** - VS Code extension on Marketplace and GitHub Action rendering CALM diagrams in PRs
+- [x] **Phase 12: Developer Tooling** - VS Code extension on Marketplace and GitHub Action rendering CALM diagrams in PRs (completed 2026-03-16)
 - [ ] **Phase 13: Embedding & Visualization** - Web component usable in any framework and flow visualization on canvas edges
 
 ## Phase Details
@@ -82,7 +82,7 @@ Plans:
   3. A developer can click "Open in CalmStudio" in VS Code and the diagram opens in the desktop app or web URL
   4. A repository maintainer can add the CalmStudio GitHub Action to a workflow and see CALM architecture diagrams rendered as SVG images in PR comments
   5. VS Code registers the MCP server automatically, making CALM architecture tools available to Copilot and Claude Code
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans complete
 Plans:
 - [ ] 12-01-PLAN.md — Extract renderArchitectureToSvg, scaffold packages, implement VS Code preview panel
 - [ ] 12-02-PLAN.md — Implement GitHub Action with PR comment rendering and validation
@@ -107,5 +107,5 @@ Phases execute in numeric order: 10 → 11 → 12 → 13
 |-------|-----------|----------------|--------|-----------|
 | 10. Docs & Package Publish | 3/3 | Complete    | 2026-03-15 | - |
 | 11. Desktop App | 3/3 | Complete   | 2026-03-15 | - |
-| 12. Developer Tooling | 2/3 | In Progress|  | - |
+| 12. Developer Tooling | 3/3 | Complete   | 2026-03-16 | - |
 | 13. Embedding & Visualization | v1.1 | 0/TBD | Not started | - |

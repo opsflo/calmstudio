@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Distribution & Developer Experience
 status: verifying
-stopped_at: Completed 12-developer-tooling/12-02-PLAN.md
-last_updated: "2026-03-16T09:31:01.671Z"
+stopped_at: Completed 12-developer-tooling/12-03-PLAN.md
+last_updated: "2026-03-16T09:39:23.590Z"
 last_activity: "2026-03-15 — completed Phase 11: Tauri desktop app with native file I/O, menu, sidecar, CI"
 progress:
   total_phases: 4
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 9
-  completed_plans: 8
+  completed_plans: 9
   percent: 50
 ---
 
@@ -57,6 +57,9 @@ Decisions are logged in PROJECT.md Key Decisions table.
 - [Phase 12-developer-tooling]: VS Code extension unit tests use vitest alias mock for vscode module — no @vscode/test-electron needed for pure function tests
 - [Phase 12-developer-tooling]: Import renderArchitectureToSvg from @calmstudio/mcp/dist/tools/render.js — ncc cannot bundle TypeScript source outside rootDir
 - [Phase 12-developer-tooling]: SVG committed to gh-diagrams branch — GitHub does not render inline SVG or base64 data URIs in PR comments
+- [Phase 12-developer-tooling]: package.json name changed from '@calmstudio/vscode-extension' to 'calmstudio' — vsce rejects scoped package names
+- [Phase 12-developer-tooling]: Type assertions used for vscode.lm and McpStdioServerDefinition — @types/vscode 1.99.0 missing these APIs
+- [Phase 12-developer-tooling]: elkjs-svg marked external in MCP server bundle and copied to dist/mcp-server/node_modules at build time
 
 ### Blockers/Concerns
 
@@ -69,6 +72,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-16T09:31:01.669Z
-Stopped at: Completed 12-developer-tooling/12-02-PLAN.md
+Last session: 2026-03-16T09:39:23.587Z
+Stopped at: Completed 12-developer-tooling/12-03-PLAN.md
 Resume file: None
