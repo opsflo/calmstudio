@@ -249,7 +249,8 @@
 	.palette {
 		display: flex;
 		flex-direction: column;
-		width: 224px;
+		width: 100%;
+		max-width: 280px;
 		height: 100%;
 		flex-shrink: 0;
 		background: var(--color-surface);

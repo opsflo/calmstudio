@@ -35,9 +35,10 @@ export function paste(existingNodes: Node[]): Node[] {
 	if (clipboardNodes.length === 0) return [];
 
 	return clipboardNodes.map((n) => {
+		const newId = nanoid();
 		const clone: Node = {
 			...JSON.parse(JSON.stringify(n)),
-			id: nanoid(),
+			id: newId,
 			position: {
 				x: n.position.x + 20,
 				y: n.position.y + 20,
@@ -45,7 +46,7 @@ export function paste(existingNodes: Node[]): Node[] {
 			selected: false,
 			data: {
 				...JSON.parse(JSON.stringify(n.data)),
-				calmId: nanoid(),
+				calmId: newId,
 			},
 		};
 		return clone;

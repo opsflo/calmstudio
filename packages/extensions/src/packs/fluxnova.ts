@@ -17,7 +17,7 @@ function node(
 	label: string,
 	iconKey: string,
 	description: string,
-	isContainer?: boolean,
+	opts?: { isContainer?: boolean; defaultChildren?: string[] },
 ): PackDefinition['nodes'][number] {
 	return {
 		typeId,
@@ -25,13 +25,14 @@ function node(
 		icon: fluxnovaIcons[iconKey] ?? fluxnovaIcons['engine']!,
 		color: fluxnovaColor,
 		description,
-		...(isContainer ? { isContainer } : {}),
+		...(opts?.isContainer ? { isContainer: true } : {}),
+		...(opts?.defaultChildren ? { defaultChildren: opts.defaultChildren } : {}),
 	};
 }
 
 export const fluxnovaPack: PackDefinition = {
 	id: 'fluxnova',
-	label: 'FluxNova BPM',
+	label: 'FluxNova',
 	version: '1.0.0',
 	color: fluxnovaColor,
 	nodes: [
@@ -79,7 +80,15 @@ export const fluxnovaPack: PackDefinition = {
 			'FluxNova Platform',
 			'platform',
 			'Container for the full FluxNova deployment',
-			true,
+			{
+				isContainer: true,
+				defaultChildren: [
+					'fluxnova:engine',
+					'fluxnova:rest-api',
+					'fluxnova:cockpit',
+					'fluxnova:admin',
+				],
+			},
 		),
 	],
 };

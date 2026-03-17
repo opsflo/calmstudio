@@ -24,6 +24,8 @@ export interface NodeTypeEntry {
   description?: string;
   /** If true, this node renders as a container (large box that accepts children). */
   isContainer?: boolean;
+  /** For containers: auto-populate with these child type IDs when placed on the canvas. */
+  defaultChildren?: string[];
 }
 
 /** A complete pack definition containing metadata and all node type entries. */

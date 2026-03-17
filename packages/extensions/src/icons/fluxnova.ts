@@ -2,9 +2,9 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 //
-// Hand-crafted abstract SVG icons for FluxNova BPM node types (16x16 viewBox, stroke-based).
+// Hand-crafted abstract SVG icons for FluxNova node types (16x16 viewBox, stroke-based).
 
-/** SVG icon strings for FluxNova BPM node types. */
+/** SVG icon strings for FluxNova node types. */
 export const fluxnovaIcons: Record<string, string> = {
   engine: `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="8" cy="8" r="2.5"/><path d="M8 2v2M8 12v2M2 8h2M12 8h2M3.5 3.5l1.5 1.5M11 11l1.5 1.5M3.5 12.5l1.5-1.5M11 5l1.5-1.5" stroke-linecap="round"/><path d="M8 5.5A2.5 2.5 0 0 1 10.5 8" stroke-linecap="round"/></svg>`,
 
@@ -18,7 +18,7 @@ export const fluxnovaIcons: Record<string, string> = {
 
   modeler: `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2" y="2" width="5" height="4" rx="1"/><rect x="9" y="2" width="5" height="4" rx="1"/><rect x="5" y="10" width="6" height="4" rx="1"/><path d="M4.5 6v2h7V6" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 8v2" stroke-linecap="round"/></svg>`,
 
-  'external-task-worker': `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="6" cy="5" r="2.5"/><path d="M2 13c0-2.2 1.8-4 4-4s4 1.8 4 4" stroke-linecap="round"/><path d="M12 7l2 2-2 2M14 9h-4" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  'external-task-worker': `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2" y="3" width="8" height="10" rx="1.5"/><path d="M5 6h2M5 8.5h2" stroke-linecap="round"/><circle cx="6" cy="11" r="0.5" fill="currentColor"/><path d="M12 6l2 2-2 2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 8h-4" stroke-linecap="round"/></svg>`,
 
   'dmn-engine': `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M8 2l5 4v4l-5 4L3 10V6L8 2Z" stroke-linejoin="round"/><path d="M5.5 8l2 2 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
 

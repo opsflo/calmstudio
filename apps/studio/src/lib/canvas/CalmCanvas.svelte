@@ -41,6 +41,7 @@
 	import { nodeTypes, resolveNodeType } from './nodeTypes';
 	import { edgeTypes, DEFAULT_EDGE_TYPE } from './edgeTypes';
 	import { makeContainment, isContainmentType } from './containment';
+	import { resolvePackNode } from '@calmstudio/extensions';
 	import EdgeMarkers from './edges/EdgeMarkers.svelte';
 	import NodeSearch from '$lib/search/NodeSearch.svelte';
 	import { pushSnapshot, undo, redo } from '$lib/stores/history.svelte';
@@ -48,6 +49,60 @@
 	import { applyFromCanvas } from '$lib/stores/calmModel.svelte';
 
 	import '@xyflow/svelte/dist/style.css';
+
+	// ─── Container scaffold helper ──────────────────────────────────────────
+	// When a container with defaultChildren is placed, auto-create child nodes
+	// inside it with composed-of edges in a 2-column grid layout.
+
+	function scaffoldChildren(
+		parentNode: Node,
+		childTypes: string[],
+	): { childNodes: Node[]; childEdges: Edge[] } {
+		const cols = 2;
+		const padX = 30;
+		const padY = 50;
+		const cellW = 200;
+		const cellH = 80;
+		const gapX = 20;
+		const gapY = 20;
+
+		const childNodes: Node[] = [];
+		const childEdges: Edge[] = [];
+
+		for (let i = 0; i < childTypes.length; i++) {
+			const calmType = childTypes[i];
+			const col = i % cols;
+			const row = Math.floor(i / cols);
+			const childId = nanoid();
+			const childResolvedType = resolveNodeType(calmType);
+
+			childNodes.push({
+				id: childId,
+				type: childResolvedType,
+				position: {
+					x: padX + col * (cellW + gapX),
+					y: padY + row * (cellH + gapY),
+				},
+				parentId: parentNode.id,
+				extent: 'parent',
+				data: {
+					label: `New ${calmType}`,
+					calmId: childId,
+					calmType,
+				},
+			});
+
+			childEdges.push({
+				id: nanoid(),
+				source: parentNode.id,
+				target: childId,
+				type: 'composed-of',
+				data: { protocol: '', description: '' },
+			});
+		}
+
+		return { childNodes, childEdges };
+	}
 
 	// ─── Props ────────────────────────────────────────────────────────────────
 
@@ -178,22 +233,31 @@
 		const id = nanoid();
 		const resolvedType = resolveNodeType(calmType);
 
+		const packMeta = calmType.includes(':') ? resolvePackNode(calmType) : null;
+		const hasScaffold = resolvedType === 'container' && packMeta?.defaultChildren?.length;
+
 		const newNode: Node = {
 			id,
 			type: resolvedType,
 			position,
 			data: {
 				label: `New ${calmType}`,
-				calmId: nanoid(),
+				calmId: id,
 				calmType,
 			},
 		};
 		if (resolvedType === 'container') {
-			newNode.width = 300;
-			newNode.height = 200;
+			newNode.width = hasScaffold ? 480 : 300;
+			newNode.height = hasScaffold ? 280 : 200;
 		}
 
-		nodes = [...nodes, newNode];
+		if (hasScaffold) {
+			const { childNodes, childEdges } = scaffoldChildren(newNode, packMeta.defaultChildren!);
+			nodes = [...nodes, newNode, ...childNodes];
+			edges = [...edges, ...childEdges];
+		} else {
+			nodes = [...nodes, newNode];
+		}
 		applyFromCanvas(nodes, edges);
 		notifyChange();
 	}
@@ -214,22 +278,31 @@
 
 		pushSnapshot(nodes, edges);
 
+		const packMeta = calmType.includes(':') ? resolvePackNode(calmType) : null;
+		const hasScaffold = resolvedType === 'container' && packMeta?.defaultChildren?.length;
+
 		const newNode: Node = {
 			id,
 			type: resolvedType,
 			position,
 			data: {
 				label: `New ${calmType}`,
-				calmId: nanoid(),
+				calmId: id,
 				calmType,
 			},
 		};
 		if (resolvedType === 'container') {
-			newNode.width = 300;
-			newNode.height = 200;
+			newNode.width = hasScaffold ? 480 : 300;
+			newNode.height = hasScaffold ? 280 : 200;
 		}
 
-		nodes = [...nodes, newNode];
+		if (hasScaffold) {
+			const { childNodes, childEdges } = scaffoldChildren(newNode, packMeta.defaultChildren!);
+			nodes = [...nodes, newNode, ...childNodes];
+			edges = [...edges, ...childEdges];
+		} else {
+			nodes = [...nodes, newNode];
+		}
 		applyFromCanvas(nodes, edges);
 		notifyChange();
 	}
@@ -239,31 +312,45 @@
 	function handleConnect(connection: Connection) {
 		if (readonly) return;
 
-		// Prevent duplicate edges between the same source and target
-		const duplicate = edges.find(
+		pushSnapshot(nodes, edges);
+
+		// Svelte Flow may auto-add an edge via bind:edges before this callback fires.
+		// Check if an edge already exists for this connection.
+		const existing = edges.find(
 			(e) =>
 				(e.source === connection.source && e.target === connection.target) ||
 				(e.source === connection.target && e.target === connection.source)
 		);
-		if (duplicate) return;
 
-		pushSnapshot(nodes, edges);
+		if (existing) {
+			// Edge was auto-added by Svelte Flow — ensure it has our type and data
+			edges = edges.map((e) =>
+				e.id === existing.id
+					? { ...e, type: e.type || DEFAULT_EDGE_TYPE, data: { protocol: '', description: '', ...e.data } }
+					: e
+			);
+		} else {
+			// No auto-added edge — create one ourselves
+			const newEdge: Edge = {
+				id: nanoid(),
+				source: connection.source,
+				target: connection.target,
+				sourceHandle: connection.sourceHandle ?? undefined,
+				targetHandle: connection.targetHandle ?? undefined,
+				type: DEFAULT_EDGE_TYPE,
+				data: {
+					protocol: '',
+					description: '',
+				},
+			};
+			edges = [...edges, newEdge];
+		}
 
 		const edgeType = DEFAULT_EDGE_TYPE;
-		const newEdge: Edge = {
-			id: nanoid(),
-			source: connection.source,
-			target: connection.target,
-			sourceHandle: connection.sourceHandle ?? undefined,
-			targetHandle: connection.targetHandle ?? undefined,
-			type: edgeType,
-		};
-
-		edges = [...edges, newEdge];
-
 		if (isContainmentType(edgeType)) {
 			nodes = makeContainment(connection.source, connection.target, nodes);
 		}
+		// Always sync to model so relationships appear in CALM JSON
 		applyFromCanvas(nodes, edges);
 		notifyChange();
 	}
@@ -346,6 +433,7 @@
 		if (readonly) return;
 
 		const draggedNode = event.node;
+		if (!draggedNode) return;
 		// Don't reparent nodes that are already parented or are containers
 		if (draggedNode.type === 'container' || draggedNode.parentId) return;
 

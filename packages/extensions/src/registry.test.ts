@@ -112,9 +112,9 @@ describe('initAllPacks', () => {
 		expect(packs.some((p) => p.id === 'core')).toBe(true);
 	});
 
-	it('getAllPacks() returns 7 packs after initAllPacks()', () => {
+	it('getAllPacks() returns 9 packs after initAllPacks()', () => {
 		initAllPacks();
-		expect(getAllPacks()).toHaveLength(7);
+		expect(getAllPacks()).toHaveLength(9);
 	});
 
 	it('AWS pack has >= 30 node entries', () => {
