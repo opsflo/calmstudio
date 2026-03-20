@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Distribution & Developer Experience
 status: verifying
-stopped_at: Completed 12-developer-tooling/12-03-PLAN.md
-last_updated: "2026-03-16T09:46:45.898Z"
+stopped_at: Completed 14-opengris-extension-pack/14-01-PLAN.md
+last_updated: "2026-03-20T16:51:01.639Z"
 last_activity: "2026-03-15 — completed Phase 11: Tauri desktop app with native file I/O, menu, sidecar, CI"
 progress:
-  total_phases: 4
-  completed_phases: 3
-  total_plans: 9
-  completed_plans: 9
+  total_phases: 5
+  completed_phases: 4
+  total_plans: 10
+  completed_plans: 10
   percent: 50
 ---
 
@@ -60,6 +60,12 @@ Decisions are logged in PROJECT.md Key Decisions table.
 - [Phase 12-developer-tooling]: package.json name changed from '@calmstudio/vscode-extension' to 'calmstudio' — vsce rejects scoped package names
 - [Phase 12-developer-tooling]: Type assertions used for vscode.lm and McpStdioServerDefinition — @types/vscode 1.99.0 missing these APIs
 - [Phase 12-developer-tooling]: elkjs-svg marked external in MCP server bundle and copied to dist/mcp-server/node_modules at build time
+- [Phase 14-opengris-extension-pack]: openGrisPack.id is 'opengris' (lowercase, no hyphens) — registry splits on ':' for namespace resolution
+- [Phase 14-opengris-extension-pack]: Green color family (#f0fdf4 bg, #16a34a border) for OpenGRIS pack to differentiate from other packs
+
+### Roadmap Evolution
+
+- Phase 14 added: OpenGRIS Extension Pack — FINOS OpenGRIS node types (scheduler, worker, worker-manager, client, object-storage, cluster, task-graph, parallel-function) for CalmStudio
 
 ### Blockers/Concerns
 
@@ -72,6 +78,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-16T09:39:23.587Z
-Stopped at: Completed 12-developer-tooling/12-03-PLAN.md
+Last session: 2026-03-20T16:51:01.637Z
+Stopped at: Completed 14-opengris-extension-pack/14-01-PLAN.md
 Resume file: None

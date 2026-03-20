@@ -32,7 +32,7 @@ Phases: 01-foundation-governance, 02-calm-canvas-core, 03-properties-bidirection
 **Goal:** Architects modeling OpenGRIS-based distributed grid computing systems can use native node types on the CalmStudio canvas with proper icons, colors, and container semantics
 **Requirements**: OGRIS-01, OGRIS-02, OGRIS-03
 **Depends on:** Phase 7 (extension pack system)
-**Plans:** 1 plan
+**Plans:** 1/1 plans complete
 
 Plans:
 - [ ] 14-01-PLAN.md — Add OpenGRIS pack with 8 node types, icons, tests, and registration
