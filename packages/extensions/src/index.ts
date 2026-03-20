@@ -19,6 +19,7 @@ export { aiPack } from './packs/ai.js';
 export { fluxnovaPack } from './packs/fluxnova.js';
 export { messagingPack } from './packs/messaging.js';
 export { identityPack } from './packs/identity.js';
+export { openGrisPack } from './packs/opengris.js';
 
 import { registerPack } from './registry.js';
 import { corePack } from './packs/core.js';
@@ -30,9 +31,10 @@ import { aiPack } from './packs/ai.js';
 import { fluxnovaPack } from './packs/fluxnova.js';
 import { messagingPack } from './packs/messaging.js';
 import { identityPack } from './packs/identity.js';
+import { openGrisPack } from './packs/opengris.js';
 
 /**
- * Register all built-in packs (core + 8 extension packs).
+ * Register all built-in packs (core + 9 extension packs).
  * Call once at application startup before resolving any pack nodes.
  */
 export function initAllPacks(): void {
@@ -45,4 +47,5 @@ export function initAllPacks(): void {
   registerPack(kubernetesPack);
   registerPack(messagingPack);
   registerPack(identityPack);
+  registerPack(openGrisPack);
 }
