@@ -43,6 +43,14 @@ Requirements for v1.1 Distribution & Developer Experience milestone.
 
 - [ ] **FLOW-01**: Flow visualization shows data flows as stepped overlays on architecture edges
 
+## OpenGRIS Extension Pack
+
+Requirements for FINOS OpenGRIS extension pack (Phase 14).
+
+- [ ] **OGRIS-01**: OpenGRIS pack registers 8 node types (scheduler, worker, worker-manager, client, object-storage, cluster, task-graph, parallel-function) under the `opengris:` namespace
+- [ ] **OGRIS-02**: `opengris:worker-manager` and `opengris:cluster` render as containers; cluster pre-populates with scheduler, worker, and object-storage children
+- [ ] **OGRIS-03**: All 8 node types have hand-crafted 16x16 stroke-based SVG icons and pass existing registry validation (non-empty icon, color, description)
+
 ## Deferred
 
 - **calmscript DSL** — MCP server solves AI generation more reliably; evaluate need after real-world MCP usage
@@ -80,11 +88,15 @@ Requirements for v1.1 Distribution & Developer Experience milestone.
 | WEBC-01 | Phase 13 | Pending |
 | WEBC-02 | Phase 13 | Pending |
 | FLOW-01 | Phase 13 | Pending |
+| OGRIS-01 | Phase 14 | Pending |
+| OGRIS-02 | Phase 14 | Pending |
+| OGRIS-03 | Phase 14 | Pending |
 
 **Coverage:**
 - v1.1 requirements: 18 total
-- Mapped to phases: 18
+- OpenGRIS requirements: 3 total
+- Mapped to phases: 21
 - Unmapped: 0
 
 ---
-*Requirements defined: 2026-03-15*
+*Requirements defined: 2026-03-15, updated: 2026-03-20*
