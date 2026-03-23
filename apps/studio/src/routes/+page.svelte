@@ -67,7 +67,7 @@
 	import { checkForUpdates } from '$lib/desktop/updater';
 	import { registerFileOpenHandler } from '$lib/desktop/fileOpen';
 	import { readTextFile } from '@tauri-apps/plugin-fs';
-	import { exportAsCalm, exportAsSvg, exportAsPng, exportAsCalmscript } from '$lib/io/export';
+	import { exportAsCalm, exportAsSvg, exportAsPng, exportAsCalmscript, exportAsScalerToml } from '$lib/io/export';
 	import type { CalmArchitecture, CalmRelationship } from '@calmstudio/calm-core';
 	import { detectPacksFromArch } from '$lib/io/sidecar';
 	import {
@@ -823,6 +823,17 @@
 		exportAsCalmscript(`// calmscript export — full DSL support coming in Phase 5\n// CALM JSON representation:\n${json}\n`);
 	}
 
+	function handleExportScalerToml() {
+		const arch = JSON.parse(getModelJson()) as CalmArchitecture;
+		exportAsScalerToml(arch);
+	}
+
+	// Reactive: show Scaler.toml export only when canvas has opengris: nodes.
+	// $derived re-evaluates whenever the reactive $state model changes.
+	const showScalerTomlExport = $derived(
+		getModel().nodes.some(n => n['node-type'].startsWith('opengris:'))
+	);
+
 	// ─── Auto-layout ──────────────────────────────────────────────────────────
 
 	/** Currently selected layout direction (used by toolbar dropdown). */
@@ -974,6 +985,7 @@
 			onexportsvg={handleExportSvg}
 			onexportpng={handleExportPng}
 			onexportcalmscript={handleExportCalmscript}
+			onexportscalertoml={handleExportScalerToml}
 			onloaddemo={handleLoadDemo}
 			ontemplates={() => (showTemplatePicker = true)}
 			filename={getFileName()}
@@ -982,6 +994,7 @@
 			onc4levelchange={handleC4LevelChange}
 			governanceScore={getArchitectureScore()}
 			showGovernanceBadge={hasAINodes()}
+			showScalerTomlExport={showScalerTomlExport}
 		/>
 
 		<!-- Error banner: below toolbar, above canvas panes -->

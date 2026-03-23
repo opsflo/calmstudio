@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: 2024 CalmStudio contributors - see NOTICE file
 //
 // SPDX-License-Identifier: Apache-2.0
+import path from 'path';
 import { sveltekit } from '@sveltejs/kit/vite';
 import tailwindcss from '@tailwindcss/vite';
 import { svelteTesting } from '@testing-library/svelte/vite';
@@ -8,6 +9,13 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
 	plugins: [tailwindcss(), sveltekit(), svelteTesting()],
+	resolve: {
+		alias: {
+			// Allow tests to import @calmstudio/calm-core/test-fixtures directly from source.
+			// The package.json exports map only exposes '.', so test-fixtures must be aliased here.
+			'@calmstudio/calm-core/test-fixtures': path.resolve('../../packages/calm-core/test-fixtures/index.ts'),
+		},
+	},
 	ssr: {
 		noExternal: ['@xyflow/svelte']
 	},

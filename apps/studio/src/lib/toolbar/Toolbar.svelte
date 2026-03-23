@@ -24,6 +24,7 @@
 		onexportsvg,
 		onexportpng,
 		onexportcalmscript,
+		onexportscalertoml,
 		onloaddemo,
 		ontemplates,
 		filename = null,
@@ -32,6 +33,7 @@
 		onc4levelchange,
 		governanceScore = null,
 		showGovernanceBadge = false,
+		showScalerTomlExport = false,
 	}: {
 		onopen: () => void;
 		onsave: () => void;
@@ -42,6 +44,7 @@
 		onexportsvg: () => void;
 		onexportpng: () => void;
 		onexportcalmscript: () => void;
+		onexportscalertoml?: (() => void) | undefined;
 		onloaddemo?: (demo: { id: string; name: string; path: string }) => void;
 		ontemplates?: () => void;
 		filename?: string | null;
@@ -54,6 +57,8 @@
 		governanceScore?: number | null;
 		/** When true, shows the governance score badge (hidden for non-AI architectures). */
 		showGovernanceBadge?: boolean;
+		/** When true, shows the Scaler.toml export option (hidden when no OpenGRIS nodes). */
+		showScalerTomlExport?: boolean;
 	} = $props();
 
 	const C4_SEGMENTS = [
@@ -66,6 +71,7 @@
 	const DEMOS = [
 		{ id: 'ecommerce', name: 'E-Commerce Storefront', path: '/demos/ecommerce.calm.json' },
 		{ id: 'aws-multi-tier', name: 'AWS Multi-Tier', path: '/demos/aws-multi-tier.calm.json' },
+		{ id: 'opengris-local-cluster', name: 'OpenGRIS Local Cluster', path: '/demos/opengris-local-cluster.calm.json' },
 	] as const;
 
 	let showExportMenu = $state(false);
@@ -336,6 +342,16 @@
 					>
 						PNG (.png)
 					</button>
+					{#if showScalerTomlExport}
+						<button
+							type="button"
+							class="export-menu-item"
+							role="menuitem"
+							onclick={() => handleExportOption(onexportscalertoml!)}
+						>
+							Scaler.toml (OpenGRIS)
+						</button>
+					{/if}
 				</div>
 			{/if}
 		</div>

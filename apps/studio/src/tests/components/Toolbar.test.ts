@@ -149,6 +149,36 @@ describe('Toolbar — governance badge', () => {
 	});
 });
 
+describe('Toolbar — Scaler.toml export button', () => {
+	it('does NOT render Scaler.toml export button when showScalerTomlExport is false', async () => {
+		const { getByRole, queryByText } = render(Toolbar, {
+			props: makeToolbarProps({ showScalerTomlExport: false }),
+		});
+		// Open export menu first
+		await fireEvent.click(getByRole('button', { name: /export diagram/i }));
+		expect(queryByText('Scaler.toml (OpenGRIS)')).toBeNull();
+	});
+
+	it('renders Scaler.toml export button when showScalerTomlExport is true', async () => {
+		const { getByRole, getByText } = render(Toolbar, {
+			props: makeToolbarProps({ showScalerTomlExport: true, onexportscalertoml: vi.fn() }),
+		});
+		// Open export menu first
+		await fireEvent.click(getByRole('button', { name: /export diagram/i }));
+		expect(getByText('Scaler.toml (OpenGRIS)')).toBeTruthy();
+	});
+
+	it('calls onexportscalertoml when Scaler.toml button is clicked', async () => {
+		const onexportscalertoml = vi.fn();
+		const { getByRole, getByText } = render(Toolbar, {
+			props: makeToolbarProps({ showScalerTomlExport: true, onexportscalertoml }),
+		});
+		await fireEvent.click(getByRole('button', { name: /export diagram/i }));
+		await fireEvent.click(getByText('Scaler.toml (OpenGRIS)'));
+		expect(onexportscalertoml).toHaveBeenCalledOnce();
+	});
+});
+
 describe('Toolbar — filename display', () => {
 	it('shows "Untitled" when no filename is provided', () => {
 		const { getByText } = render(Toolbar, { props: makeToolbarProps() });

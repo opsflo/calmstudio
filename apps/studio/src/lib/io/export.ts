@@ -9,6 +9,7 @@
  * - exportAsSvg: Captures the canvas viewport as SVG via html-to-image.
  * - exportAsPng: Captures the canvas viewport as PNG (2x Retina).
  * - exportAsCalmscript: Stub — downloads calmscript content (Phase 5 will fully implement DSL).
+ * - exportAsScalerToml: Downloads a Scaler.toml config for OpenGRIS architectures.
  * - downloadDataUrl: Low-level helper for data URL downloads.
  *
  * SVG/PNG export requires a real browser (jsdom cannot render computed styles).
@@ -22,6 +23,7 @@ import { downloadDataUrl } from '$lib/io/fileSystem';
 import { detectPacksFromArch, buildSidecarData, sidecarNameFor } from '$lib/io/sidecar';
 import type { CalmArchitecture, CalmDecorator, CalmControls } from '@calmstudio/calm-core';
 import { isAINode, getAIGFForNodeType } from '@calmstudio/calm-core';
+import { buildScalerToml } from '$lib/io/scalerToml';
 
 const IMAGE_WIDTH = 1920;
 const IMAGE_HEIGHT = 1080;
@@ -216,5 +218,22 @@ export function exportAsCalmscript(content: string): void {
 	const blob = new Blob([content], { type: 'text/plain' });
 	const url = URL.createObjectURL(blob);
 	downloadDataUrl(url, 'architecture.calmscript');
+	setTimeout(() => URL.revokeObjectURL(url), 0);
+}
+
+// ─── Scaler.toml export ───────────────────────────────────────────────────────
+
+/**
+ * Export the current CALM architecture as a Scaler.toml configuration file.
+ * Only meaningful when the architecture contains OpenGRIS nodes.
+ *
+ * @param arch      The CALM architecture to export
+ * @param filename  Output filename (default: scaler.toml)
+ */
+export function exportAsScalerToml(arch: CalmArchitecture, filename = 'scaler.toml'): void {
+	const content = buildScalerToml(arch);
+	const blob = new Blob([content], { type: 'text/plain' });
+	const url = URL.createObjectURL(blob);
+	downloadDataUrl(url, filename);
 	setTimeout(() => URL.revokeObjectURL(url), 0);
 }
