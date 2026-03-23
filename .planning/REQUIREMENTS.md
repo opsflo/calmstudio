@@ -51,6 +51,15 @@ Requirements for FINOS OpenGRIS extension pack (Phase 14).
 - [x] **OGRIS-02**: `opengris:worker-manager` and `opengris:cluster` render as containers; cluster pre-populates with scheduler, worker, and object-storage children
 - [x] **OGRIS-03**: All 8 node types have hand-crafted 16x16 stroke-based SVG icons and pass existing registry validation (non-empty icon, color, description)
 
+## OpenGRIS Scaler.toml Exporter & Templates
+
+Requirements for OpenGRIS Scaler.toml exporter and deployment templates (Phase 15).
+
+- [ ] **TOML-01**: `buildScalerToml` pure function converts CalmArchitecture with OpenGRIS nodes into valid Scaler.toml string with correct sections, defaults, waterfall policy, and type coercion
+- [ ] **TOML-02**: "Export as Scaler.toml" option appears in export dropdown only when canvas contains `opengris:` nodes, and triggers download of generated Scaler.toml file
+- [ ] **TOML-03**: 4 OpenGRIS deployment templates (Local Dev, Market Risk, Scientific Research, Multi-Cloud) registered under "opengris" category with pre-filled customMetadata
+- [ ] **TOML-04**: OpenGRIS Local Cluster demo file accessible from welcome screen Demos dropdown
+
 ## Deferred
 
 - **calmscript DSL** — MCP server solves AI generation more reliably; evaluate need after real-world MCP usage
@@ -91,12 +100,17 @@ Requirements for FINOS OpenGRIS extension pack (Phase 14).
 | OGRIS-01 | Phase 14 | Complete |
 | OGRIS-02 | Phase 14 | Complete |
 | OGRIS-03 | Phase 14 | Complete |
+| TOML-01 | Phase 15 | Pending |
+| TOML-02 | Phase 15 | Pending |
+| TOML-03 | Phase 15 | Pending |
+| TOML-04 | Phase 15 | Pending |
 
 **Coverage:**
 - v1.1 requirements: 18 total
 - OpenGRIS requirements: 3 total
-- Mapped to phases: 21
+- OpenGRIS Scaler requirements: 4 total
+- Mapped to phases: 25
 - Unmapped: 0
 
 ---
-*Requirements defined: 2026-03-15, updated: 2026-03-20*
+*Requirements defined: 2026-03-15, updated: 2026-03-23*

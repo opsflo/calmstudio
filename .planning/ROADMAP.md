@@ -37,6 +37,18 @@ Phases: 01-foundation-governance, 02-calm-canvas-core, 03-properties-bidirection
 Plans:
 - [ ] 14-01-PLAN.md — Add OpenGRIS pack with 8 node types, icons, tests, and registration
 
+### Phase 15: OpenGRIS Scaler.toml Exporter and Deployment Templates
+
+**Goal:** Architects can export CALM architectures with OpenGRIS nodes as Scaler.toml configuration files and start from turnkey deployment templates covering local dev, market risk, scientific research, and multi-cloud patterns
+**Requirements**: TOML-01, TOML-02, TOML-03, TOML-04
+**Depends on:** Phase 14
+**Plans:** 3 plans
+
+Plans:
+- [ ] 15-01-PLAN.md — TDD: buildScalerToml pure TOML builder with full test coverage
+- [ ] 15-02-PLAN.md — Create 4 OpenGRIS deployment templates and register in template system
+- [ ] 15-03-PLAN.md — Wire export UI, conditional toolbar, demo file, and full integration
+
 ---
 
 ### 🚧 v1.1 Distribution & Developer Experience (In Progress)
