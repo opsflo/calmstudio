@@ -20,6 +20,7 @@ module.exports = {
         'deps',
         'github-action',
         'vscode-extension',
+        'web-component',
       ],
     ],
   },

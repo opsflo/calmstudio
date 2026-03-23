@@ -12,7 +12,69 @@ import type {
   CalmControls,
   CalmControl,
   CalmControlRequirement,
+  CalmFlow,
+  CalmTransition,
 } from './types.js';
+
+describe('CalmFlow and CalmTransition types', () => {
+  it('CalmArchitecture accepts optional flows field with CalmFlow array', () => {
+    const arch: CalmArchitecture = {
+      nodes: [],
+      relationships: [],
+      flows: [
+        {
+          'unique-id': 'flow-1',
+          name: 'Auth Flow',
+          description: 'User authentication sequence',
+          transitions: [
+            {
+              'relationship-unique-id': 'rel-1',
+              'sequence-number': 1,
+              summary: 'User submits credentials',
+            },
+          ],
+        },
+      ],
+    };
+    expect(arch.flows).toHaveLength(1);
+    expect(arch.flows?.[0]?.name).toBe('Auth Flow');
+  });
+
+  it('CalmFlow has required fields: unique-id, name, description, transitions', () => {
+    const flow: CalmFlow = {
+      'unique-id': 'flow-2',
+      name: 'Data Flow',
+      description: 'Data pipeline sequence',
+      transitions: [],
+    };
+    expect(flow['unique-id']).toBe('flow-2');
+    expect(flow.name).toBe('Data Flow');
+    expect(flow.description).toBe('Data pipeline sequence');
+    expect(flow.transitions).toEqual([]);
+  });
+
+  it('CalmTransition has required fields: relationship-unique-id, sequence-number, summary', () => {
+    const transition: CalmTransition = {
+      'relationship-unique-id': 'rel-2',
+      'sequence-number': 3,
+      summary: 'Service calls DB',
+    };
+    expect(transition['relationship-unique-id']).toBe('rel-2');
+    expect(transition['sequence-number']).toBe(3);
+    expect(transition.summary).toBe('Service calls DB');
+    expect(transition.direction).toBeUndefined();
+  });
+
+  it('CalmTransition accepts optional direction field', () => {
+    const transition: CalmTransition = {
+      'relationship-unique-id': 'rel-3',
+      'sequence-number': 1,
+      summary: 'Forward request',
+      direction: 'source-to-destination',
+    };
+    expect(transition.direction).toBe('source-to-destination');
+  });
+});
 
 describe('CALM 1.2 type definitions', () => {
   it('CalmNode accepts controls property without TypeScript error', () => {

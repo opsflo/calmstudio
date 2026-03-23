@@ -127,6 +127,35 @@ export interface CalmRelationship {
 }
 
 /**
+ * A single step in a CALM flow sequence, referencing a relationship.
+ * Corresponds to CALM 1.2 flow.json transition schema.
+ */
+export interface CalmTransition {
+  /** unique-id of the relationship this step traverses */
+  'relationship-unique-id': string;
+  /** 1-based ordering within the flow */
+  'sequence-number': number;
+  /** Human-readable description of what this step does */
+  summary: string;
+  /** Optional — explicit direction override for bidirectional relationships */
+  direction?: 'source-to-destination' | 'destination-to-source';
+}
+
+/**
+ * A named sequence of transitions describing a runtime flow through the architecture.
+ * Corresponds to CALM 1.2 flow.json schema.
+ */
+export interface CalmFlow {
+  'unique-id': string;
+  name: string;
+  description: string;
+  'requirement-url'?: string;
+  transitions: CalmTransition[];
+  controls?: CalmControls;
+  metadata?: Record<string, unknown>[];
+}
+
+/**
  * A complete CALM architecture document — nodes + relationships.
  */
 export interface CalmArchitecture {
@@ -134,4 +163,6 @@ export interface CalmArchitecture {
   relationships: CalmRelationship[];
   /** CALM 1.2 decorators — architecture-wide overlays for governance and cross-cutting concerns */
   decorators?: CalmDecorator[];
+  /** CALM 1.2 flows — named sequences of transitions describing runtime behaviour */
+  flows?: CalmFlow[];
 }
