@@ -88,6 +88,13 @@
 		getArchitectureScore,
 		hasAINodes,
 	} from '$lib/stores/governance.svelte';
+	import {
+		getActiveFlowId,
+		setActiveFlowId,
+		getActiveFlowEdgeIds,
+		getFlowTransitionForEdge,
+		isNodeInActiveFlow,
+	} from '$lib/stores/flowState.svelte';
 
 	let nodes = $state.raw<Node[]>([]);
 	let edges = $state.raw<Edge[]>([]);
@@ -834,6 +841,80 @@
 		getModel().nodes.some(n => n['node-type'].startsWith('opengris:'))
 	);
 
+	// ─── Flow visualization ───────────────────────────────────────────────────
+
+	/** Flow items for the toolbar dropdown: derived from the loaded architecture. */
+	const flows = $derived(
+		(getModel().flows ?? []).map(f => ({ id: f['unique-id'], name: f.name }))
+	);
+
+	/** Currently active flow ID — read from the reactive flow store. */
+	const activeFlowId = $derived(getActiveFlowId());
+
+	/** Set of edge unique-IDs that are part of the active flow. */
+	const activeFlowEdgeIds = $derived(getActiveFlowEdgeIds(getModel()));
+
+	/**
+	 * Reactively inject/remove flow visualization data into the live edges[] and nodes[] state.
+	 * This mirrors the validation enrichment pattern: directly mutates the $state.raw arrays
+	 * so SvelteFlow re-renders edges with flowTransition/dimmed data from their data prop.
+	 *
+	 * Using $effect ensures this runs whenever activeFlowId or the arch model changes.
+	 */
+	$effect(() => {
+		const currentActiveFlowId = activeFlowId;
+		const arch = getModel();
+
+		if (!currentActiveFlowId) {
+			// Clear flow data from all edges
+			const cleared = edges.map((e) => {
+				if (!e.data?.flowTransition && !e.data?.dimmed) return e;
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
+				const { flowTransition: _ft, dimmed: _d, ...restData } = (e.data ?? {}) as Record<string, unknown>;
+				return { ...e, data: restData };
+			});
+			if (cleared.some((e, i) => e !== edges[i])) edges = cleared;
+
+			// Clear node dimming
+			const clearedNodes = nodes.map((n) => {
+				if (!n.style?.includes('opacity: 0.3')) return n;
+				const newStyle = (n.style ?? '').replace(/\s*opacity:\s*0\.3\s*;?/g, '').trim();
+				return { ...n, style: newStyle || undefined };
+			});
+			if (clearedNodes.some((n, i) => n !== nodes[i])) nodes = clearedNodes;
+			return;
+		}
+
+		// Inject flow transition data into edges
+		const enrichedEdges = edges.map((e) => {
+			const transition = getFlowTransitionForEdge(arch, e.id);
+			const isDimmed = !activeFlowEdgeIds.has(e.id);
+			const current = e.data as Record<string, unknown> | undefined;
+			const sameTransition = current?.flowTransition === (transition ?? null);
+			const sameDimmed = current?.dimmed === isDimmed;
+			if (sameTransition && sameDimmed) return e;
+			return { ...e, data: { ...e.data, flowTransition: transition ?? null, dimmed: isDimmed } };
+		});
+		if (enrichedEdges.some((e, i) => e !== edges[i])) edges = enrichedEdges;
+
+		// Apply/remove node dimming via style
+		const enrichedNodes = nodes.map((n) => {
+			const nodeId = (n.data?.calmId as string) ?? n.id;
+			const inFlow = isNodeInActiveFlow(arch, nodeId);
+			const hasDimStyle = n.style?.includes('opacity: 0.3') ?? false;
+			if (!inFlow && !hasDimStyle) {
+				const existingStyle = n.style ?? '';
+				return { ...n, style: `${existingStyle} opacity: 0.3;`.trim() };
+			}
+			if (inFlow && hasDimStyle) {
+				const newStyle = (n.style ?? '').replace(/\s*opacity:\s*0\.3\s*;?/g, '').trim();
+				return { ...n, style: newStyle || undefined };
+			}
+			return n;
+		});
+		if (enrichedNodes.some((n, i) => n !== nodes[i])) nodes = enrichedNodes;
+	});
+
 	// ─── Auto-layout ──────────────────────────────────────────────────────────
 
 	/** Currently selected layout direction (used by toolbar dropdown). */
@@ -995,6 +1076,9 @@
 			governanceScore={getArchitectureScore()}
 			showGovernanceBadge={hasAINodes()}
 			showScalerTomlExport={showScalerTomlExport}
+			flows={flows}
+			activeFlowId={activeFlowId}
+			onflowchange={setActiveFlowId}
 		/>
 
 		<!-- Error banner: below toolbar, above canvas panes -->

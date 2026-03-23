@@ -34,6 +34,9 @@
 		governanceScore = null,
 		showGovernanceBadge = false,
 		showScalerTomlExport = false,
+		flows = [],
+		activeFlowId = null,
+		onflowchange,
 	}: {
 		onopen: () => void;
 		onsave: () => void;
@@ -59,6 +62,12 @@
 		showGovernanceBadge?: boolean;
 		/** When true, shows the Scaler.toml export option (hidden when no OpenGRIS nodes). */
 		showScalerTomlExport?: boolean;
+		/** List of flows from the architecture, shown in dropdown when non-empty. */
+		flows?: Array<{ id: string; name: string }>;
+		/** Currently active flow ID, or null for no active flow. */
+		activeFlowId?: string | null;
+		/** Called when user selects a flow or "None". Receives flow ID or null. */
+		onflowchange?: (id: string | null) => void;
 	} = $props();
 
 	const C4_SEGMENTS = [
@@ -169,7 +178,7 @@
 		{/if}
 	</div>
 
-	<!-- Center: Filename + dirty indicator -->
+	<!-- Center: Filename + dirty indicator + flow selector -->
 	<div class="toolbar-center">
 		{#if filename}
 			<span class="filename">{filename}</span>
@@ -181,6 +190,27 @@
 			{#if isDirty}
 				<span class="dirty-dot" aria-label="Unsaved changes" title="Unsaved changes">&#8226;</span>
 			{/if}
+		{/if}
+
+		<!-- Flow selector: shown only when architecture has flows -->
+		{#if flows.length > 0}
+			<div class="flow-selector" role="group" aria-label="Flow visualization">
+				<span class="flow-label">Flow:</span>
+				<select
+					class="flow-select"
+					value={activeFlowId ?? ''}
+					aria-label="Select flow to visualize"
+					onchange={(e) => {
+						const val = (e.target as HTMLSelectElement).value;
+						onflowchange?.(val || null);
+					}}
+				>
+					<option value="">None</option>
+					{#each flows as f}
+						<option value={f.id}>{f.name}</option>
+					{/each}
+				</select>
+			</div>
 		{/if}
 	</div>
 
@@ -646,6 +676,58 @@
 
 	.gov-score {
 		font-variant-numeric: tabular-nums;
+	}
+
+	/* ─── Flow selector ─────────────────────────────────────── */
+
+	.flow-selector {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+		margin-left: 8px;
+	}
+
+	.flow-label {
+		font-size: 11px;
+		font-family: var(--font-sans);
+		color: var(--color-text-secondary);
+		font-weight: 500;
+		white-space: nowrap;
+	}
+
+	.flow-select {
+		height: 22px;
+		padding: 0 6px;
+		font-size: 11px;
+		font-family: var(--font-sans);
+		font-weight: 500;
+		color: var(--color-text-primary);
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-radius: 6px;
+		cursor: pointer;
+		outline: none;
+		max-width: 160px;
+	}
+
+	.flow-select:focus {
+		border-color: #3b82f6;
+		box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+	}
+
+	:global(.dark) .flow-label {
+		color: #64748b;
+	}
+
+	:global(.dark) .flow-select {
+		background: #111827;
+		border-color: #334155;
+		color: #e2e8f0;
+	}
+
+	:global(.dark) .flow-select:focus {
+		border-color: #60a5fa;
+		box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2);
 	}
 
 	/* ─── C4 view level segmented control ────────────────────── */

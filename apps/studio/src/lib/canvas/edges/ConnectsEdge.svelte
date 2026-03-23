@@ -5,9 +5,12 @@
   ConnectsEdge.svelte — CALM "connects" relationship edge.
   Visual style: solid line + filled arrowhead.
   Protocol labels render as inline pill on the path.
+  Flow overlays render as sibling group (outside the dimmed wrapper).
 -->
 <script lang="ts">
 	import { BaseEdge, EdgeLabel, getSmoothStepPath, type EdgeProps } from '@xyflow/svelte';
+	import FlowOverlay from './FlowOverlay.svelte';
+	import type { CalmTransition } from '@calmstudio/calm-core';
 
 	let {
 		id,
@@ -37,21 +40,38 @@
 				: undefined
 	);
 	const finalStyle = $derived(validationStyle ? `${style ?? ''} ${validationStyle}` : style);
+
+	const flowTransition = $derived((data as Record<string, unknown>)?.flowTransition as CalmTransition | null | undefined);
+	const dimmed = $derived((data as Record<string, unknown>)?.dimmed === true);
 </script>
 
-<BaseEdge
-	{id}
-	path={edgePath}
-	markerEnd="url(#marker-arrow-filled)"
-	style={finalStyle}
-/>
+<g style={dimmed ? 'opacity: 0.3' : ''}>
+	<BaseEdge
+		{id}
+		path={edgePath}
+		markerEnd="url(#marker-arrow-filled)"
+		style={finalStyle}
+	/>
 
-{#if protocolLabel}
-	<EdgeLabel x={labelX} y={labelY} class="nodrag nopan">
-		<span class="edge-label">
-			{protocolLabel}
-		</span>
-	</EdgeLabel>
+	{#if protocolLabel}
+		<EdgeLabel x={labelX} y={labelY} class="nodrag nopan">
+			<span class="edge-label">
+				{protocolLabel}
+			</span>
+		</EdgeLabel>
+	{/if}
+</g>
+
+{#if flowTransition}
+	<FlowOverlay
+		edgePath={edgePath}
+		edgeId={id}
+		sequenceNumber={flowTransition['sequence-number']}
+		summary={flowTransition.summary}
+		direction={flowTransition.direction ?? 'source-to-destination'}
+		labelX={labelX}
+		labelY={labelY}
+	/>
 {/if}
 
 <style>
