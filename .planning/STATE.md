@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Distribution & Developer Experience
 status: verifying
-stopped_at: Completed 14-opengris-extension-pack/14-01-PLAN.md
-last_updated: "2026-03-20T16:54:22.454Z"
+stopped_at: Completed 15-opengris-scaler-toml-exporter-and-deployment-templates/15-02-PLAN.md
+last_updated: "2026-03-23T04:51:47.657Z"
 last_activity: "2026-03-15 — completed Phase 11: Tauri desktop app with native file I/O, menu, sidecar, CI"
 progress:
-  total_phases: 5
+  total_phases: 6
   completed_phases: 4
-  total_plans: 10
-  completed_plans: 10
+  total_plans: 13
+  completed_plans: 11
   percent: 50
 ---
 
@@ -62,10 +62,13 @@ Decisions are logged in PROJECT.md Key Decisions table.
 - [Phase 12-developer-tooling]: elkjs-svg marked external in MCP server bundle and copied to dist/mcp-server/node_modules at build time
 - [Phase 14-opengris-extension-pack]: openGrisPack.id is 'opengris' (lowercase, no hyphens) — registry splits on ':' for namespace resolution
 - [Phase 14-opengris-extension-pack]: Green color family (#f0fdf4 bg, #16a34a border) for OpenGRIS pack to differentiate from other packs
+- [Phase 15]: [15-02] opengris template IDs use prefixes ogld/ogmr/ogsr/ogmc for unique-id uniqueness across CALM nodes
+- [Phase 15]: [15-02] TCP protocol used for all ZeroMQ connections; customMetadata keys match exact TOML field names
 
 ### Roadmap Evolution
 
 - Phase 14 added: OpenGRIS Extension Pack — FINOS OpenGRIS node types (scheduler, worker, worker-manager, client, object-storage, cluster, task-graph, parallel-function) for CalmStudio
+- Phase 15 added: OpenGRIS Scaler.toml Exporter and Deployment Templates — CALM-to-TOML exporter plugin + starter templates (local dev, market risk, scientific research, multi-cloud)
 
 ### Blockers/Concerns
 
@@ -78,6 +81,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-20T16:51:01.637Z
-Stopped at: Completed 14-opengris-extension-pack/14-01-PLAN.md
+Last session: 2026-03-23T04:51:47.655Z
+Stopped at: Completed 15-opengris-scaler-toml-exporter-and-deployment-templates/15-02-PLAN.md
 Resume file: None
