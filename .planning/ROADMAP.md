@@ -118,7 +118,7 @@ Plans:
   1. A developer can add `<calm-diagram src="arch.calm.json">` to any HTML page and see a rendered CALM architecture diagram without any framework or build tool
   2. A developer can install the web component via npm and use it inside a React, Vue, Angular, or SvelteKit application
   3. An architect can enable flow visualization on a CALM diagram and see data flows displayed as stepped animated overlays on the relevant architecture edges
-**Plans:** 1/3 plans executed
+**Plans:** 2/3 plans executed
 
 Plans:
 - [ ] 13-01-PLAN.md — Add flow types to calm-core, scaffold web-component package, implement ELK SVG renderer with pack support
@@ -135,4 +135,4 @@ Phases execute in numeric order: 10 → 11 → 12 → 13
 | 10. Docs & Package Publish | 3/3 | Complete    | 2026-03-15 | - |
 | 11. Desktop App | 3/3 | Complete   | 2026-03-15 | - |
 | 12. Developer Tooling | 3/3 | Complete    | 2026-03-16 | - |
-| 13. Embedding & Visualization | 1/3 | In Progress|  | - |
+| 13. Embedding & Visualization | 2/3 | In Progress|  | - |
