@@ -60,7 +60,7 @@ Plans:
 - [x] **Phase 10: Docs & Package Publish** - Docusaurus documentation site live and calm-core published to npm (completed 2026-03-15)
 - [x] **Phase 11: Desktop App** - Tauri 2 native app builds and runs on macOS, Windows, and Linux (completed 2026-03-15)
 - [x] **Phase 12: Developer Tooling** - VS Code extension on Marketplace and GitHub Action rendering CALM diagrams in PRs (completed 2026-03-16)
-- [ ] **Phase 13: Embedding & Visualization** - Web component usable in any framework and flow visualization on canvas edges
+- [x] **Phase 13: Embedding & Visualization** - Web component usable in any framework and flow visualization on canvas edges (completed 2026-03-23)
 
 ## Phase Details
 
@@ -118,7 +118,7 @@ Plans:
   1. A developer can add `<calm-diagram src="arch.calm.json">` to any HTML page and see a rendered CALM architecture diagram without any framework or build tool
   2. A developer can install the web component via npm and use it inside a React, Vue, Angular, or SvelteKit application
   3. An architect can enable flow visualization on a CALM diagram and see data flows displayed as stepped animated overlays on the relevant architecture edges
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans complete
 
 Plans:
 - [ ] 13-01-PLAN.md — Add flow types to calm-core, scaffold web-component package, implement ELK SVG renderer with pack support
@@ -135,4 +135,4 @@ Phases execute in numeric order: 10 → 11 → 12 → 13
 | 10. Docs & Package Publish | 3/3 | Complete    | 2026-03-15 | - |
 | 11. Desktop App | 3/3 | Complete   | 2026-03-15 | - |
 | 12. Developer Tooling | 3/3 | Complete    | 2026-03-16 | - |
-| 13. Embedding & Visualization | 2/3 | In Progress|  | - |
+| 13. Embedding & Visualization | 3/3 | Complete   | 2026-03-23 | - |

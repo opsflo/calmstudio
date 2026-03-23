@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Distribution & Developer Experience
 status: verifying
-stopped_at: "Completed 13-embedding-visualization/13-03-PLAN.md (checkpoint: awaiting human-verify)"
-last_updated: "2026-03-23T06:28:50.391Z"
+stopped_at: Completed 13-embedding-visualization/13-02-PLAN.md
+last_updated: "2026-03-23T06:34:39.072Z"
 last_activity: "2026-03-15 — completed Phase 11: Tauri desktop app with native file I/O, menu, sidecar, CI"
 progress:
   total_phases: 6
-  completed_phases: 5
+  completed_phases: 6
   total_plans: 16
-  completed_plans: 15
+  completed_plans: 16
   percent: 50
 ---
 
@@ -74,6 +74,8 @@ Decisions are logged in PROJECT.md Key Decisions table.
 - [Phase 13-embedding-visualization]: Bundle everything (no rollupOptions.external) for zero-dependency CDN use
 - [Phase 13-embedding-visualization]: Flow overlay SVG group appended after node layer so animated dots are never subject to dimming
 - [Phase 13-embedding-visualization]: edgeLayouts Map populated during edge render loop (single pass) reused for flow overlay
+- [Phase 13-embedding-visualization]: Flow data injected via $effect into edges[]/nodes[] state arrays — same pattern as validation enrichment, avoids needing separate display arrays
+- [Phase 13-embedding-visualization]: FlowOverlay is sibling to edge (not child) to avoid opacity: 0.3 inheritance from dimmed wrapper
 
 ### Roadmap Evolution
 
@@ -91,6 +93,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-23T06:28:50.389Z
-Stopped at: Completed 13-embedding-visualization/13-03-PLAN.md (checkpoint: awaiting human-verify)
+Last session: 2026-03-23T06:34:39.070Z
+Stopped at: Completed 13-embedding-visualization/13-02-PLAN.md
 Resume file: None
