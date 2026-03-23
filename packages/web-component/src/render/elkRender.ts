@@ -9,6 +9,7 @@ const ELK = (ELKImport as unknown as { default?: new () => { layout: (graph: unk
 import type { CalmArchitecture } from '@calmstudio/calm-core';
 import { renderNodeSvg } from './nodeRenderer.js';
 import { renderEdgeSvg, renderEdgeMarkers } from './edgeRenderer.js';
+import { renderFlowOverlay, applyFlowDimming, getFlowNodeIds, type EdgeLayout } from './flowOverlay.js';
 
 // ---------------------------------------------------------------------------
 // ELK type helpers
@@ -41,6 +42,7 @@ type ElkLayouted = {
 export interface RenderOptions {
   theme?: 'light' | 'dark';
   direction?: 'DOWN' | 'RIGHT';
+  flow?: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -59,7 +61,7 @@ export async function renderELKDiagram(
   arch: CalmArchitecture,
   options: RenderOptions = {}
 ): Promise<string> {
-  const { theme = 'light', direction = 'DOWN' } = options;
+  const { theme = 'light', direction = 'DOWN', flow: flowId } = options;
 
   // Handle empty architecture
   if (arch.nodes.length === 0) {
@@ -143,6 +145,22 @@ export async function renderELKDiagram(
   // Arrow markers
   parts.push(renderEdgeMarkers());
 
+  // Resolve active flow (if any) and build edge layout map for overlay
+  const activeFlow = flowId
+    ? (arch.flows ?? []).find((f) => f['unique-id'] === flowId) ?? null
+    : null;
+
+  const activeFlowEdgeIds = new Set<string>(
+    activeFlow ? activeFlow.transitions.map((t) => t['relationship-unique-id']) : []
+  );
+
+  const activeFlowNodeIds = activeFlow
+    ? getFlowNodeIds(arch, activeFlow)
+    : new Set<string>();
+
+  // Build edge layout map for flow overlay path rendering
+  const edgeLayouts = new Map<string, EdgeLayout>();
+
   // Draw edges first (behind nodes)
   for (const edge of layouted.edges ?? []) {
     for (const section of edge.sections ?? []) {
@@ -157,14 +175,25 @@ export async function renderELKDiagram(
         points.push({ x: section.endPoint.x, y: section.endPoint.y });
       }
       if (points.length >= 2) {
+        // Store layout for flow overlay before rendering edge
+        edgeLayouts.set(edge.id, { id: edge.id, points });
+
         const relType = relTypeMap.get(edge.id);
-        parts.push(
-          renderEdgeSvg({
-            id: edge.id,
-            points,
-            relationshipType: relType,
-          }).replace('stroke="#555"', `stroke="${edgeColor}"`).replace('stroke="#888"', `stroke="${edgeColor}"`)
-        );
+        const edgeOpacity = applyFlowDimming(edge.id, activeFlowEdgeIds, true);
+        const edgeSvg = renderEdgeSvg({
+          id: edge.id,
+          points,
+          relationshipType: relType,
+        })
+          .replace('stroke="#555"', `stroke="${edgeColor}"`)
+          .replace('stroke="#888"', `stroke="${edgeColor}"`);
+
+        // Wrap in opacity group when flow is active
+        if (activeFlow) {
+          parts.push(`<g opacity="${edgeOpacity}">${edgeSvg}</g>`);
+        } else {
+          parts.push(edgeSvg);
+        }
       }
     }
   }
@@ -179,18 +208,33 @@ export async function renderELKDiagram(
     const description = nodeDescMap.get(child.id) ?? '';
     const label = child.labels?.[0]?.text ?? child.id;
 
-    parts.push(
-      renderNodeSvg({
-        id: child.id,
-        x,
-        y,
-        width: w,
-        height: h,
-        name: label,
-        nodeType,
-        description,
-      })
-    );
+    // Dim nodes not connected to the active flow
+    const nodeOpacity =
+      activeFlow && activeFlowNodeIds.size > 0 && !activeFlowNodeIds.has(child.id)
+        ? '0.3'
+        : '1';
+
+    const nodeSvg = renderNodeSvg({
+      id: child.id,
+      x,
+      y,
+      width: w,
+      height: h,
+      name: label,
+      nodeType,
+      description,
+    });
+
+    if (activeFlow && nodeOpacity !== '1') {
+      parts.push(`<g opacity="${nodeOpacity}">${nodeSvg}</g>`);
+    } else {
+      parts.push(nodeSvg);
+    }
+  }
+
+  // Append flow overlay ABOVE edges and nodes so animated dots are not dimmed
+  if (activeFlow) {
+    parts.push(renderFlowOverlay(activeFlow, edgeLayouts));
   }
 
   parts.push('</svg>');

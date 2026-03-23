@@ -43,7 +43,7 @@
     const currentSrc = src;
     const currentData = data;
     const currentTheme = theme;
-    void flow; // tracked but not used in basic render (future: filter by flow)
+    const currentFlow = flow;
 
     void (async () => {
       error = '';
@@ -66,7 +66,7 @@
           return;
         }
 
-        svgContent = await renderELKDiagram(arch, { theme: currentTheme });
+        svgContent = await renderELKDiagram(arch, { theme: currentTheme, flow: currentFlow || undefined });
       } catch (err) {
         error = err instanceof Error ? err.message : String(err);
       } finally {
@@ -225,5 +225,14 @@
   :host([theme="dark"]) {
     --calm-bg: #1e1e1e;
     --calm-text: #e5e5e5;
+  }
+
+  /* Flow overlay styles — SVG <title> provides native browser tooltip on hover */
+  :global(.flow-badge) {
+    cursor: pointer;
+  }
+
+  :global(.flow-overlay circle) {
+    cursor: pointer;
   }
 </style>
