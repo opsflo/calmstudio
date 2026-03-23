@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Distribution & Developer Experience
 status: verifying
-stopped_at: Completed 15-opengris-scaler-toml-exporter-and-deployment-templates/15-03-PLAN.md
-last_updated: "2026-03-23T05:07:50.486Z"
+stopped_at: Completed 13-embedding-visualization/13-01-PLAN.md
+last_updated: "2026-03-23T06:20:34.138Z"
 last_activity: "2026-03-15 — completed Phase 11: Tauri desktop app with native file I/O, menu, sidecar, CI"
 progress:
   total_phases: 6
   completed_phases: 5
-  total_plans: 13
-  completed_plans: 13
+  total_plans: 16
+  completed_plans: 14
   percent: 50
 ---
 
@@ -69,6 +69,9 @@ Decisions are logged in PROJECT.md Key Decisions table.
 - [Phase 15]: [15-01] Address auto-derivation: scheduler port+1=storage, port+2=client via connects relationships
 - [Phase 15]: $derived rune used for showScalerTomlExport in +page.svelte to ensure reactive re-evaluation when opengris nodes are added after page load
 - [Phase 15]: vite.config.ts resolve.alias for @calmstudio/calm-core/test-fixtures unblocks Vitest - maps to TS source since package.json exports only exposes '.'
+- [Phase 13-embedding-visualization]: CalmTransition/CalmFlow added to calm-core types.ts alongside CalmArchitecture for co-location
+- [Phase 13-embedding-visualization]: Svelte 5 custom element uses shadow DOM open mode for CSS isolation; role=application+tabindex for a11y
+- [Phase 13-embedding-visualization]: Bundle everything (no rollupOptions.external) for zero-dependency CDN use
 
 ### Roadmap Evolution
 
@@ -86,6 +89,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-23T05:04:06.444Z
-Stopped at: Completed 15-opengris-scaler-toml-exporter-and-deployment-templates/15-03-PLAN.md
+Last session: 2026-03-23T06:20:34.136Z
+Stopped at: Completed 13-embedding-visualization/13-01-PLAN.md
 Resume file: None

@@ -36,8 +36,8 @@ Requirements for v1.1 Distribution & Developer Experience milestone.
 
 ### Web Component
 
-- [ ] **WEBC-01**: `<calm-diagram>` web component renders any CALM JSON with a single HTML tag
-- [ ] **WEBC-02**: Web component installable via npm and usable in any framework
+- [x] **WEBC-01**: `<calm-diagram>` web component renders any CALM JSON with a single HTML tag
+- [x] **WEBC-02**: Web component installable via npm and usable in any framework
 
 ### Flow Visualization
 
@@ -94,8 +94,8 @@ Requirements for OpenGRIS Scaler.toml exporter and deployment templates (Phase 1
 | VSCE-04 | Phase 12 | Complete |
 | VSCE-05 | Phase 12 | Complete |
 | GHAC-01 | Phase 12 | Complete |
-| WEBC-01 | Phase 13 | Pending |
-| WEBC-02 | Phase 13 | Pending |
+| WEBC-01 | Phase 13 | Complete |
+| WEBC-02 | Phase 13 | Complete |
 | FLOW-01 | Phase 13 | Pending |
 | OGRIS-01 | Phase 14 | Complete |
 | OGRIS-02 | Phase 14 | Complete |
