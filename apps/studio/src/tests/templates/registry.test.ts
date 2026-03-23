@@ -219,4 +219,34 @@ describe('initAllTemplates', () => {
 			expect(byCategory.length).toBeGreaterThan(0);
 		}
 	});
+
+	it('registers all 4 OpenGRIS templates', () => {
+		initAllTemplates();
+		const opengrisTemplates = getAllTemplates().filter((t) => t._template.category === 'opengris');
+		expect(opengrisTemplates).toHaveLength(4);
+	});
+
+	it('registers at least 10 templates total (6 FluxNova + 4 OpenGRIS)', () => {
+		initAllTemplates();
+		expect(getAllTemplates().length).toBeGreaterThanOrEqual(10);
+	});
+
+	it('getTemplatesByCategory returns OpenGRIS templates', () => {
+		initAllTemplates();
+		const byCategory = getTemplatesByCategory('opengris');
+		expect(byCategory).toHaveLength(4);
+		const ids = byCategory.map((t) => t._template.id);
+		expect(ids).toContain('opengris-local-dev');
+		expect(ids).toContain('opengris-market-risk');
+		expect(ids).toContain('opengris-scientific-research');
+		expect(ids).toContain('opengris-multi-cloud');
+	});
+
+	it('loadTemplate works for opengris-local-dev after initAllTemplates', () => {
+		initAllTemplates();
+		const arch = loadTemplate('opengris-local-dev') as CalmArchitecture & { _template?: unknown };
+		expect(arch).toBeDefined();
+		expect(arch.nodes.length).toBeGreaterThan(0);
+		expect(arch).not.toHaveProperty('_template');
+	});
 });

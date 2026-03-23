@@ -95,7 +95,7 @@ export function getAllTemplates(): CalmTemplate[] {
 	return Array.from(templates.values());
 }
 
-// ─── Static imports for all 6 FluxNova templates ─────────────────────────────
+// ─── Static imports for all 10 templates (6 FluxNova + 4 OpenGRIS) ───────────
 // SvelteKit / Vite handles JSON imports natively in the app package.
 
 import fluxnovaPlatform from './fluxnova-platform.json';
@@ -104,9 +104,13 @@ import fluxnovaFlashRisk from './fluxnova-flash-risk.json';
 import fluxnovaSettlement from './fluxnova-settlement.json';
 import fluxnovaAiAgent from './fluxnova-ai-agent.json';
 import fluxnovaMicroservices from './fluxnova-microservices.json';
+import opengrisLocalDev from './opengris-local-dev.json';
+import opengrisMarketRisk from './opengris-market-risk.json';
+import opengrisScientificResearch from './opengris-scientific-research.json';
+import opengrisMultiCloud from './opengris-multi-cloud.json';
 
 /**
- * Register all 6 FluxNova templates.
+ * Register all 10 templates (6 FluxNova + 4 OpenGRIS).
  * Call once at module level in +page.svelte (alongside initAllPacks).
  */
 export function initAllTemplates(): void {
@@ -116,4 +120,8 @@ export function initAllTemplates(): void {
 	registerTemplate(fluxnovaSettlement as CalmTemplate);
 	registerTemplate(fluxnovaAiAgent as CalmTemplate);
 	registerTemplate(fluxnovaMicroservices as CalmTemplate);
+	registerTemplate(opengrisLocalDev as CalmTemplate);
+	registerTemplate(opengrisMarketRisk as CalmTemplate);
+	registerTemplate(opengrisScientificResearch as CalmTemplate);
+	registerTemplate(opengrisMultiCloud as CalmTemplate);
 }

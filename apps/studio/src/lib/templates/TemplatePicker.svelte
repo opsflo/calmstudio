@@ -36,6 +36,7 @@
 			fluxnova: 'FluxNova',
 			'ai-governance': 'AI Governance',
 			general: 'General',
+			opengris: 'OpenGRIS',
 		};
 		return map[cat] ?? cat.charAt(0).toUpperCase() + cat.slice(1);
 	}
@@ -46,6 +47,7 @@
 			fluxnova: '#f97316',
 			'ai-governance': '#8b5cf6',
 			general: '#3b82f6',
+			opengris: '#16a34a',
 		};
 		return map[cat] ?? '#64748b';
 	}
