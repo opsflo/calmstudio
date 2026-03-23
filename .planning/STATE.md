@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Distribution & Developer Experience
 status: verifying
-stopped_at: Completed 15-opengris-scaler-toml-exporter-and-deployment-templates/15-02-PLAN.md
-last_updated: "2026-03-23T04:51:47.657Z"
+stopped_at: Completed 15-opengris-scaler-toml-exporter-and-deployment-templates/15-01-PLAN.md
+last_updated: "2026-03-23T04:54:43.671Z"
 last_activity: "2026-03-15 — completed Phase 11: Tauri desktop app with native file I/O, menu, sidecar, CI"
 progress:
   total_phases: 6
   completed_phases: 4
   total_plans: 13
-  completed_plans: 11
+  completed_plans: 12
   percent: 50
 ---
 
@@ -64,6 +64,9 @@ Decisions are logged in PROJECT.md Key Decisions table.
 - [Phase 14-opengris-extension-pack]: Green color family (#f0fdf4 bg, #16a34a border) for OpenGRIS pack to differentiate from other packs
 - [Phase 15]: [15-02] opengris template IDs use prefixes ogld/ogmr/ogsr/ogmc for unique-id uniqueness across CALM nodes
 - [Phase 15]: [15-02] TCP protocol used for all ZeroMQ connections; customMetadata keys match exact TOML field names
+- [Phase 15]: [15-01] opengris:worker nodes emit [worker] sections only when customMetadata is present
+- [Phase 15]: [15-01] Hand-crafted TOML strings (no TOML library) - flat format sufficient for correctness
+- [Phase 15]: [15-01] Address auto-derivation: scheduler port+1=storage, port+2=client via connects relationships
 
 ### Roadmap Evolution
 
@@ -81,6 +84,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-23T04:51:47.655Z
-Stopped at: Completed 15-opengris-scaler-toml-exporter-and-deployment-templates/15-02-PLAN.md
+Last session: 2026-03-23T04:54:43.669Z
+Stopped at: Completed 15-opengris-scaler-toml-exporter-and-deployment-templates/15-01-PLAN.md
 Resume file: None

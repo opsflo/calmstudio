@@ -42,7 +42,7 @@ Plans:
 **Goal:** Architects can export CALM architectures with OpenGRIS nodes as Scaler.toml configuration files and start from turnkey deployment templates covering local dev, market risk, scientific research, and multi-cloud patterns
 **Requirements**: TOML-01, TOML-02, TOML-03, TOML-04
 **Depends on:** Phase 14
-**Plans:** 1/3 plans executed
+**Plans:** 2/3 plans executed
 
 Plans:
 - [ ] 15-01-PLAN.md — TDD: buildScalerToml pure TOML builder with full test coverage
