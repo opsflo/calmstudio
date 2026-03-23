@@ -55,10 +55,10 @@ Requirements for FINOS OpenGRIS extension pack (Phase 14).
 
 Requirements for OpenGRIS Scaler.toml exporter and deployment templates (Phase 15).
 
-- [ ] **TOML-01**: `buildScalerToml` pure function converts CalmArchitecture with OpenGRIS nodes into valid Scaler.toml string with correct sections, defaults, waterfall policy, and type coercion
-- [ ] **TOML-02**: "Export as Scaler.toml" option appears in export dropdown only when canvas contains `opengris:` nodes, and triggers download of generated Scaler.toml file
+- [x] **TOML-01**: `buildScalerToml` pure function converts CalmArchitecture with OpenGRIS nodes into valid Scaler.toml string with correct sections, defaults, waterfall policy, and type coercion
+- [x] **TOML-02**: "Export as Scaler.toml" option appears in export dropdown only when canvas contains `opengris:` nodes, and triggers download of generated Scaler.toml file
 - [x] **TOML-03**: 4 OpenGRIS deployment templates (Local Dev, Market Risk, Scientific Research, Multi-Cloud) registered under "opengris" category with pre-filled customMetadata
-- [ ] **TOML-04**: OpenGRIS Local Cluster demo file accessible from welcome screen Demos dropdown
+- [x] **TOML-04**: OpenGRIS Local Cluster demo file accessible from welcome screen Demos dropdown
 
 ## Deferred
 
@@ -100,10 +100,10 @@ Requirements for OpenGRIS Scaler.toml exporter and deployment templates (Phase 1
 | OGRIS-01 | Phase 14 | Complete |
 | OGRIS-02 | Phase 14 | Complete |
 | OGRIS-03 | Phase 14 | Complete |
-| TOML-01 | Phase 15 | Pending |
-| TOML-02 | Phase 15 | Pending |
+| TOML-01 | Phase 15 | Complete |
+| TOML-02 | Phase 15 | Complete |
 | TOML-03 | Phase 15 | Complete |
-| TOML-04 | Phase 15 | Pending |
+| TOML-04 | Phase 15 | Complete |
 
 **Coverage:**
 - v1.1 requirements: 18 total
