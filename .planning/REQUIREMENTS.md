@@ -41,7 +41,7 @@ Requirements for v1.1 Distribution & Developer Experience milestone.
 
 ### Flow Visualization
 
-- [ ] **FLOW-01**: Flow visualization shows data flows as stepped overlays on architecture edges
+- [x] **FLOW-01**: Flow visualization shows data flows as stepped overlays on architecture edges
 
 ## OpenGRIS Extension Pack
 
@@ -96,7 +96,7 @@ Requirements for OpenGRIS Scaler.toml exporter and deployment templates (Phase 1
 | GHAC-01 | Phase 12 | Complete |
 | WEBC-01 | Phase 13 | Complete |
 | WEBC-02 | Phase 13 | Complete |
-| FLOW-01 | Phase 13 | Pending |
+| FLOW-01 | Phase 13 | Complete |
 | OGRIS-01 | Phase 14 | Complete |
 | OGRIS-02 | Phase 14 | Complete |
 | OGRIS-03 | Phase 14 | Complete |

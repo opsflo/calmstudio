@@ -4,7 +4,7 @@ milestone: v1.1
 milestone_name: Distribution & Developer Experience
 status: verifying
 stopped_at: Completed 13-embedding-visualization/13-02-PLAN.md
-last_updated: "2026-03-23T06:34:39.072Z"
+last_updated: "2026-03-24T04:05:26.888Z"
 last_activity: "2026-03-15 — completed Phase 11: Tauri desktop app with native file I/O, menu, sidecar, CI"
 progress:
   total_phases: 6
