@@ -1,5 +1,14 @@
 # Milestones
 
+## v1.1 Distribution & Developer Experience (Shipped: 2026-03-24)
+
+**Phases completed:** 6 phases, 16 plans, 11 tasks
+
+**Key accomplishments:**
+- (none recorded)
+
+---
+
 ## v1.0 MVP (Shipped: 2026-03-15)
 
 **Phases completed:** 11 phases, 42 plans, 7 tasks

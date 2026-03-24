@@ -85,7 +85,9 @@
 			font-weight="bold"
 			font-family="var(--font-sans, sans-serif)"
 		>{sequenceNumber}</text>
-		<!-- Transparent hit area for hover detection (larger than badge) -->
+		<!-- Transparent hit area for hover detection (larger than badge).
+		     Parent <g> is aria-hidden="true"; this circle is purely visual. -->
+		<!-- svelte-ignore a11y_no_static_element_interactions -->
 		<circle
 			r="14"
 			fill="transparent"
